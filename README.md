@@ -1,3 +1,7 @@
+Paper repository for _XXX_ by Ng, Rinaldi & Hannuksela (2024).
+
+The paper can be reproduced programmatically from this repo using [_showyourwork_](http://show-your.work). Scripts to produce figures and tables can be found in [src/scripts](src/scripts), and data in XXX.
+
 <p align="center">
 <a href="https://github.com/showyourwork/showyourwork">
 <img width = "450" src="https://raw.githubusercontent.com/showyourwork/.github/main/images/showyourwork.png" alt="showyourwork"/>
@@ -15,4 +19,4 @@
 </a>
 </p>
 
-An open source scientific article created using the [showyourwork](https://github.com/showyourwork/showyourwork) workflow.
+Click [here](https://github.com/thomasckng/det_frame_cosmo/blob/main-pdf/ms.pdf) to view PDF without automatically downloading.
