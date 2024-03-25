@@ -82,7 +82,7 @@ stamp:
   # Display of the repo URL in the stamp
   url:
     # Show the URL?
-    enabled: true
+    enabled: false
     # Maximum URL length to display
     maxlen: 40
 
