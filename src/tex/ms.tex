@@ -1,4 +1,3 @@
-% Define document class
 \documentclass[aps,prd,twocolumn,superscriptaddress,preprintnumbers,nofootinbib,hidelinks]{revtex4-2}
 
 \usepackage{showyourwork}
@@ -7,6 +6,9 @@
 \usepackage{bookmark}
 \usepackage{orcidlink}
 \usepackage{mathtools}
+
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
 \begin{document}
 
 \title{Detector-frame cosmology with non-parametric methods}
@@ -25,7 +27,7 @@
 \affiliation{Department of Physics, The Chinese University of Hong Kong, Shatin, Hong Kong}
 
 \begin{abstract}
-    \textsf{\color{red} [TODO: Abstract]}
+    \todo{Abstract}
 \end{abstract}
 
 \maketitle
@@ -40,35 +42,51 @@
 \label{sec:introduction}
 
 % Motivation
-Since the first direct detection of \acp{GW} in 2015, nearly a hundred events have been observed by the \ac{LVK}.
+    % Hubble tension
+    % GW can provide independent measurements of Hubble constant
+    % With EM counterpart, can measure redshift
+    % Without EM counterpart, can measure redshift from population statistics
+
+    % The challenge of understanding the Universe's dynamics, particularly the Hubble tension, requires precise measurements of the Hubble constant.
+    % Building upon the existing spectral siren method, which capitalizes on population information from gravitational wave sources, this talk explores an alternative way to analyse the population data to obtain the cosmological parameters.
+    % We'll focus on how non-parametric methods, which are flexible models that can be used to agnostically reconstruct arbitrary probability densities, can be incorporate in this framework and leverage on the detector-frame mass distribution to infer the cosmological parameters.
 
 % Previous work
+    % Spectral siren
+    % Other population studies
 
 % What's new?
+    % Non-parametric methods
+    % Detector-frame
 
 % Section outline
-
-\section{Background}
-\label{sec:background}
-
-% Spectral siren
+In Sec.~\ref{sec:method},
+In Sec.~\ref{sec:results},
+In Sec.~\ref{sec:discussion},
+In Sec.~\ref{sec:conclusion},
 
 \section{Method}
 \label{sec:method}
 
-\subsection{Non-parametric reconstruction of detector-frame observed population}
+In this section, we describe the framework of our method, 
+
+\subsection{Framework}
+\label{sec:framework}
+
+\subsubsection{Non-parametric reconstruction of detector-frame observed population}
 \label{sec:reconstruction}
 
-\subsection{Transformation of source-frame population model}
+\subsubsection{Transformation of source-frame population model}
 \label{sec:transformation}
 
-\subsection{Inference}
+\subsubsection{Inference}
 \label{sec:inference}
+
+\subsection{Injection test}
+\label{sec:injection}
 
 \section{Results}
 \label{sec:results}
-
-\subsection{}
 
 \section{Discussion}
 \label{sec:discussion}
