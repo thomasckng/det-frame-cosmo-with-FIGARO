@@ -58,16 +58,25 @@ This method is known as the spectral siren \citep{You:2020wju, Mastrogiovanni:20
 % Previous work
 The fundamental idea of the spectral siren method is to assume a population model for the mass distribution of the sources and marginalize over the redshift distribution to infer the cosmological parameters.
 Many studies have explored different variations of the spectral siren method.
-\todo{Summarize previous work}
+\todo{Summarize previous work and add references}
 
 % What's new?
 In this study, we explore an alternative method based on the spectral siren framework.
+We propose two major modifications to the standard spectral siren method.
+First, instead of transforming the luminosity distance to redshift during the inference process, we transform the population model to the detector frame.
+Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the observed population directly from the data using non-parametric methods.
+With these modifications, we aim to separate the spectral siren method into two distinct parts.
+The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
+All the assumptions including the population model, cosmological model and the selection function are then incorporated in the second half.
+This separation allows us to explore the impact of different assumptions easily.
+\todo{Add references}
 
 % Section outline
-In Sec.~\ref{sec:method},
-In Sec.~\ref{sec:results},
-In Sec.~\ref{sec:discussion},
-In Sec.~\ref{sec:conclusion},
+In Sec.~\ref{sec:method}, we describe our modified method and the testing procedure.
+In Sec.~\ref{sec:results}, we present the results of our method.
+In Sec.~\ref{sec:discussion}, we compare our result with other methods and discuss future directions.
+Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
+\todo{Rewrite outline}
 
 \section{Method}
 \label{sec:method}
