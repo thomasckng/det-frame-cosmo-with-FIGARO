@@ -63,7 +63,7 @@ Many studies have explored different variations of the spectral siren method.
 % What's new?
 In this study, we explore an alternative method based on the spectral siren framework.
 We propose two major modifications to the standard spectral siren method.
-First, instead of transforming the luminosity distance to redshift during the inference process, we transform the population model to the detector frame.
+First, instead of transforming the luminosity distance to redshift during the \ac{PE} process, we transform the population model to the detector frame.
 Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the observed population directly from the data using non-parametric methods.
 With these modifications, we aim to separate the spectral siren method into two distinct parts.
 The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
@@ -81,19 +81,23 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 \section{Method}
 \label{sec:method}
 
-In this section, we describe the framework of our method, 
+In this section, we describe the framework of our method, followed by a description of the testing setup.
 
 \subsection{Framework}
 \label{sec:framework}
 
+Our method consists of three main steps: the non-parametric reconstruction of the observed population, the transformation of the source-frame population model to the detector frame, and the \ac{PE}.
+We show the flowchart of our method in Fig.~XXX. \todo{Add flowchart}
+
 \subsubsection{Non-parametric reconstruction of detector-frame observed population}
 \label{sec:reconstruction}
+
 
 \subsubsection{Transformation of source-frame population model}
 \label{sec:transformation}
 
-\subsubsection{Inference}
-\label{sec:inference}
+\subsubsection{Parameter estimation}
+\label{sec:pe}
 
 \subsection{Injection test}
 \label{sec:injection}
