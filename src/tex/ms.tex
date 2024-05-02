@@ -52,10 +52,10 @@
 % Motivation
 In recent years, the precision of cosmological measurements has improved significantly, leading to the discovery of the Hubble tension, a discrepancy between the value of the Hubble constant $H_0$ inferred from the \ac{CMB} \citep{Planck:2018vyg} and local measurements \citep{Riess:2021jrx}.
 This tension has motivated the search for new methods to measure $H_0$ with high precision, and \ac{GW} sources have emerged as a promising tool for this purpose.
-To infer $H_0$ from \ac{GW} sources, one needs not only the luminosity distance which can be inferred from the signal, but also the redshift of the source.
+To infer $H_0$ from \ac{GW} sources, one needs not only the luminosity distance which can be inferred from the signal but also the redshift of the source.
 Some \ac{GW} sources can be associated with \ac{EM} counterparts, allowing for the measurement of the redshift, e.g., GW170817 \citep{LIGOScientific:2017adf, Guidorzi:2017ogy}.
 However, most \ac{GW} sources do not have \ac{EM} counterparts.
-In this case, one can use population statistics to infer $H_0$ by marginalizing over the redshift distribution of the sources.
+In this case, one can use population statistics to infer $H_0$ by marginalizing the redshift distribution of the sources.
 This method is known as the spectral siren \citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
 
 % Previous work
@@ -66,11 +66,11 @@ Many studies have explored different variations of the spectral siren method.
 % What's new?
 In this study, we explore an alternative method based on the spectral siren framework.
 We propose two major modifications to the standard spectral siren method.
-First, instead of transforming the individual posterior samples from detector frame to source frame during \ac{PE} process, we transform the population model to the detector frame before performing \ac{PE}.
-Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the detector-frame intrinsic population directly from the data using non-parametric method, where detector-frame intrinsic population is the detector-frame polulation after removing the selection effects.
+First, instead of transforming the individual posterior samples from the detector frame to the source frame during the \ac{PE} process, we transform the population model to the detector frame before performing \ac{PE}.
+Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the detector-frame intrinsic population directly from the data using a non-parametric method, where the detector-frame intrinsic population is the detector-frame population after removing the selection effects.
 
 With these modifications, we aim to separate the spectral siren method into two distinct parts.
-The first part is the reconstruction of the observed intrinsic population from the data, which does not require any assumptions about the population model, and the intermediate result only depends on the data and the assumption on the selection function.
+The first part is the reconstruction of the observed intrinsic population from the data, which does not require any assumptions about the population model, and the intermediate result only depends on the data and the assumption of the selection function.
 other assumptions including the population model and cosmological model are then incorporated in the second half.
 This separation allows us to explore the impact of different assumptions easily.
 The intermediate result of the first part can be reused as long as the data and the assumption on the selection function are the same.
@@ -106,20 +106,20 @@ To account for the uncertainty in the reconstruction, we need to perform the rec
 The uncertainty of the reconstruction can then be quantified by the spread of the distributions.
 In Fig.~XXX \todo{Add figure}, we show an example of the reconstruction obtained with \textsc{FIGARO}.
 
-This part of the method is mostly data-driven and only requires the assumption on the selection function.
+This part of the method is mostly data-driven and only requires the assumption of the selection function.
 Therefore the intermediate result is independent of the population and cosmological model, and we can reuse the result for testing different models.
 This reduces the computational cost of the method, as we only need to perform the reconstruction once.
 
 \subsection{Transformation of source-frame population model}
 \label{sec:transformation}
 
-On the other hand, we need a source-frame population model $p(m_1|\Lambda)$ to represent the underlying population of the sources, where $\Lambda$ is the polulation model.
+On the other hand, we need a source-frame population model $p(m_1|\Lambda)$ to represent the underlying population of the sources, where $\Lambda$ is the population model.
 We can either use a parametric model to only assume the form of the population distribution, or we can use a fixed population model to assume the exact population distribution.
 With $p(m_1|\Lambda)$, we need to transform it to the detector frame with a given cosmological model to obtain the detector-frame population model $p(m^z_1|\Lambda, \Omega)$, where $\Omega$ is the cosmological model.
 In this study, we use the $\Lambda$CDM model with the Planck 2018 cosmological parameters \citep{Planck:2018vyg}, except for $H_0$ which we choose to be a free parameter.
 We choose only $H_0$ as a free parameter because the current detection of \ac{GW} sources is local and the effect of $H_0$ dominates other cosmological parameters.
 With different $H_0$, $p(m_1|\Lambda)$ will be transformed differently, and the resulting $p(m^z_1|\Lambda, H_0)$ will be different.
-By considering a continuous set of $H_{0,j}$ and $\Lambda_j$, we can obtain a set of $p(m^z_1|\Lambda_j, H_{0,j})$, which is a set of continuous detector-frame intrinsic population model for each combination of $H_{0,j}$ and $\Lambda_j$.\footnote{In practice, we use a discrete set of $H_{0,j}$ and $\Lambda_j$ to approximate the continuous set.}
+By considering a continuous set of $H_{0,j}$ and hyperparameters $\lambda_j$ of the population model, we can obtain a set of $p(m^z_1|\Lambda(\lambda_j), H_{0,j})$, which is a set of continuous detector-frame intrinsic population models for each combination of $H_{0,j}$ and $\Lambda(\lambda_j)$.\footnote{In practice, we use a discrete set of $H_{0,j}$ and $\Lambda(\lambda_j)$ with a small step size to approximate the continuous set.}
 In Fig.~XXX \todo{Add figure}, we show an example of the transformation.
 
 Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model.
@@ -181,7 +181,7 @@ In Fig.~XXX \todo{Add figure}, we show an example of the fitting procedure.
 
 % Future directions
     % Likelihood
-    % luminosity distance/redshift polulation 
+    % luminosity distance/redshift population 
 
 \section{Conclusion}
 \label{sec:conclusion}
