@@ -41,7 +41,7 @@
     \acro{PE}{parameter estimation}
     \acro{CMB}{cosmic microwave background}
     \acro{EM}{electromagnetic}
-    \acro{DPGMM}{Dirichlet process Gaussian mixture model}
+    \acro{(H)DPGMM}{hierarchy of Dirichlet process Gaussian mixture model}
     \acro{BBH}{binary black hole}
     \acro{GWTC-3}{the third Gravitational-Wave Transient Catalog}
 \end{acronym}
@@ -66,12 +66,15 @@ Many studies have explored different variations of the spectral siren method.
 % What's new?
 In this study, we explore an alternative method based on the spectral siren framework.
 We propose two major modifications to the standard spectral siren method.
-First, instead of transforming the luminosity distance to redshift during the \ac{PE} process, we transform the population model to the detector frame.
-Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the observed population directly from the data using non-parametric methods.
+First, instead of transforming the individual posterior samples from detector frame to source frame during \ac{PE} process, we transform the population model to the detector frame before performing \ac{PE}.
+Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the detector-frame intrinsic population directly from the data using non-parametric method, where detector-frame intrinsic population is the detector-frame polulation after removing the selection effects.
+
 With these modifications, we aim to separate the spectral siren method into two distinct parts.
-The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
-All the assumptions including the population model, cosmological model and the selection function are then incorporated in the second half.
+The first part is the reconstruction of the observed intrinsic population from the data, which does not require any assumptions about the population model, and the intermediate result only depends on the data and the assumption on the selection function.
+other assumptions including the population model and cosmological model are then incorporated in the second half.
 This separation allows us to explore the impact of different assumptions easily.
+The intermediate result of the first part can be reused as long as the data and the assumption on the selection function are the same.
+The assumption on the selection function usually does not change in population studies, as the selection function is determined by the detector sensitivity.
 \todo{Add references}
 
 % Section outline
@@ -84,53 +87,48 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 \section{Method}
 \label{sec:method}
 
-In this section, we describe the framework of our method, followed by a description of the testing setup.
-
-\subsection{Framework}
-\label{sec:framework}
-
-Our method consists of three main steps: the non-parametric reconstruction of the observed population, the transformation of the source-frame population model to the detector frame, and the \ac{PE}.
+Our method consists of three main steps: the non-parametric reconstruction of the detector-frame intrinsic population, the transformation of the source-frame population model to the detector frame, and the \ac{PE}.
 We show the flowchart of our method in Fig.~XXX. \todo{Add flowchart}
 
-\subsubsection{Non-parametric reconstruction of detector-frame observed population}
+\subsection{Non-parametric reconstruction of detector-frame intrinsic population}
 \label{sec:reconstruction}
 
-The first step of our method is to reconstruct the observed population.
-we choose to consider the primary mass $m_1$ of the \ac{BBH} sources.
-From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we can reconstruct the observed detector-frame mass distribution $p(m_1|\{d\})$, where $\{d\}$ is the set of all the observed data.
+The first step of our method is to reconstruct the detector-frame intrinsic population.
+we choose to consider the primary mass $m_1$ of the \ac{BBH} sources, in principle, we can consider more parameters at once.
+From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the detector-frame intrinsic mass distribution $p(m^z_1|\mathbf{d})$, where $\mathbf{d}$ is the observed data of the \ac{GW} events.
 
 To perform the reconstruction, we use a non-parametric reconstruction package \textsc{FIGARO} \citep{Rinaldi:2022kyg}.
-\textsc{FIGARO} can reconstruct an arbitrary probability density function from a set of samples based on the \ac{DPGMM}.
-It can also perform a hierarchy of \ac{DPGMM} to reconstruct an polulation distribution with posterior samples from multiple events \citep{Rinaldi:2021bhm}.
-The output of \textsc{FIGARO} is a set of distributions, where each distribution is a realization of the observed population that is consistent with the data.
-Therefore, the set of distributions represents the uncertainty in the reconstruction procedure.
+Using \textsc{FIGARO}, we perform a \ac{(H)DPGMM} to reconstruct $p(m^z_1|\Xi_i(\mathbf{d}))$ with samples from single-event \ac{PE} posterior $p(m^z_1|d_i)$, where $d_i$ is the observed data of a single \ac{GW} event \citep{Rinaldi:2021bhm}, and $\Xi_i$ is the hyperparameters of the \ac{(H)DPGMM} for a single reconstruction.
+In the process of the reconstruction, selection effects are taken into account by \todo{Add equation} \citep{Mandel:2018mve}.
+
+Performing the reconstruction once will give a distribution $p(m^z_1|\Xi_i(\mathbf{d}))$ that is consistent with $\mathbf{d}$ with a given set of hyperparameters $\Xi_i$.
+To account for the uncertainty in the reconstruction, we need to perform the reconstruction multiple times to obtain a set of distributions $\{p(m^z_1|\Xi_i(\mathbf{d}))\}$.
+The uncertainty of the reconstruction can then be quantified by the spread of the distributions.
 In Fig.~XXX \todo{Add figure}, we show an example of the reconstruction obtained with \textsc{FIGARO}.
 
-This part of the method is completely data-driven and does not require any assumptions about the population model or the cosmological model.
-Therefore the intermediate result is independent of the assumptions, and we can reuse the result for different population models, cosmological models, or selection functions.
-This reduces the computational cost of the method, as we only need to perform the reconstruction of the observed population once.
+This part of the method is mostly data-driven and only requires the assumption on the selection function.
+Therefore the intermediate result is independent of the population and cosmological model, and we can reuse the result for testing different models.
+This reduces the computational cost of the method, as we only need to perform the reconstruction once.
 
-\subsubsection{Transformation of source-frame population model}
+\subsection{Transformation of source-frame population model}
 \label{sec:transformation}
 
 On the other hand, we need a source-frame population model $p(m_1|\Lambda)$ to represent the underlying population of the sources, where $\Lambda$ is the polulation model.
 We can either use a parametric model to only assume the form of the population distribution, or we can use a fixed population model to assume the exact population distribution.
-With $p(m_1|\Lambda)$, we need to transform it to the detector frame with a given cosmological model to obtain the detector-frame population model $p(m_1|\Lambda, \Omega)$, where $\Omega$ is the cosmological model.
+With $p(m_1|\Lambda)$, we need to transform it to the detector frame with a given cosmological model to obtain the detector-frame population model $p(m^z_1|\Lambda, \Omega)$, where $\Omega$ is the cosmological model.
 In this study, we use the $\Lambda$CDM model with the Planck 2018 cosmological parameters \citep{Planck:2018vyg}, except for $H_0$ which we choose to be a free parameter.
-With different $\Omega$, $p(m_1|\Lambda)$ will be transformed differently, and the resulting $p(m_1|\Lambda, \Omega)$ will be different.
-In Fig.~XXX \todo{Add figure}, we show an example of the transformation without any selection effects.
+We choose only $H_0$ as a free parameter because the current detection of \ac{GW} sources is local and the effect of $H_0$ dominates other cosmological parameters.
+With different $H_0$, $p(m_1|\Lambda)$ will be transformed differently, and the resulting $p(m^z_1|\Lambda, H_0)$ will be different.
+By considering a continuous set of $H_{0,j}$ and $\Lambda_j$, we can obtain a set of $p(m^z_1|\Lambda_j, H_{0,j})$, which is a set of continuous detector-frame intrinsic population model for each combination of $H_{0,j}$ and $\Lambda_j$.\footnote{In practice, we use a discrete set of $H_{0,j}$ and $\Lambda_j$ to approximate the continuous set.}
+In Fig.~XXX \todo{Add figure}, we show an example of the transformation.
 
-After the cosmological transformation, we need to consider the selection effects.
-The selection effects can be easily incorporated by applying the selection function to the transformed population.
-\todo{Add more details. Parametric or fixed?}
+Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model.
 
-Opposite to the first part of the method, which is completely data-driven, this part includes all the assumptions about the population model, the cosmological model, and the selection function.
-
-\subsubsection{Parameter estimation}
+\subsection{Parameter estimation}
 \label{sec:pe}
 
-With $p(m_1|\{d\})$ and $p(m_1|\Lambda, \Omega)$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
-The \ac{PE} is performed by comparing the observed population $p(m_1|\{d\})$ with the transformed population $p(m_1|\Lambda, \Omega)$.
+With $\{p(m^z_1|\Xi_i(\mathbf{d}))\}$ and $\{p(m^z_1|\Lambda_j, H_{0,j})\}$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
+The \ac{PE} is performed by comparing $\{p(m^z_1|\Xi_i(\mathbf{d}))\}$ with $\{p(m^z_1|\Lambda_j, H_{0,j})\}$.
 To compare the two populations, we use the Jensen–Shannon distance $d_{JS}$ as the distance measure.
 $d_{JS}$ is calculated as
 \begin{equation}
@@ -138,20 +136,43 @@ $d_{JS}$ is calculated as
 \end{equation}
 where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, and $D_{KL}$ is the Kullback–Leibler divergence.
 $d_{JS}$ is a symmetric and smoothed version of $D_{KL}$, and it is bounded between 0 and 1.
-For each reconstructed population $p(m_1|\{d\})$, we find the best-fit parameters by minimizing $d_{JS}$ with respect to the free parameters.
-This procedure gives us a set of best-fit parameters for each reconstructed population.
+
+For each reconstructed distribution $p(m^z_1|\Xi_i(\mathbf{d}))$, we find the best-fit $\Lambda_j$ and $H_{0,j}$ by minimizing $d_{JS}$.
+This procedure gives us a set of best-fit $H_{0,i}$ and $\Lambda_i$ for each $\Xi_i$.
 Note that the resulting distribution of the best-fit parameters is not a posterior distribution in the Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
-Instead, it is a distribution of the best-fit parameters that are consistent with the observed data, distributed according to the uncertainty in the reconstruction of the observed population.
+Instead, it is a distribution of the best-fit parameters that are consistent with the observed data, distributed according to the uncertainty in the reconstruction of the population.
+That is, the uncertainty in the comparison of the two populations is not considered in the resulting distribution.
+By considering this optimization procedure only, we can estimate the best-fit parameters without performing computationally expensive likelihood calculations.
 In Fig.~XXX \todo{Add figure}, we show an example of the fitting procedure.
 
-\subsection{Injection test}
-\label{sec:injection}
+\subsection{Minimization of $d_{JS}$}
+\label{sec:minimization}
 
-\subsection{GWTC-3 test}
-\label{sec:gwtc3}
+\section{Analysis}
+\label{sec:analysis}
+
+\subsection{Injection}
+\label{sec:injection-setup}
+
+\subsection{Real data}
+\label{sec:real-data-setup}
 
 \section{Results}
 \label{sec:results}
+
+\subsection{Injection}
+\label{sec:injection-results}
+
+% $H_0$ only
+
+% $H_0$ and $\Lambda$
+
+\subsection{Real data}
+\label{sec:real-data-results}
+
+% Power law + peak
+
+% Population model from simulation
 
 \section{Discussion}
 \label{sec:discussion}
