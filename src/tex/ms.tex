@@ -67,14 +67,13 @@ Many studies have explored different variations of the spectral siren method.
 In this study, we explore an alternative method based on the spectral siren framework.
 We propose two major modifications to the standard spectral siren method.
 First, instead of transforming the individual posterior samples from the detector frame to the source frame during the \ac{PE} process, we transform the population model to the detector frame before performing \ac{PE}.
-Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the detector-frame intrinsic population directly from the data using a non-parametric method, where the detector-frame intrinsic population is the detector-frame population after removing the selection effects.
+Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the detector-frame observed population directly from the data using a non-parametric method.
 
 With these modifications, we aim to separate the spectral siren method into two distinct parts.
-The first part is the reconstruction of the observed intrinsic population from the data, which does not require any assumptions about the population model, and the intermediate result only depends on the data and the assumption of the selection function.
-other assumptions including the population model and cosmological model are then incorporated in the second half.
+The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
+Other assumptions including the population model, cosmological model and selection function are then incorporated in the second half.
 This separation allows us to explore the impact of different assumptions easily.
-The intermediate result of the first part can be reused as long as the data and the assumption on the selection function are the same.
-The assumption on the selection function usually does not change in population studies, as the selection function is determined by the detector sensitivity.
+The intermediate result of the first part can be reused as long as the data does not change, reducing the computational cost of the method.
 \todo{Add references}
 
 % Section outline
@@ -87,28 +86,27 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 \section{Method}
 \label{sec:method}
 
-Our method consists of three main steps: the non-parametric reconstruction of the detector-frame intrinsic population, the transformation of the source-frame population model to the detector frame, and the \ac{PE}.
+Our method consists of three main steps: the non-parametric reconstruction of the detector-frame observed population, the transformation of the source-frame population model to the detector frame, and the \ac{PE}.
 We show the flowchart of our method in Fig.~XXX. \todo{Add flowchart}
 
-\subsection{Non-parametric reconstruction of detector-frame intrinsic population}
+\subsection{Non-parametric reconstruction of detector-frame observed population}
 \label{sec:reconstruction}
 
-The first step of our method is to reconstruct the detector-frame intrinsic population.
+The first step of our method is to reconstruct the detector-frame observed population.
 we choose to consider the primary mass $m_1$ of the \ac{BBH} sources, in principle, we can consider more parameters at once.
-From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the detector-frame intrinsic mass distribution $p(m^z_1|\mathbf{d})$, where $\mathbf{d}$ is the observed data of the \ac{GW} events.
+From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the detector-frame observed mass distribution $p(m^z_1|\mathbf{Y})$, where $\mathbf{Y}$ is the set of posterior samples of all \ac{GW} events.
 
 To perform the reconstruction, we use a non-parametric reconstruction package \textsc{FIGARO} \citep{Rinaldi:2022kyg}.
-Using \textsc{FIGARO}, we perform a \ac{(H)DPGMM} to reconstruct $p(m^z_1|\Xi_i(\mathbf{d}))$ with samples from single-event \ac{PE} posterior $p(m^z_1|d_i)$, where $d_i$ is the observed data of a single \ac{GW} event \citep{Rinaldi:2021bhm}, and $\Xi_i$ is the hyperparameters of the \ac{(H)DPGMM} for a single reconstruction.
-In the process of the reconstruction, selection effects are taken into account by \todo{Add equation} \citep{Mandel:2018mve}.
+Using \textsc{FIGARO}, we perform a \ac{(H)DPGMM} to reconstruct $p(m^z_1|\Theta_i(\mathbf{Y}))$ with samples from all single-event \ac{PE} posterior \citep{Rinaldi:2021bhm}, and $\Theta_i$ is the hyperparameters of the \ac{(H)DPGMM} for a single reconstruction.
 
-Performing the reconstruction once will give a distribution $p(m^z_1|\Xi_i(\mathbf{d}))$ that is consistent with $\mathbf{d}$ with a given set of hyperparameters $\Xi_i$.
-To account for the uncertainty in the reconstruction, we need to perform the reconstruction multiple times to obtain a set of distributions $\{p(m^z_1|\Xi_i(\mathbf{d}))\}$.
+Performing the reconstruction once will give a distribution $p(m^z_1|\Theta_i(\mathbf{Y}))$ that is consistent with $\mathbf{Y}$ with a given set of hyperparameters $\Theta_i$.
+To account for the uncertainty in the reconstruction, we need to perform the reconstruction multiple times to obtain a set of distributions $p(m^z_1|\mathbf{\Theta}(\mathbf{Y}))$, where $\mathbf{\Theta}$ is a set of $\Theta_i$.
 The uncertainty of the reconstruction can then be quantified by the spread of the distributions.
 In Fig.~XXX \todo{Add figure}, we show an example of the reconstruction obtained with \textsc{FIGARO}.
 
-This part of the method is mostly data-driven and only requires the assumption of the selection function.
-Therefore the intermediate result is independent of the population and cosmological model, and we can reuse the result for testing different models.
-This reduces the computational cost of the method, as we only need to perform the reconstruction once.
+This part of the method is completely data-driven.
+Therefore the intermediate result is independent of the population, cosmological model and selection function, and we can reuse the result for testing different models.
+This reduces the computational cost of the method, as we only need to perform the reconstruction once to analyze different models.
 
 \subsection{Transformation of source-frame population model}
 \label{sec:transformation}
@@ -116,19 +114,19 @@ This reduces the computational cost of the method, as we only need to perform th
 On the other hand, we need a source-frame population model $p(m_1|\Lambda)$ to represent the underlying population of the sources, where $\Lambda$ is the population model.
 We can either use a parametric model to only assume the form of the population distribution, or we can use a fixed population model to assume the exact population distribution.
 With $p(m_1|\Lambda)$, we need to transform it to the detector frame with a given cosmological model to obtain the detector-frame population model $p(m^z_1|\Lambda, \Omega)$, where $\Omega$ is the cosmological model.
-In this study, we use the $\Lambda$CDM model with the Planck 2018 cosmological parameters \citep{Planck:2018vyg}, except for $H_0$ which we choose to be a free parameter.
-We choose only $H_0$ as a free parameter because the current detection of \ac{GW} sources is local and the effect of $H_0$ dominates other cosmological parameters.
-With different $H_0$, $p(m_1|\Lambda)$ will be transformed differently, and the resulting $p(m^z_1|\Lambda, H_0)$ will be different.
-By considering a continuous set of $H_{0,j}$ and hyperparameters $\lambda_j$ of the population model, we can obtain a set of $p(m^z_1|\Lambda(\lambda_j), H_{0,j})$, which is a set of continuous detector-frame intrinsic population models for each combination of $H_{0,j}$ and $\Lambda(\lambda_j)$.\footnote{In practice, we use a discrete set of $H_{0,j}$ and $\Lambda(\lambda_j)$ with a small step size to approximate the continuous set.}
+With different $\Omega$, $p(m_1|\Lambda)$ will be transformed differently, and the resulting $p(m^z_1|\Lambda, \Omega)$ will be different.
+By considering a continuous set of $\Omega$ and  $\Lambda$ of the population model, we can obtain a set of $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega})$, which is a set of continuous detector-frame intrinsic population models for each combination of $\Omega_j$ and $\Lambda_j$, where $\mathbf{\Lambda} = \{\Lambda_j\}$ and $\mathbf{\Omega} = \{\Omega_j\}$.\footnote{In practice, we use a discrete set of $\Omega_j$ and $\Lambda_j$ with a small step size in their hyperparameters to approximate the continuous set.}
+After obtaining $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega})$, we can perform the \ac{PE} to infer the best-fit $\Omega_j$ and $\Lambda_j$.
+\todo{Add selection function}
 In Fig.~XXX \todo{Add figure}, we show an example of the transformation.
 
-Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model.
+Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model, as well as the selection function.
 
 \subsection{Parameter estimation}
 \label{sec:pe}
 
-With $\{p(m^z_1|\Xi_i(\mathbf{d}))\}$ and $\{p(m^z_1|\Lambda_j, H_{0,j})\}$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
-The \ac{PE} is performed by comparing $\{p(m^z_1|\Xi_i(\mathbf{d}))\}$ with $\{p(m^z_1|\Lambda_j, H_{0,j})\}$.
+With $p(m^z_1|\mathbf{\Theta}(\mathbf{Y}))$ and $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega})$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
+The \ac{PE} is performed by comparing $p(m^z_1|\Theta_i(\mathbf{Y}))$ with $p(m^z_1|\Lambda_j, \Omega_j)$.
 To compare the two populations, we use the Jensen–Shannon distance $d_{JS}$ as the distance measure.
 $d_{JS}$ is calculated as
 \begin{equation}
@@ -137,8 +135,8 @@ $d_{JS}$ is calculated as
 where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, and $D_{KL}$ is the Kullback–Leibler divergence.
 $d_{JS}$ is a symmetric and smoothed version of $D_{KL}$, and it is bounded between 0 and 1.
 
-For each reconstructed distribution $p(m^z_1|\Xi_i(\mathbf{d}))$, we find the best-fit $\Lambda_j$ and $H_{0,j}$ by minimizing $d_{JS}$.
-This procedure gives us a set of best-fit $H_{0,i}$ and $\Lambda_i$ for each $\Xi_i$.
+For each reconstructed distribution $p(m^z_1|\Theta_i(\mathbf{Y}))$, we find the best-fit $\Lambda_j$ and $\Omega_j$ by minimizing $d_{JS}$.
+This procedure gives us a set of best-fit $\Lambda_i$ and $\Omega_j$ for each $\Theta_i$.
 Note that the resulting distribution of the best-fit parameters is not a posterior distribution in the Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
 Instead, it is a distribution of the best-fit parameters that are consistent with the observed data, distributed according to the uncertainty in the reconstruction of the population.
 That is, the uncertainty in the comparison of the two populations is not considered in the resulting distribution.
