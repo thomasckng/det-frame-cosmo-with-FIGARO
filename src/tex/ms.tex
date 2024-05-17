@@ -8,6 +8,7 @@
 \usepackage{mathtools}
 
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\newcommand{\ste}[1]{\textcolor{blue}{[Ste: #1]}}
 
 \begin{document}
 
@@ -56,7 +57,8 @@ To infer $H_0$ from \ac{GW} sources, one needs not only the luminosity distance 
 Some \ac{GW} sources can be associated with \ac{EM} counterparts, allowing for the measurement of the redshift, e.g., GW170817 \citep{LIGOScientific:2017adf, Guidorzi:2017ogy}.
 However, most \ac{GW} sources do not have \ac{EM} counterparts. \todo{Add galaxy catalog method}
 In this case, one can use population statistics to infer $H_0$ by marginalizing the redshift distribution of the sources.
-This method is known as the spectral siren \citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
+This method is known as the spectral siren method\citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
+\ste{You should mention that the galaxy catalog method also exists and cite some more relevant papers (e.g. Schutz 1986, Del Pozzo 2012, Farr et al. 2019). References \texttt{\href{ https://onlinelibrary.wiley.com/doi/pdf/10.1002/andp.202200180}{here}}}
 
 % Previous work
 The fundamental idea of the spectral siren method is to assume a population model for the mass distribution of the sources and marginalize over the redshift distribution to infer the cosmological parameters.
@@ -64,17 +66,20 @@ Many studies have explored different variations of the spectral siren method.
 \todo{Summarize previous work and add references}
 
 % What's new?
+\ste{Instead of immediately describing what we will do in the paper, I think you should add a brief description of non-parametric methods and then guide the reader to the same idea that we had (nonpar methods can reconstruct whatever distribution we want $\rightarrow$ cosmology must be involved to reconstruct astro dist $\rightarrow$ detector-frame dist `freezes' the cosmology and can be predicted using astro models + cosmological parameters $\rightarrow$ comparison with observations). Then you can briefly sketch what we present in the paper and summarise its content. It's more appealing and easy to understand if instead of presenting the reader with a bunch of facts you make them think with yow, somewhat like a lecture.}
 In this study, we explore an alternative method based on the spectral siren framework.
 We propose two major modifications to the standard spectral siren method.
 First, instead of transforming the individual posterior samples from the detector frame to the source frame during the \ac{PE} process, we transform the population model to the detector frame before performing \ac{PE}.
 Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the detector-frame observed population directly from the data using a non-parametric method.
 
+\ste{I see what you're doing here, and it's ok, but I'd present this as `benefits' of this approach, rather than our aims.}
 With these modifications, we aim to separate the spectral siren method into two distinct parts.
 The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
 Other assumptions including the population model, cosmological model and selection function are then incorporated in the second half.
 This separation allows us to explore the impact of different assumptions easily.
 The intermediate result of the first part can be reused as long as the data does not change, reducing the computational cost of the method.
 \todo{Add references}
+\todo{More events in the future}
 
 % Section outline
 In Sec.~\ref{sec:method}, we describe our modified method and the testing procedure.
@@ -85,7 +90,7 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 
 \section{Method}
 \label{sec:method}
-
+\ste{In this section, we present the framework we developed to infer the cosmological parameters leveraging on the detector-frame mass distribution. In the remainder of this Section, we will make use of the following notation, mutuated from Rinaldi et al. (2024? 2022?): ...}
 Our method consists of three main steps: the non-parametric reconstruction of the detector-frame observed population, the transformation of the source-frame population model to the detector frame, and the \ac{PE}.
 We show the flowchart of our method in Fig.~XXX. \todo{Add flowchart}
 
@@ -96,13 +101,15 @@ The first step of our method is to reconstruct the detector-frame observed popul
 we choose to consider the primary mass $m_1$ of the \ac{BBH} sources, in principle, we can consider more parameters at once.
 From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the detector-frame observed mass distribution $p(m^z_1|\mathbf{Y})$, where $\mathbf{Y}$ is the set of posterior samples of all \ac{GW} events.
 
-To perform the reconstruction, we use a non-parametric reconstruction package \textsc{FIGARO} \citep{Rinaldi:2022kyg}.
-Using \textsc{FIGARO}, we perform a \ac{(H)DPGMM} to reconstruct $p(m^z_1|\Theta_i(\mathbf{Y}))$ with samples from all single-event \ac{PE} posterior \citep{Rinaldi:2021bhm}, and $\Theta_i$ is the hyperparameters of the \ac{(H)DPGMM} for a single reconstruction.
+To perform the reconstruction, we use a non-parametric reconstruction package \textsc{figaro}\footnote{\textsc{figaro} is publicly available at \url{https://github.com/sterinaldi/FIGARO} and via \texttt{pip}.} \citep{Rinaldi:2022kyg}.
+Using \textsc{figaro}, we perform a \ac{(H)DPGMM} to reconstruct $p(m^z_1|\Theta_i(\mathbf{Y}))$ with samples from all single-event \ac{PE} posterior \citep{Rinaldi:2021bhm}, and $\Theta_i$ are the hyperparameters of the \ac{(H)DPGMM} for a single reconstruction.
+\ste{Here it should be the other way around. We use (H)DPGMM as non-parametric model to reconstruct the observed detector-frame mass distribution -- you may want to extremely briefly summarise it here -- and then you mention the fact that the numerical implementation we use is \textsc{figaro}.}
 
 Performing the reconstruction once will give a distribution $p(m^z_1|\Theta_i(\mathbf{Y}))$ that is consistent with $\mathbf{Y}$ with a given set of hyperparameters $\Theta_i$.
 To account for the uncertainty in the reconstruction, we need to perform the reconstruction multiple times to obtain a set of distributions $p(m^z_1|\mathbf{\Theta}(\mathbf{Y}))$, where $\mathbf{\Theta}$ is a set of $\Theta_i$.
 The uncertainty of the reconstruction can then be quantified by the spread of the distributions.
-In Fig.~XXX \todo{Add figure}, we show an example of the reconstruction obtained with \textsc{FIGARO}.
+\todo{Mention the reconstruction holds only in the region with samples}
+In Fig.~XXX \todo{Add figure}, we show an example of the reconstruction obtained with \textsc{figaro}.
 
 This part of the method is completely data-driven.
 Therefore the intermediate result is independent of the population, cosmological model and selection function, and we can reuse the result for testing different models.
@@ -112,12 +119,15 @@ This reduces the computational cost of the method, as we only need to perform th
 \label{sec:transformation}
 
 On the other hand, we need a source-frame population model $p(m_1|\Lambda)$ to represent the underlying population of the sources, where $\Lambda$ is the population model.
+\todo{Change to function of mass and redshift}
 We can either use a parametric model to only assume the form of the population distribution, or we can use a fixed population model to assume the exact population distribution.
 With $p(m_1|\Lambda)$, we need to transform it to the detector frame with a given cosmological model to obtain the detector-frame population model $p(m^z_1|\Lambda, \Omega)$, where $\Omega$ is the cosmological model.
 With different $\Omega$, $p(m_1|\Lambda)$ will be transformed differently, and the resulting $p(m^z_1|\Lambda, \Omega)$ will be different.
 By considering a continuous set of $\Omega$ and  $\Lambda$ of the population model, we can obtain a set of $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega})$, which is a set of continuous detector-frame intrinsic population models for each combination of $\Omega_j$ and $\Lambda_j$, where $\mathbf{\Lambda} = \{\Lambda_j\}$ and $\mathbf{\Omega} = \{\Omega_j\}$.\footnote{In practice, we use a discrete set of $\Omega_j$ and $\Lambda_j$ with a small step size in their hyperparameters to approximate the continuous set.}
+\ste{This following sentence should be the very last sentence of this subsection, since it opens for the following PE description.} 
 After obtaining $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega})$, we can perform the \ac{PE} to infer the best-fit $\Omega_j$ and $\Lambda_j$.
-\todo{Add selection function}
+\todo{PE->Inference of Cosmological Parameters}
+\todo{Add selection function} \ste{In the selection function part, you may also want to specify why we opted for reconstructing the observed distribution and not the intrinsic one with (H)DPGMM (namely the censoring of a specific portion of the parameter space).}
 In Fig.~XXX \todo{Add figure}, we show an example of the transformation.
 
 Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model, as well as the selection function.
@@ -136,15 +146,14 @@ where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, a
 $d_{JS}$ is a symmetric and smoothed version of $D_{KL}$, and it is bounded between 0 and 1.
 
 For each reconstructed distribution $p(m^z_1|\Theta_i(\mathbf{Y}))$, we find the best-fit $\Lambda_j$ and $\Omega_j$ by minimizing $d_{JS}$.
+\todo{add the cutting of the low and high mass}
 This procedure gives us a set of best-fit $\Lambda_i$ and $\Omega_j$ for each $\Theta_i$.
 Note that the resulting distribution of the best-fit parameters is not a posterior distribution in the Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
 Instead, it is a distribution of the best-fit parameters that are consistent with the observed data, distributed according to the uncertainty in the reconstruction of the population.
 That is, the uncertainty in the comparison of the two populations is not considered in the resulting distribution.
 By considering this optimization procedure only, we can estimate the best-fit parameters without performing computationally expensive likelihood calculations.
 In Fig.~XXX \todo{Add figure}, we show an example of the fitting procedure.
-
-\subsection{Minimization of $d_{JS}$}
-\label{sec:minimization}
+\todo{Add minimization process}
 
 \section{Analysis}
 \label{sec:analysis}
@@ -154,7 +163,7 @@ In Fig.~XXX \todo{Add figure}, we show an example of the fitting procedure.
 
 \subsection{Real data}
 \label{sec:real-data-setup}
-Data retrived from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}
+Data from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}
 
 \section{Results}
 \label{sec:results}
