@@ -77,10 +77,9 @@ By separating the reconstruction of the observed population from the inference o
 Furthermore, the intermediate result represents the information contained in the observed data without any assumptions about the population model, cosmological model, or selection function, which allows us to study the features of the observed population directly.
 
 Some other studies have made use of non-parametric methods with the spectral siren framework.
-\todo{Summarize previous work and add references}
-\todo{Compare with our work}
+\todo{Summarize previous work, add references and compare with our work}
 
-\todo{More events in the future}
+Considering the increasing number of \ac{GW} events and the improvement of the detectors, we expect that the spectral siren method will give us an independent and precise measurement of $H_0$ which is comparable to the previous measurements \citep{Planck:2018vyg, Riess:2021jrx}.
 
 % Section outline
 In Sec.~\ref{sec:method}, we describe our modified method and the testing procedure.
@@ -106,13 +105,14 @@ In this section, we present the framework we developed to infer the cosmological
             $z$ & Redshift of the \ac{GW} sources \\
             $d_L$ & Luminosity distance of the \ac{GW} sources \\
             $m^z_1$ & Primary mass of the \ac{BBH} sources in the detector frame \\
-            $\mathbf{Y}$ & Set of posterior samples of all \ac{GW} events \\
+            $\mathbf{Y}$ & Set of posterior samples of the \ac{GW} events \\
             $\mathbf{\Theta}$ & Set of hyperparameters of the \ac{(H)DPGMM} \\
             $p(m^z_1|\mathbf{\Theta})$ & Detector-frame observed mass population distribution reconstructed with \ac{(H)DPGMM} \\
             $\Lambda$ & Source-frame population model \\
             $\Omega$ & Cosmological model \\
             $p(m_1|\Lambda)$ & Source-frame mass population distribution assuming the population model $\Lambda$ \\
             $p(m^z_1|\Lambda, \Omega)$ & Detector-frame mass population distribution assuming the population model $\Lambda$ and cosmological model $\Omega$ \\
+            $\mathrm{det}$ & detectability of the \ac{GW} events \\
         \end{tabular}
         \end{ruledtabular}
 \end{table}
@@ -163,42 +163,45 @@ We then transform $p(m_1|\Lambda)$ to the detector frame with a given cosmologic
         \begin{split}
             &p(m^z_1|\Lambda, \Omega, \mathrm{det}) \\
             &= \int p(m^z_1|m_1, z, \Lambda, \Omega, \mathrm{det}) p(m_1, z|\Lambda, \Omega, \mathrm{det}) \mathrm{d}m_1 \mathrm{d}z \\
-            &= \int \frac{p(\mathrm{det}|m^z_1, m_1, z, \Omega)p(m^z_1|m_1, z, \Omega)}{p(\mathrm{det}|m_1, z, \Omega)} \frac{p(\mathrm{det}|m_1, z, \Lambda, \Omega)p(m_1, z|\Lambda, \Omega)}{p(\mathrm{det}|\Lambda, \Omega)} \mathrm{d}m_1 \mathrm{d}z \\
-            &= \frac{1}{p(\mathrm{det}|\Lambda, \Omega)}\int \frac{p(\mathrm{det}|m_1, z, \Omega)p(m^z_1|m_1, z)p(\mathrm{det}|m_1, z, \Omega)p(m_1, z|\Lambda)}{p(\mathrm{det}|m_1, z, \Omega)}  \mathrm{d}m_1 \mathrm{d}z \\
-            &\propto \int \delta(m^z_1-m_1(1+z))p(\mathrm{det}|m_1, z, \Omega)p(m_1|\Lambda)p(z|\Lambda) \mathrm{d}m_1 \mathrm{d}z \\
+            &= \int p(m^z_1|m_1, z) \frac{p(\mathrm{det}|m_1, z, \Lambda, \Omega)p(m_1, z|\Lambda, \Omega)}{p(\mathrm{det}|\Lambda, \Omega)} \mathrm{d}m_1 \mathrm{d}z \\
+            &= \frac{1}{p(\mathrm{det}|\Lambda, \Omega)}\int \delta(m^z_1-m_1(1+z))p(\mathrm{det}|m_1, z, \Omega)p(m_1|\Lambda)p(z|\Lambda) \mathrm{d}m_1 \mathrm{d}z \\
+            &\propto \int p\left(\mathrm{det}\middle|\frac{m^z_1}{1+z},z,\Omega\right)p\left(\frac{m^z_1}{1+z}\middle|\Lambda\right)p(z|\Lambda) \mathrm{d}z\,,
         \end{split}
     \end{equation}
 \end{widetext}
 where we assume the source-frame mass distribution does not evolve with redshift, and $\mathrm{det}$ represents whether the event is detectable or not.
-We include the selection effect in Eq.~\eqref{eq:transformation}, which gives us $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ in the final expression.
+The selection effect is included in the derivation in eq.~\eqref{eq:transformation}, specifically, the first term in the final expression, which is the selection function.
+Note that the selection function in general is a function of the detector-frame mass $m^z_1$, luminosity distance $d_L$, and mass ratio $q$.
+In this work, we marginalized over $q$ to study the primary mass distribution only.
+Due to the censoring of the low and high mass events, we consider the selection function in the transformation instead of the reconstruction.
+
 With different $\Omega$, the resulting $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ will be different.
-By considering a continuous set of $\Omega$ and  $\Lambda$ of the population model, we can obtain a set of $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, which is a set of continuous detector-frame observed population models for each combination of $\Omega_j$ and $\Lambda_j$, where $\mathbf{\Lambda} = \{\Lambda_j\}$ and $\mathbf{\Omega} = \{\Omega_j\}$.\footnote{In practice, we use a discrete set of $\Omega_j$ and $\Lambda_j$ with a small step size in their hyperparameters to approximate the continuous set.}
-\ste{This following sentence should be the very last sentence of this subsection, since it opens for the following PE description.} 
-After obtaining $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, we can perform the \ac{PE} to infer the optimized $\Omega_j$ and $\Lambda_j$.
-\todo{PE\textrightarrow Inference of Cosmological Parameters}
-\ste{In the selection function part, you may also want to specify why we opted for reconstructing the observed distribution and not the intrinsic one with (H)DPGMM (namely the censoring of a specific portion of the parameter space).}
+By considering a continuous set of $\Omega$ and  $\Lambda$ of the population model, we can obtain a set of $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, which is a set of continuous detector-frame observed population models for each combination of $\Omega_j$ and $\Lambda_j$, where $\mathbf{\Lambda} = \{\Lambda_j\}$ and $\mathbf{\Omega} = \{\Omega_j\}$.
 In Fig.~XXX \todo{Add figure}, we show an example of the transformation.
 
 Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model, as well as the selection function.
+After obtaining $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, we can perform the \ac{PE} to infer the optimized $\Omega_j$ and $\Lambda_j$.
 
 \subsection{Parameter estimation}
 \label{sec:pe}
 
-With $p(m^z_1|\mathbf{\Theta}(\mathbf{Y}))$ and $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega})$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
-The \ac{PE} is performed by comparing $p(m^z_1|\Theta_i(\mathbf{Y}))$ with $p(m^z_1|\Lambda_j, \Omega_j)$.
-To compare the two populations, we use the Jensen-Shannon distance $d_{JS}$ as the distance measure.
-$d_{JS}$ is calculated as
+With $p(m^z_1|\mathbf{\Theta})$ and $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
+The \ac{PE} is performed by comparing $p(m^z_1|\Theta_i)$ with $p(m^z_1|\Lambda_j, \Omega_j)$.
+To compare the two populations, we use the Jensen-Shannon distance $d_\mathrm{JS}$ as the distance measure.
+$d_\mathrm{JS}$ is calculated as
 \begin{equation}
-    d_{JS}(p, q) = \sqrt{\frac{D_{KL}(p||m) + D_{KL}(q||m)}{2}},
+    d_\mathrm{JS}(p, q) = \sqrt{\frac{D_\mathrm{KL}(p||m) + D_\mathrm{KL}(q||m)}{2}},
 \end{equation}
-where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, and $D_{KL}$ is the Kullback-Leibler divergence.
-$d_{JS}$ is a symmetric and smoothed version of $D_{KL}$, and it is bounded between 0 and 1.
+where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, and $D_\mathrm{KL}$ is the Kullback-Leibler divergence.
+$d_\mathrm{JS}$ is a symmetric and smoothed version of $D_\mathrm{KL}$, and it is bounded between 0 and 1.
 
-For each reconstructed distribution $p(m^z_1|\Theta_i(\mathbf{Y}))$, we find the optimized $\Lambda_j$ and $\Omega_j$ by minimizing $d_{JS}$.
-\todo{add the cutting of the low and high mass}
+For each reconstructed distribution $p(m^z_1|\Theta_i)$, we find the optimized $\Lambda_j$ and $\Omega_j$ by minimizing $d_\mathrm{JS}$.
 For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX} algorithm. \todo{Add reference for the algorithm}
 This procedure gives us a set of optimized $\Lambda_i$ and $\Omega_j$ for each $\Theta_i$.
-Note that the resulting distribution of the optimized parameters is not a posterior distribution in the Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
+Note that we first calculate the median of the detector-frame primary mass posterior samples of each \ac{GW} event, then we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the medians.
+This is because the reconstruction is only valid in the region where observations are present.
+
+The resulting distribution of the optimized parameters is not a posterior distribution in the Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
 Instead, it is a distribution of the optimized parameters that are consistent with the observed data, distributed according to the uncertainty in the reconstruction of the population.
 That is, the uncertainty in the comparison of the two populations is not considered in the resulting distribution.
 By considering this optimization procedure only, we can estimate the optimized parameters without performing computationally expensive likelihood calculations.
