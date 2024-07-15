@@ -20,6 +20,12 @@ static = src / "static"
 # Absolute path to the `src/scripts` folder (contains figure/pipeline scripts)
 scripts = src / "scripts"
 
+# Absolute path to the `src/scripts/plotting` folder (contains plotting scripts)
+plotting = scripts / "plotting"
+
+# Absolute path to the `src/scripts/analysis` folder (contains analysis scripts)
+analysis = scripts / "analysis"
+
 # Absolute path to the `src/tex` folder (contains the manuscript)
 tex = src / "tex"
 
