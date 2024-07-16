@@ -10,12 +10,12 @@ outdir = paths.data / 'simulation'
 draws = load_density(outdir / f'draws/draws_observed_{label}.json')
 obs_samples = np.loadtxt(outdir / 'obs_samples.txt')
 
-fig = plot_median_cr(draws, samples=obs_samples, save=True, show=False)
+fig = plot_median_cr(draws, hierarchical=True, save=True, show=False)
 ax = fig.axes[0]
-ax.hist(obs_samples, bins = int(np.sqrt(len(obs_samples))), histtype = 'step', density = True, label = '$\mathrm{median}(Y_t)$')
+ax.hist(obs_samples, bins = int(np.sqrt(len(obs_samples))), histtype = 'step', density = True, label = '$\mathrm{median}(Y_t)$', color = 'tab:red')
 ax.set_xlim(0,120)
 ax.set_ylim(0)
-ax.xlabel('$m^z_1\ [\mathrm{M}_\odot]$')
-ax.ylabel('Density')
+ax.set_xlabel('$m^z_1\ [\mathrm{M}_\odot]$')
+ax.set_ylabel('$\mathrm{Density}$')
 ax.legend()
 fig.savefig(paths.figures / 'simulation_reconstruction.pdf', bbox_inches='tight')
