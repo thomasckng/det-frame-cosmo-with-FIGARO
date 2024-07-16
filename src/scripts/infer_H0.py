@@ -2,7 +2,6 @@ import numpy as np
 from figaro.cosmology import CosmologicalParameters
 from scipy.spatial.distance import jensenshannon as scipy_jsd
 from figaro.load import load_density
-import os
 import sys
 from tqdm import tqdm
 import dill
@@ -16,13 +15,12 @@ def p_z(z, H0):
     return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)/(1+z)
 
 label = sys.argv[1]
-outdir = os.path.dirname(os.path.realpath(__file__)) + "/" + label
-outdir = paths.data / outdir
+outdir = paths.data / label
 
 print("Preparing model pdfs...")
-grid_label = "real_model_pdf"
+grid_label = "grid"
 try:
-    mz, H0, z, m, model_pdf = np.load(outdir+"/../"+grid_label+".npz").values()
+    mz, H0, z, m, model_pdf = np.load(outdir / f"/../{grid_label}.npz").values()
 except:
     mz = np.linspace(1,200,900)
     H0 = np.linspace(5,150,1000)
@@ -39,15 +37,15 @@ except:
         return selfunc_interp(x)
     
     grid = [np.transpose(np.meshgrid(mz, CosmologicalParameters(i/100., 0.315, 0.685, -1., 0., 0.).LuminosityDistance(z))) for i in H0] # shape = (len(H0), len(mz), len(z), 2)
-    SE_grid = np.array([selection_function(grid[i]) for i in tqdm(range(len(H0)), desc = 'SE grid')]) # shape = (len(H0), len(mz), len(z))
+    SE_grid = np.array([selection_function(grid[i]) for i in tqdm(range(len(H0)), desc = 'selection function grid')]) # shape = (len(H0), len(mz), len(z))
     model_pdf = np.einsum("ijk, kij -> ijk", model_pdf, SE_grid) # shape = (len(mz), len(z), len(H0))
 
     model_pdf = np.trapz(model_pdf, z, axis=1) # shape = (len(mz), len(H0))
 
-    np.savez(outdir / "../"+grid_label+".npz", mz=mz, H0=H0, z=z, m=m, model_pdf=model_pdf)
+    np.savez(outdir / f"../{grid_label}.npz", mz=mz, H0=H0, z=z, m=m, model_pdf=model_pdf)
 
 print("Reading bounds and draws...")
-draws = load_density(outdir / "draws/draws_observed_"+label+".json")
+draws = load_density(outdir / f"draws/draws_observed_{label}.json")
 
 bounds = np.loadtxt(outdir / "jsd_bounds.txt")
 

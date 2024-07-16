@@ -7,3 +7,7 @@
 *.tiff
 *.gif
 *.svg
+*.sub
+*.out
+*.err
+*.log
