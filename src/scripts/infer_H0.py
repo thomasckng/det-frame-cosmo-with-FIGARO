@@ -20,15 +20,16 @@ outdir = os.path.dirname(os.path.realpath(__file__)) + "/" + label
 outdir = paths.data / outdir
 
 print("Preparing model pdfs...")
+grid_label = "real_model_pdf"
 try:
-    mz, H0, z, m, model_pdf = np.load(outdir+"/../real_model_pdf.npz").values()
+    mz, H0, z, m, model_pdf = np.load(outdir+"/../"+grid_label+".npz").values()
 except:
     mz = np.linspace(1,200,900)
     H0 = np.linspace(5,150,1000)
     z = np.linspace(0.001,2,800)
     m = np.einsum("i, j -> ij", mz, np.reciprocal(1+z)) # shape = (len(mz), len(z))
 
-    # model mz pdf for each H0
+    # Calculate source-frame population model pdf for each H0
     model_pdf = np.einsum("ij, kj -> ijk", plpeak(m), [p_z(z, i) for i in H0]) # shape = (len(mz), len(z), len(H0))
 
     # Load selection function
@@ -43,12 +44,12 @@ except:
 
     model_pdf = np.trapz(model_pdf, z, axis=1) # shape = (len(mz), len(H0))
 
-    np.savez(outdir+"/../real_model_pdf.npz", mz=mz, H0=H0, z=z, m=m, model_pdf=model_pdf)
+    np.savez(outdir / "../"+grid_label+".npz", mz=mz, H0=H0, z=z, m=m, model_pdf=model_pdf)
 
 print("Reading bounds and draws...")
-draws = load_density(outdir+"/draws/draws_observed_"+label+".json")
+draws = load_density(outdir / "draws/draws_observed_"+label+".json")
 
-bounds = np.loadtxt(outdir+"/jsd_bounds.txt")
+bounds = np.loadtxt(outdir / "jsd_bounds.txt")
 
 print("Preparing H0 inference...")
 # Mask out mz where there is no sample
@@ -58,14 +59,14 @@ model_pdf_short = model_pdf[_mask]
 
 figaro_pdf = np.array([draw.pdf(mz_short) for draw in draws])# shape (n_draws, len(mz_short))
 
-print("Infering H0...")
+print("Inferring H0...")
 # Compute JSD between (reconstructed observed distributions for each DPGMM draw) and (model mz distributions for each H0)
 jsd = np.array([scipy_jsd(model_pdf_short, np.full((len(H0), len(mz_short)), figaro_pdf[j]).T) for j in tqdm(range(len(figaro_pdf)), desc='JSD')])
 # Find H0 that minimizes JSD for each DPGMM draw
 H0_samples = H0[np.argmin(jsd, axis=1)]
 
 print("Saving results...")
-np.savetxt(outdir+"/jsds.txt", jsd)
-np.savetxt(outdir+"/H0s.txt", H0_samples)
+np.savetxt(outdir / "jsds.txt", jsd)
+np.savetxt(outdir / "H0s.txt", H0_samples)
 
 print("Done!")
