@@ -16,9 +16,9 @@ def p_z(z):
 
 # Generate true detector frame mass samples
 def generate_truth(n_single_event_draws):
-    M = rejection_sampler(n_single_event_draws, plpeak, [0,200])
+    m = rejection_sampler(n_single_event_draws, plpeak, [0,200])
     z = rejection_sampler(n_single_event_draws, p_z, [0, 2])
-    return np.array([M * (1 + z), z]).T
+    return np.array([m * (1 + z), z]).T
 
 # Generate detector frame mass posterior samples
 def generate_mz_posterior_samples(truth, sigma = 0.03, n_samples = 1000):
