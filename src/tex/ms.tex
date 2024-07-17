@@ -105,7 +105,8 @@ In this section, we present the framework we developed to infer the cosmological
             $z$ & Redshift of the \ac{GW} sources \\
             $d_L$ & Luminosity distance of the \ac{GW} sources \\
             $m^z_1$ & Primary mass of the \ac{BBH} sources in the detector frame \\
-            $\mathbf{Y}$ & Set of posterior samples of the \ac{GW} events \\
+            $Y_t$ & source-frame primary mass posterior samples of the t-th \ac{GW} event \\
+            $\mathbf{Y}$ & Set of source-frame primary mass posterior samples of all \ac{GW} events \\
             $\mathbf{\Theta}$ & Set of hyperparameters of the \ac{(H)DPGMM} \\
             $p(m^z_1|\mathbf{\Theta})$ & Detector-frame observed mass population distribution reconstructed with \ac{(H)DPGMM} \\
             $\Lambda$ & Source-frame population model \\
@@ -145,7 +146,7 @@ Performing the reconstruction once will give a distribution $p(m^z_1|\Theta_i)$ 
 To account for the uncertainty in the reconstruction, we need to perform the reconstruction multiple times to obtain a set of distributions $p(m^z_1|\mathbf{\Theta})$, where $\mathbf{\Theta}$ is a set of $\Theta_i$.
 The uncertainty of the reconstruction can then be quantified by the spread of the distributions.
 It is important to note that the reconstruction is only valid in the region where the samples are present.
-In Fig.~XXX \todo{Add figure}, we show an example of the reconstruction obtained with \textsc{figaro}.
+In Fig.~\ref{fig:simulation_reconstruction}, we show an example of the reconstruction obtained with \textsc{figaro}.
 
 This part of the method is completely data-driven.
 Therefore the intermediate result is independent of the population, cosmological model and selection function, and we can reuse the result for testing different models.
@@ -177,7 +178,7 @@ Due to the censoring of the low and high mass events, we consider the selection 
 
 With different $\Omega$, the resulting $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ will be different.
 By considering a continuous set of $\Omega$ and  $\Lambda$ of the population model, we can obtain a set of $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, which is a set of continuous detector-frame observed population models for each combination of $\Omega_j$ and $\Lambda_j$, where $\mathbf{\Lambda} = \{\Lambda_j\}$ and $\mathbf{\Omega} = \{\Omega_j\}$.
-In Fig.~XXX \todo{Add figure}, we show an example of the transformation.
+In Fig.~\ref{fig:simulation_transformation}, we show an example of the transformation.
 
 Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model, as well as the selection function.
 After obtaining $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, we can perform the \ac{PE} to infer the optimized $\Omega_j$ and $\Lambda_j$.
@@ -200,12 +201,12 @@ For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implemen
 This procedure gives us a set of optimized $\Lambda_i$ and $\Omega_j$ for each $\Theta_i$.
 Note that we first calculate the median of the detector-frame primary mass posterior samples of each \ac{GW} event, then we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the medians.
 This is because the reconstruction is only valid in the region where observations are present.
+In Fig.~\ref{fig:simulation_comparison}, we show an illustration of the comparison between the two populations.
 
 The resulting distribution of the optimized parameters is not a posterior distribution in the Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
 Instead, it is a distribution of the optimized parameters that are consistent with the observed data, distributed according to the uncertainty in the reconstruction of the population.
 That is, the uncertainty in the comparison of the two populations is not considered in the resulting distribution.
 By considering this optimization procedure only, we can estimate the optimized parameters without performing computationally expensive likelihood calculations.
-In Fig.~XXX \todo{Add figure}, we show an example of the fitting procedure.
 
 The analysis code is publicly available.\footnote{\todo{Add link}}
 
@@ -238,6 +239,15 @@ The analysis code is publicly available.\footnote{\todo{Add link}}
         \todo{Add caption}
     }
     \label{fig:simulation_comparison}
+\end{figure}
+
+\begin{figure}[h]
+    \script{plot_simulation_result_H0.py}
+    \includegraphics[width=\linewidth]{figures/simulation_result_H0.pdf}
+    \caption{
+        \todo{Add caption}
+    }
+    \label{fig:simulation_result_H0}
 \end{figure}
 
 % $H_0$ and $\Lambda$
