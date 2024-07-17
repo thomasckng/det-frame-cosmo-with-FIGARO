@@ -83,7 +83,7 @@ Considering the increasing number of \ac{GW} events and the improvement of the d
 
 % Section outline
 In Sec.~\ref{sec:method}, we describe our modified method and the testing procedure.
-In Sec.~\ref{sec:simulation}, we present the analysis setup and results of the simulation study.
+In Sec.~\ref{sec:mock_data}, we present the analysis setup and results of the mock data study.
 In Sec.~\ref{sec:real_data}, we apply our method to the real data from the \ac{LVK}.
 In Sec.~\ref{sec:discussion}, we compare our results with other methods and discuss future directions.
 Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
@@ -209,10 +209,36 @@ In Fig.~XXX \todo{Add figure}, we show an example of the fitting procedure.
 
 The analysis code is publicly available.\footnote{\todo{Add link}}
 
-\section{Simulation}
-\label{sec:simulation}
+\section{Mock data}
+\label{sec:mock_data}
 
 % $H_0$ only
+\begin{figure}[h]
+    \script{plot_simulation_reconstruction.py}
+    \includegraphics[width=\linewidth]{figures/simulation_reconstruction.pdf}
+    \caption{
+        \todo{Add caption}
+    }
+    \label{fig:simulation_reconstruction}
+\end{figure}
+
+\begin{figure}[h]
+    \script{plot_simulation_transformation.py}
+    \includegraphics[width=\linewidth]{figures/simulation_transformation.pdf}
+    \caption{
+        \todo{Add caption}
+    }
+    \label{fig:simulation_transformation}
+\end{figure}
+
+\begin{figure}[h]
+    \script{plot_simulation_comparison.py}
+    \includegraphics[width=\linewidth]{figures/simulation_comparison.pdf}
+    \caption{
+        \todo{Add caption}
+    }
+    \label{fig:simulation_comparison}
+\end{figure}
 
 % $H_0$ and $\Lambda$
 
@@ -222,8 +248,6 @@ The analysis code is publicly available.\footnote{\todo{Add link}}
 Data from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}
 
 % Power law + peak
-
-% Population model from simulation
 
 \section{Discussion}
 \label{sec:discussion}
