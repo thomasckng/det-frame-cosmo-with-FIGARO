@@ -26,13 +26,11 @@ dag:
 # Externally-hosted datasets, e.g. on Zenodo
 datasets:
   10.5072/zenodo.78500:
-    destination: src/data
     contents:
-      - grid.npz
-    destination: src/data/simulation
-    contents:
-      - draws/draws_observed_simulation.json
-      - jsd_bounds.txt
+      grid.npz: src/data/grid.npz
+      jsd_bounds.txt: src/data/simulation/jsd_bounds.txt
+      obs_samples.txt: src/data/simulation/obs_samples.txt
+      draws_observed_simulation.json: src/data/simulation/draws/draws_observed_simulation.json
 
 # Custom file dependencies
 dependencies:
