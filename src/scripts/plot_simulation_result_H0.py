@@ -9,7 +9,7 @@ true_H0 = Planck18.h*100
 
 plt.hist(H0_samples)
 percs = np.percentile(H0_samples, [5, 16, 50, 84, 95])
-plt.axvline(true_H0, lw = 0.7, ls = '--', c = 'orangered', label = '$H_0 = '+str(f'{true_H0:.1f}')+'(\mathrm{Simulated})$')
+plt.axvline(true_H0, lw = 0.7, ls = '--', c = 'orangered', label = '$H_0 = '+str(f'{true_H0:.1f}')+' (\mathrm{Simulated})$')
 plt.axvline(percs[2], c = 'steelblue', lw=0.7, label = '$H_0 = '+str(f'{percs[2]:.1f}')+'^{+'+str(f'{percs[3]-percs[2]:.1f}')+'}_{-'+str(f'{percs[2]-percs[1]:.1f}')+'}$')
 plt.axvspan(percs[1], percs[3], alpha=0.25, color='mediumturquoise')
 plt.axvspan(percs[0], percs[4], alpha=0.25, color='darkturquoise')
