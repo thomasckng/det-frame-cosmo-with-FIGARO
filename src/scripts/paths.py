@@ -28,7 +28,3 @@ figures = tex / "figures"
 
 # Absolute path to the `src/tex/output` folder (contains other user-defined output)
 output = tex / "output"
-
-import os
-from pathlib import Path
-os.environ["PATH"] += os.pathsep + str(Path.home() / "bin")
