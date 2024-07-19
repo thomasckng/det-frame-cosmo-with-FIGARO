@@ -20,6 +20,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt install texlive texlive-latex-extra texlive-fonts-recommended dvipng cm-super type1cm
+          latex --version
 
       - name: Build the article PDF
         id: build
