@@ -140,7 +140,7 @@ The first step of our method is to reconstruct the detector-frame observed popul
 we choose to consider the primary mass $m_1$ of the \ac{BBH} sources, in principle, we can consider more parameters at once.
 From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the detector-frame observed mass distribution.
 
-We use a \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the detector-frame observed mass population distribution $p(m^z_1|\mathbf{\Theta})$.
+We use the \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the detector-frame observed mass population distribution $p(m^z_1|\mathbf{\Theta})$.
 The \ac{(H)DPGMM} is a hierarchy of Gaussian mixture models with a Dirichlet process prior, which allows the model to be flexible to reconstruct arbitrary population distribution from posterior samples.
 To perform the reconstruction, we use the package \textsc{figaro}\footnote{\textsc{figaro} is publicly available at \url{https://github.com/sterinaldi/FIGARO} and via \texttt{pip}.} \citep{Rinaldi:2024eep}.
 Performing the reconstruction once will give a distribution $p(m^z_1|\Theta_i)$ that is consistent with $\mathbf{Y}$ with a given set of hyperparameters $\Theta_i$.
@@ -198,7 +198,7 @@ where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, a
 $d_\mathrm{JS}$ is a symmetric and smoothed version of $D_\mathrm{KL}$, and it is bounded between 0 and 1.
 
 For each reconstructed distribution $p(m^z_1|\Theta_i)$, we find the optimized $\Lambda_j$ and $\Omega_j$ by minimizing $d_\mathrm{JS}$.
-For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX} algorithm. \todo{Add reference for the algorithm}
+For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX} algorithm. \todo{Add reference for the algorithm and scipy}
 This procedure gives us a set of optimized $\Lambda_i$ and $\Omega_j$ for each $\Theta_i$.
 Note that we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the median of the $m^z_1$ posterior samples of each \ac{GW} event
 This is because the reconstruction is only valid in the region where observations are present.
@@ -215,13 +215,15 @@ The analysis code is publicly available.\footnote{The analysis code is available
 \label{sec:mock_data}
 
 In this section, we test our method with a mock data study.
-To prepare the mock data, we first generated $10000$ sets of $m_1$ and $z$ samples from a \textsc{power law + peak} model for the $m_1$ distribution and a uniform distribution in comoving volume for the $z$ distribution.
+To prepare the mock data, we first generated $10000$ sets of $m_1$ and $z$ samples from a \textsc{power law + peak} model for the $m_1$ distribution and uniform distribution over comoving volume and source-frame time (see, e.g., Eq.~11 in \cite{LIGOScientific:2019zcs}) for the $z$ distribution. \todo{Add reference for models}
 Here we assumed the $m_1$ distribution does not evolve with $z$.
-we then transformed the $m_1$ and $z$ samples to $m^z_1$ and $d_L$ samples.
+We then transformed the $m_1$ and $z$ samples to $m^z_1$ and $d_L$ samples.
+Here we chose the $\Lambda$CDM model with parameters consistent with the Planck 2018 results \cite{Planck:2018vyg} as the cosmological model for the transformation of the samples.
 After the transformation, we applied a selection function to the $m^z_1$ and $d_L$ samples.
 We chose the O3 selection function from \todo{add reference} as the selection function.
 Note that we marginalized over $q$ for the selection function, similar to the transformation in Sec.~\ref{sec:transformation}.
-After applying the selection function, we generated the $m^z_1$ posterior samples for each true $m^z_1$ sample by
+After applying the selection function, there were $262$ sets of samples left.
+We then generated the $m^z_1$ posterior samples for each true $m^z_1$ sample by
 \begin{gather*}
     I \sim \mathcal{N}(0, 0.03)\,,\\
     P \sim \mathcal{N}(\log(T_t)+I, 0.03)\,,\\
@@ -229,24 +231,45 @@ After applying the selection function, we generated the $m^z_1$ posterior sample
 \end{gather*}
 where $\mathcal{N}(\mu, \sigma)$ is a normal distribution with mean $\mu$ and standard deviation $\sigma$, $I$ is the intrinsic error, $P$ is the posterior sample in the log space, $T_t$ is the true $m^z_1$ sample, and $Y_t$ is the posterior sample for the $t$-th \ac{GW} event.
 
-% $H_0$ only
+After preparing the mock data, we first performed the reconstruction of the observed $m^z_1$ population distribution with \textsc{figaro} as described in Sec.~\ref{sec:reconstruction}.
+The result of the reconstruction is shown in Fig.~\ref{fig:simulation_reconstruction}.
+
 \begin{figure}[h]
     \script{plot_simulation_reconstruction.py}
     \includegraphics[width=\linewidth]{figures/simulation_reconstruction.pdf}
     \caption{
-        \todo{Add caption}
+        In both panels, the red line is the histogram of the median of the $m^z_1$ posterior samples of the \ac{GW} events.
+        In the upper panel, the blue line is the median of the reconstructed distributions, and the shaded region represents the 68\% and 90\% credible intervals of the reconstructed distributions.
+        In the lower panel, the blue lines are the single reconstructed distributions from a subset of all the reconstructed distributions.
+        By combining all the single reconstructed distributions, we obtain the distribution in the upper panel.
     }
     \label{fig:simulation_reconstruction}
 \end{figure}
+
+Next, we chose the true population model we used to generate the mock data as the source-frame population model $\Lambda$.
+We then transformed $p(m_1|\Lambda)$ to the detector frame with the true cosmological model we used to generate the mock data, except we did not fix $H_0$.
+We performed the transformation for each $H_0$ in the range from $5$ to $150$.
+After the transformation, we applied the selection function we used to generate the mock data to the transformed distribution.
+Here we only free $H_0$ in the transformation to test if our method can recover the true $H_0$ while we fixed the other cosmological parameters to the true values.
+The result of the transformation is shown in Fig.~\ref{fig:simulation_transformation}.
 
 \begin{figure}[h]
     \script{plot_simulation_transformation.py}
     \includegraphics[width=\linewidth]{figures/simulation_transformation.pdf}
     \caption{
-        \todo{Add caption}
+        The upper panel shows the source-frame $m_1$ population distribution, which we chose as the true population model.
+        The lower panel shows the transformed detector-frame $m^z_1$ population distributions for different $H_0$.
+        The source-frame population distribution is redshifted towards higher masses as $H_0$ increases, as $m^z_1 = m_1(1+z)$ and $z$ increases with $H_0$ for a given $d_L$.
+        The low-mass peak is suppressed due to the selection function.
     }
     \label{fig:simulation_transformation}
 \end{figure}
+
+Finally, we performed the \ac{PE} to infer $H_0$.
+For this test specifically, instead of using the \textsc{scipy} optimization algorithm, we used a grid search to find the optimized $H_0$, as the parameter space is one-dimensional.
+Figure~\ref{fig:simulation_comparison} shows an illustration of the comparison between the reconstructed observed population and the transformed population for different $H_0$.
+For each $H_0$, we computed the $d_\mathrm{JS}$ between the two populations and found the optimized $H_0$ that minimizes $d_\mathrm{JS}$.
+The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
 
 \begin{figure}[h]
     \script{plot_simulation_comparison.py}
@@ -257,6 +280,7 @@ where $\mathcal{N}(\mu, \sigma)$ is a normal distribution with mean $\mu$ and st
     \label{fig:simulation_comparison}
 \end{figure}
 
+% $H_0$ only
 \begin{figure}[h]
     \script{plot_simulation_result_H0.py}
     \includegraphics[width=\linewidth]{figures/simulation_result_H0.pdf}
