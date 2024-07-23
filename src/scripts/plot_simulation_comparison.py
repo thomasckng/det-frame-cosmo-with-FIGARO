@@ -16,12 +16,11 @@ ax = fig.axes[0]
 colors = ['tab:green', 'tab:red', 'tab:orange']
 for i, c in zip([np.argmin(abs(H0-40)), np.argmin(abs(H0-70)), np.argmin(abs(H0-100))], colors):
     ax.plot(mz, model_pdf[:,i]/np.trapz(model_pdf[:,i], mz), label=f"$H_0={H0[i]:.0f}$", c=c)
-y_max = ax.get_ylim()[1]
-ax.fill_between([0, bounds[0]], 0, 1, color='gray', alpha=0.2)
-ax.fill_between([bounds[1], 200], 0, 1, color='gray', alpha=0.2)
+ax.axvspans(0, bounds[0], color='gray', alpha=0.2)
+ax.axvspans(bounds[1], 200, color='gray', alpha=0.2)
 ax.set_xlabel('$m^z_1\ [\mathrm{M}_\odot]$')
 ax.set_ylabel('$\mathrm{Density}$')
 ax.set_xlim(0, 200)
-ax.set_ylim(0, y_max)
+ax.set_ylim(0)
 ax.legend()
 fig.savefig(paths.figures / "simulation_comparison.pdf", bbox_inches='tight')
