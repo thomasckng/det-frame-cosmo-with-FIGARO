@@ -116,7 +116,7 @@ In this section, we present the framework we developed to infer the cosmological
             $p(m^z_1|\Lambda, \Omega)$ & Detector-frame mass population distribution assuming the population model $\Lambda$ and cosmological model $\Omega$ \\
             $\mathrm{det}$ & detectability of the \ac{GW} events \\
         \end{tabular}
-        \end{ruledtabular}
+    \end{ruledtabular}
 \end{table}
 
 Specifically, we propose two major modifications to the standard spectral siren method.
@@ -161,7 +161,7 @@ Note that, either a parametric model can be used to only assume the form of the 
 We then transform $p(m_1|\Lambda)$ to the detector frame with a given cosmological model $\Omega$ to obtain the detector-frame mass population $p(m^z_1|\Lambda, \Omega)$ by
 \begin{widetext}
 \begin{equation}
- \label{eq:transformation}
+    \label{eq:transformation}
     \begin{aligned}
         &p(m^z_1|\Lambda, \Omega, \mathrm{det}) \\
         &= \int p(m^z_1|m_1, z, \Lambda, \Omega, \mathrm{det}) p(m_1, z|\Lambda, \Omega, \mathrm{det}) \mathrm{d}m_1 \mathrm{d}z \\
@@ -258,7 +258,7 @@ The result of the transformation is shown in Fig.~\ref{fig:simulation_transforma
     \includegraphics[width=\linewidth]{figures/simulation_transformation.pdf}
     \caption{
         The upper panel shows the source-frame $m_1$ population distribution, which we chose as the true population model.
-        The lower panel shows the transformed detector-frame $m^z_1$ population distributions for different $H_0$.
+        The lower panel shows the transformed detector-frame $m^z_1$ population distributions for different $H_0$, where the corresponding $H_0$ is shown in the legend.
         The source-frame population distribution is redshifted towards higher masses as $H_0$ increases, as $m^z_1 = m_1(1+z)$ and $z$ increases with $H_0$ for a given $d_L$.
         The low-mass peak is suppressed due to the selection function.
     }
@@ -275,7 +275,9 @@ The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
     \script{plot_simulation_comparison.py}
     \includegraphics[width=\linewidth]{figures/simulation_comparison.pdf}
     \caption{
-        \todo{Add caption}
+        The blue line and bands are the ones from Fig.~\ref{fig:simulation_reconstruction}, which represent the reconstructed observed population.
+        The other colored lines are the ones from Fig.~\ref{fig:simulation_transformation}, which represent the transformed population for different $H_0$.
+        The shaded regions represent the boundaries for the calculation of $d_\mathrm{JS}$, i.e., the $d_\mathrm{JS}$ calculation only considers the non-shaded region.
     }
     \label{fig:simulation_comparison}
 \end{figure}
@@ -285,7 +287,11 @@ The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
     \script{plot_simulation_result_H0.py}
     \includegraphics[width=\linewidth]{figures/simulation_result_H0.pdf}
     \caption{
-        \todo{Add caption}
+        The histogram shows the distribution of the optimized $H_0$.
+        The vertical blue line and shaded regions represent the median, 68\%, and 90\% credible intervals of the distribution.
+        The vertical orange line represents the true $H_0$ we used to generate the mock data.
+        Note that the distribution only shows the uncertainty in the reconstruction.
+        The uncertainty in the comparison is not considered in the distribution.
     }
     \label{fig:simulation_result_H0}
 \end{figure}
