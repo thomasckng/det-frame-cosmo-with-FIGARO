@@ -62,7 +62,7 @@ Another alternative method is to use population statistics to infer $H_0$ by mar
 This method is known as the spectral siren method\citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
 
 % Previous work
-The fundamental idea of the spectral siren method is to infer cosmology by comparing the observed mass population with the intrinsic mass population since the observed mass population is redshifted due to the expansion of the Universe.
+The fundamental idea of the spectral siren method is to infer cosmology by comparing the observed mass population distribution with the intrinsic mass population distribution since the observed distribution is redshifted due to the expansion of the Universe.
 Assumptions about the intrinsic population model and cosmological model are required to perform the comparison.
 Previous studies often infer either the intrinsic population model or the cosmological model, but not both simultaneously, due to the expensive computational cost.
 \todo{Summarize previous work and add references}
@@ -94,7 +94,8 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 
 \section{Method}
 \label{sec:method}
-In this section, we present the framework we developed to infer the cosmological parameters leveraging the detector-frame mass distribution. In the remainder of this Section, we will make use of the notation summarized in Table~\ref{tab:notation}, mutuated from \citet{Rinaldi:2021bhm, Rinaldi:2022kyg}.
+In this section, we present the framework we developed to infer both the intrinsic population model and the cosmological model simultaneously by leveraging the detector-frame mass population distribution.
+In the remainder of this Section, we will make use of the notation summarized in Table~\ref{tab:notation}, mutuated from \citet{Rinaldi:2021bhm, Rinaldi:2022kyg}.
 \todo{Renew notations}
 
 \begin{table}
@@ -103,19 +104,20 @@ In this section, we present the framework we developed to infer the cosmological
         \begin{tabular}{c>{\raggedright\arraybackslash}p{0.8\linewidth}}
             Notation & Description \\
             \hline
-            $m_1$ & Primary mass of the \ac{GW} sources \\
+            $m_1$ & Primary mass of the \ac{GW} sources in the source frame \\
             $q$ & Mass ratio of the \ac{GW} sources \\
             $z$ & Redshift of the \ac{GW} sources \\
             $d_L$ & Luminosity distance of the \ac{GW} sources \\
             $m^z_1$ & Primary mass of the \ac{BBH} sources in the detector frame \\
-            $Y_t$ & source-frame primary mass posterior samples of the $t$-th \ac{GW} event \\
-            $\mathbf{Y}$ & Set of source-frame primary mass posterior samples of all \ac{GW} events \\
+            $Y_t$ & detector-frame primary mass posterior samples of the $t$-th \ac{GW} event \\
+            $\mathbf{Y}$ & Set of detector-frame primary mass posterior samples of all \ac{GW} events \\
+            $\Theta_i$ & Hyperparameters of the \ac{(H)DPGMM} \\
             $\mathbf{\Theta}$ & Set of hyperparameters of the \ac{(H)DPGMM} \\
-            $p(m^z_1|\mathbf{\Theta})$ & Detector-frame observed mass population distribution reconstructed with \ac{(H)DPGMM} \\
+            $p(m^z_1|\mathbf{\Theta})$ & Detector-frame observed primary mass population distribution reconstructed with the \ac{(H)DPGMM} \\
             $\Lambda$ & Source-frame population model \\
             $\Omega$ & Cosmological model \\
-            $p(m_1|\Lambda)$ & Source-frame mass population distribution assuming the population model $\Lambda$ \\
-            $p(m^z_1|\Lambda, \Omega)$ & Detector-frame mass population distribution assuming the population model $\Lambda$ and cosmological model $\Omega$ \\
+            $p(m_1|\Lambda)$ & Source-frame primary mass population distribution assuming the population model $\Lambda$ \\
+            $p(m^z_1|\Lambda, \Omega)$ & Detector-frame primary mass population distribution assuming the population model $\Lambda$ and cosmological model $\Omega$ \\
             $\mathrm{det}$ & detectability of the \ac{GW} events \\
         \end{tabular}
     \end{ruledtabular}
@@ -123,12 +125,12 @@ In this section, we present the framework we developed to infer the cosmological
 \end{table}
 
 Specifically, we propose two major modifications to the standard spectral siren method.
-First, instead of transforming the individual posterior samples from the detector frame to the source frame during the \ac{PE} process, we transform the population model to the detector frame before performing \ac{PE}.
-Second, instead of computing the likelihood of the observed data given the population model, we reconstruct the detector-frame observed population directly from the data using a non-parametric method.
+First, instead of transforming the individual-event posterior samples from the detector frame to the source frame during the \ac{PE} process, we transform the population model to the detector frame before performing \ac{PE}.
+Second, instead of directly computing the likelihood of the observed data given the population model, we reconstruct the observed population distribution from the data using a non-parametric method and compare it with the population model.
 
 With these modifications, we separate the spectral siren method into two distinct parts.
 The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
-We make use of a \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed population distribution.
+We make use of the \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed population distribution.
 Other assumptions including the population model, cosmological model and selection function are then incorporated in the second half.
 This separation allows us to explore the impact of different assumptions easily.
 The intermediate result of the first part can be reused as long as the data does not change, reducing the computational cost of the method.
@@ -140,9 +142,9 @@ Our method consists of three main steps: the non-parametric reconstruction of th
 
 The first step of our method is to reconstruct the detector-frame observed population.
 we choose to consider the primary mass $m_1$ of the \ac{BBH} sources, in principle, we can consider more parameters at once.
-From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the detector-frame observed mass distribution.
+From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the observed detector-frame primary mass population distribution.
 
-We use the \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the detector-frame observed mass population distribution $p(m^z_1|\mathbf{\Theta})$.
+We use the \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed $m^z_1$ population distribution $p(m^z_1|\mathbf{\Theta})$.
 The \ac{(H)DPGMM} is a hierarchy of Gaussian mixture models with a Dirichlet process prior, which allows the model to be flexible to reconstruct arbitrary population distribution from posterior samples.
 To perform the reconstruction, we use the package \textsc{figaro}\footnote{\textsc{figaro} is publicly available at \url{https://github.com/sterinaldi/FIGARO} and via \texttt{pip}.} \citep{Rinaldi:2024eep}.
 Performing the reconstruction once will give a distribution $p(m^z_1|\Theta_i)$ that is consistent with $\mathbf{Y}$ with a given set of hyperparameters $\Theta_i$.
@@ -158,9 +160,9 @@ This reduces the computational cost of the method, as we only need to perform th
 \subsection{Transformation of source-frame population model}
 \label{sec:transformation}
 
-On the other hand, we assume a population model $\Lambda$ to obtain a source-frame mass population $p(m_1|\Lambda)$, which represents the underlying population of the sources.
+On the other hand, we assume a population model $\Lambda$ to obtain a source-frame primary mass $m_1$ population distribution $p(m_1|\Lambda)$, which represents the underlying population distribution given the model $\Lambda$.
 Note that, either a parametric model can be used to only assume the form of the population distribution, or a fixed population model can be used to assume an exact population distribution.
-We then transform $p(m_1|\Lambda)$ to the detector frame with a given cosmological model $\Omega$ to obtain the detector-frame mass population $p(m^z_1|\Lambda, \Omega)$ by
+We then transform $p(m_1|\Lambda)$ to the detector frame with a given cosmological model $\Omega$ to obtain the population distribution $p(m^z_1|\Lambda, \Omega)$ by
 \begin{widetext}
 \begin{equation}
     \begin{aligned}
@@ -173,17 +175,17 @@ We then transform $p(m_1|\Lambda)$ to the detector frame with a given cosmologic
     \label{eq:transformation}
 \end{equation}
 \end{widetext}
-where we assume the $m_1$ distribution does not evolve with $z$, and $\mathrm{det}$ represents whether the event is detectable or not.
+where $\mathrm{det}$ represents whether the event is detectable or not.
+We assume the $m_1$ distribution does not evolve with $z$.
 The selection effect is included in the derivation in Eq.~\eqref{eq:transformation}, specifically, the first term in the final expression, which is the selection function.
 Note that the selection function in general is a function of the detector-frame mass $m^z_1$, luminosity distance $d_L$, and mass ratio $q$.
-In this work, we marginalized over $q$ to study the primary mass distribution only.
+In this work, we marginalized over $q$ to study the $m_1$ population distribution only.
 Due to the censoring of the low and high mass events, we consider the selection function in the transformation instead of the reconstruction.
-
 With different $\Lambda$ or $\Omega$, the resulting $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ will be different.
 In Fig.~\ref{fig:simulation_transformation}, we show an example of the transformation.
 
 Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model, as well as the selection function.
-After obtaining $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, we can perform the \ac{PE} to infer the optimized $\Omega_j$ and $\Lambda_j$.
+After obtaining $p(m^z_1|\Lambda, \Omega, \mathrm{det})$, we can perform the \ac{PE} to infer the optimized $\Omega$ and $\Lambda$.
 
 \subsection{Parameter estimation}
 \label{sec:pe}
