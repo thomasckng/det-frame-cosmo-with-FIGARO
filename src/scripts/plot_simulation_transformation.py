@@ -19,7 +19,7 @@ colors = ['tab:green', 'tab:red', 'tab:orange']
 for i, c in zip([np.argmin(abs(H0-40)), np.argmin(abs(H0-70)), np.argmin(abs(H0-100))], colors):
     ax2.plot(mz, model_pdf[:,i]/np.trapz(model_pdf[:,i], mz), label=f"$H_0={H0[i]:.0f}$", c=c)
 ax2.set_xlabel('$m^z_1\ [\mathrm{M}_\odot]$')
-ax2.set_ylabel('$p(m^z_1|\Lambda, \Omega(H_0), \mathrm{det})$')
+ax2.set_ylabel('$p(m^z_1|\Lambda,\Omega(H_0),\mathrm{det})$')
 ax2.set_xlim(0,200)
 ax2.set_ylim(0)
 ax2.legend()
