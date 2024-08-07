@@ -80,6 +80,9 @@ Some other studies have made use of non-parametric methods with the spectral sir
 \todo{Summarize previous work, add references and compare with our work}
 
 Considering the increasing number of \ac{GW} events and the improvement of the detectors, we expect that the spectral siren method will give us an independent and precise measurement of $H_0$ which is comparable to the previous measurements \citep{Planck:2018vyg, Riess:2021jrx}.
+However, performing standard hierarchical Bayesian inference with the spectral siren method is computationally expensive, and it depends on the choice of the population model and the cosmological model.
+Our method provides an alternative to studying different models without performing lengthy hierarchical analysis.
+This allows us to explore more models before performing the full hierarchical Bayesian inference, which makes our method a powerful diagnostic tool for model selection.
 
 % Section outline
 In Sec.~\ref{sec:method}, we describe our modified method and the testing procedure.
@@ -95,7 +98,6 @@ In this section, we present the framework we developed to infer the cosmological
 \todo{Renew notations}
 
 \begin{table}
-    \label{tab:notation}
     \caption{Notation}
     \begin{ruledtabular}
         \begin{tabular}{c>{\raggedright\arraybackslash}p{0.8\linewidth}}
@@ -117,6 +119,7 @@ In this section, we present the framework we developed to infer the cosmological
             $\mathrm{det}$ & detectability of the \ac{GW} events \\
         \end{tabular}
     \end{ruledtabular}
+    \label{tab:notation}
 \end{table}
 
 Specifically, we propose two major modifications to the standard spectral siren method.
@@ -131,7 +134,6 @@ This separation allows us to explore the impact of different assumptions easily.
 The intermediate result of the first part can be reused as long as the data does not change, reducing the computational cost of the method.
 
 Our method consists of three main steps: the non-parametric reconstruction of the detector-frame observed population, the transformation of the source-frame population model to the detector frame, and the \ac{PE}.
-We show the flowchart of our method in Fig.~XXX. \todo{Add flowchart}
 
 \subsection{Non-parametric reconstruction of detector-frame observed population}
 \label{sec:reconstruction}
@@ -161,7 +163,6 @@ Note that, either a parametric model can be used to only assume the form of the 
 We then transform $p(m_1|\Lambda)$ to the detector frame with a given cosmological model $\Omega$ to obtain the detector-frame mass population $p(m^z_1|\Lambda, \Omega)$ by
 \begin{widetext}
 \begin{equation}
-    \label{eq:transformation}
     \begin{aligned}
         &p(m^z_1|\Lambda, \Omega, \mathrm{det}) \\
         &= \int p(m^z_1|m_1, z, \Lambda, \Omega, \mathrm{det}) p(m_1, z|\Lambda, \Omega, \mathrm{det}) \mathrm{d}m_1 \mathrm{d}z \\
@@ -169,16 +170,16 @@ We then transform $p(m_1|\Lambda)$ to the detector frame with a given cosmologic
         &= \frac{1}{p(\mathrm{det}|\Lambda, \Omega)}\int \delta(m^z_1-m_1(1+z))p(\mathrm{det}|m_1, z, \Omega)p(m_1|\Lambda)p(z|\Lambda) \mathrm{d}m_1 \mathrm{d}z \\
         &\propto \int p\left(\mathrm{det}\middle|\frac{m^z_1}{1+z},z,\Omega\right)p\left(\frac{m^z_1}{1+z}\middle|\Lambda\right)p(z|\Lambda) \mathrm{d}z\,,
     \end{aligned}
+    \label{eq:transformation}
 \end{equation}
 \end{widetext}
 where we assume the $m_1$ distribution does not evolve with $z$, and $\mathrm{det}$ represents whether the event is detectable or not.
-The selection effect is included in the derivation in eq.~\eqref{eq:transformation}, specifically, the first term in the final expression, which is the selection function.
+The selection effect is included in the derivation in Eq.~\eqref{eq:transformation}, specifically, the first term in the final expression, which is the selection function.
 Note that the selection function in general is a function of the detector-frame mass $m^z_1$, luminosity distance $d_L$, and mass ratio $q$.
 In this work, we marginalized over $q$ to study the primary mass distribution only.
 Due to the censoring of the low and high mass events, we consider the selection function in the transformation instead of the reconstruction.
 
-With different $\Omega$, the resulting $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ will be different.
-By considering a continuous set of $\Omega$ and  $\Lambda$ of the population model, we can obtain a set of $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, which is a set of continuous detector-frame observed population models for each combination of $\Omega_j$ and $\Lambda_j$, where $\mathbf{\Lambda} = \{\Lambda_j\}$ and $\mathbf{\Omega} = \{\Omega_j\}$.
+With different $\Lambda$ or $\Omega$, the resulting $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ will be different.
 In Fig.~\ref{fig:simulation_transformation}, we show an example of the transformation.
 
 Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model, as well as the selection function.
@@ -187,8 +188,8 @@ After obtaining $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$, we c
 \subsection{Parameter estimation}
 \label{sec:pe}
 
-With $p(m^z_1|\mathbf{\Theta})$ and $p(m^z_1|\mathbf{\Lambda}, \mathbf{\Omega}, \mathrm{det})$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
-The \ac{PE} is performed by comparing $p(m^z_1|\Theta_i)$ with $p(m^z_1|\Lambda_j, \Omega_j)$.
+With $p(m^z_1|\mathbf{\Theta})$ and $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
+The \ac{PE} is performed by comparing $p(m^z_1|\Theta_i)$ with $p(m^z_1|\Lambda, \Omega)$.
 To compare the two populations, we use the Jensen-Shannon distance $d_\mathrm{JS}$ as the distance measure.
 $d_\mathrm{JS}$ is calculated as
 \begin{equation}
@@ -197,11 +198,11 @@ $d_\mathrm{JS}$ is calculated as
 where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, and $D_\mathrm{KL}$ is the Kullback-Leibler divergence.
 $d_\mathrm{JS}$ is a symmetric and smoothed version of $D_\mathrm{KL}$, and it is bounded between 0 and 1.
 
-For each reconstructed distribution $p(m^z_1|\Theta_i)$, we find the optimized $\Lambda_j$ and $\Omega_j$ by minimizing $d_\mathrm{JS}$.
-For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX} algorithm. \todo{Add reference for the algorithm and scipy}
-This procedure gives us a set of optimized $\Lambda_i$ and $\Omega_j$ for each $\Theta_i$.
+For each reconstructed distribution $p(m^z_1|\Theta_i)$, we find an optimized $\Lambda_i$ and $\Omega_i$ by minimizing $d_\mathrm{JS}$.
+For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX} algorithm. \todo{Add reference for the algorithm}
 Note that we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the median of the $m^z_1$ posterior samples of each \ac{GW} event
 This is because the reconstruction is only valid in the region where observations are present.
+This procedure gives us a set of optimized $\Lambda_i$ and $\Omega_i$ for each $\Theta_i$.
 In Fig.~\ref{fig:simulation_comparison}, we show an illustration of the comparison between the two populations.
 
 The resulting distribution of the optimized parameters is not a posterior distribution in a Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
@@ -215,23 +216,33 @@ The analysis code is publicly available.\footnote{The analysis code is available
 \label{sec:mock_data}
 
 In this section, we test our method with a mock data study.
-To prepare the mock data, we first generated $10000$ sets of $m_1$ and $z$ samples from a \textsc{power law + peak} model for the $m_1$ distribution and uniform distribution over comoving volume and source-frame time (see, e.g., Eq.~11 in \cite{LIGOScientific:2019zcs}) for the $z$ distribution. \todo{Add reference for models}
+To prepare the mock data, we first generated $10000$ sets of $m_1$ and $z$ samples from a \textsc{power law + peak} distribution (see, e.g., Eq.~B4 in \cite{KAGRA:2021duu}) for the $m_1$ distribution and uniform distribution over comoving volume and source-frame time (see, e.g., Eq.~11 in \cite{LIGOScientific:2019zcs}) for the $z$ distribution.
 Here we assumed the $m_1$ distribution does not evolve with $z$.
 We then transformed the $m_1$ and $z$ samples to $m^z_1$ and $d_L$ samples.
 Here we chose the $\Lambda$CDM model with parameters consistent with the Planck 2018 results \cite{Planck:2018vyg} as the cosmological model for the transformation of the samples.
+
 After the transformation, we applied a selection function to the $m^z_1$ and $d_L$ samples.
 We chose the O3 selection function from \todo{add reference} as the selection function.
 Note that we marginalized over $q$ for the selection function, similar to the transformation in Sec.~\ref{sec:transformation}.
 After applying the selection function, there were $262$ sets of samples left.
+
 We then generated the $m^z_1$ posterior samples for each true $m^z_1$ sample by
 \begin{gather*}
     I \sim \mathcal{N}(0, 0.03)\,,\\
     P \sim \mathcal{N}(\log(T_t)+I, 0.03)\,,\\
     Y_t = \exp(P)\,,
 \end{gather*}
-where $\mathcal{N}(\mu, \sigma)$ is a normal distribution with mean $\mu$ and standard deviation $\sigma$, $I$ is the intrinsic error, $P$ is the posterior sample in the log space, $T_t$ is the true $m^z_1$ sample, and $Y_t$ is the posterior sample for the $t$-th \ac{GW} event.
+where $\mathcal{N}(\mu, \sigma)$ is a normal distribution with mean $\mu$ and standard deviation $\sigma$, $I$ is the difference between the true $m^z_1$ value and the measured mean in log space, $P$ is the posterior sample in the log space, $T_t$ is the true $m^z_1$ sample, and $Y_t$ is the posterior sample for the $t$-th \ac{GW} event.
+For each true $m^z_1$ sample, we draw a random $I$ and generate $1000$ $Y_t$ samples.
+This procedure ensures the posterior samples are positive.
+After preparing the mock data, we test our method with two cases: the inference of $H_0$ only and the inference of $H_0$ and a subset of the population model parameters.
 
-After preparing the mock data, we first performed the reconstruction of the observed $m^z_1$ population distribution with \textsc{figaro} as described in Sec.~\ref{sec:reconstruction}.
+\subsection{Inference of $H_0$}
+
+In this subsection, we first test our method with a simplified case where we only infer $H_0$.
+We assume the selection function, the true population model and its parameters, and the true cosmological model and its parameters except $H_0$ are known.
+
+We first performed the reconstruction of the observed $m^z_1$ population distribution with \textsc{figaro} as described in Sec.~\ref{sec:reconstruction}.
 The result of the reconstruction is shown in Fig.~\ref{fig:simulation_reconstruction}.
 
 \begin{figure}[h]
@@ -282,7 +293,6 @@ The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
     \label{fig:simulation_comparison}
 \end{figure}
 
-% $H_0$ only
 \begin{figure}[h]
     \script{plot_simulation_result_H0.py}
     \includegraphics[width=\linewidth]{figures/simulation_result_H0.pdf}
@@ -296,7 +306,13 @@ The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
     \label{fig:simulation_result_H0}
 \end{figure}
 
-% $H_0$ and $\Lambda$
+\subsection{Inference of $H_0$ and $\Lambda$}
+
+In this subsection, we test our method with a more realistic case where we infer $H_0$ and a subset of the population model parameters.
+Similar to the previous subsection, we assume only the free parameters are unknown.
+
+The reconstruction of the observed $m^z_1$ population distribution is the same as in the previous subsection.
+Note that the same reconstruction result can be reused, as the data does not change.
 
 \section{Real data}
 \label{sec:real_data}
@@ -305,17 +321,29 @@ Data from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}
 
 % Power law + peak
 
-\section{Discussion}
-\label{sec:discussion}
-
-% Comparison with other methods
-
 % PL+P issue
     % Gregoire Pierra's paper
 
-% Future directions
-    % Likelihood
-    % luminosity distance/redshift population 
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Comparison with previous work}
+\label{sec:comparison}
+% diagnostic tool
+% model selection
+
+\subsection{Future work}
+\label{sec:future_work}
+As mentioned in Sec.~\ref{sec:pe}, our method is not a Bayesian inference, as we only consider the optimization of the parameters.
+To perform a full Bayesian inference, we need to develop a likelihood function that considers the comparison of the two populations.
+With this likelihood, our method will give the same result as the standard hierarchical Bayesian inference, as long as the number of reconstructions is large enough.
+
+Another potential improvement is to consider not only the primary mass distribution.
+For example, we can consider the joint distribution of the primary mass and luminosity distance.
+The reconstruction of the joint observed distribution can also be performed in the current framework.
+However, we need a joint population model that considers both the primary mass and luminosity distance.
+Performing the analysis of the joint distribution will allow us to study mass population models that evolve with redshift.
+Furthermore, the inference of cosmological parameters will be more precise, as the information from the luminosity distance is also considered.
 
 \section{Conclusion}
 \label{sec:conclusion}
