@@ -1,4 +1,4 @@
-Paper repository for _XXX_ by Ng, Rinaldi & Hannuksela (2024).
+Paper repository for _Inferring cosmology from gravitational waves using non-parametric detector-frame mass distribution_ by Ng, Rinaldi & Hannuksela (2024).
 
 The paper can be reproduced programmatically from this repo using [_showyourwork_](http://show-your.work). Scripts to produce figures and tables can be found in [src/scripts](src/scripts), and data in XXX.
 
