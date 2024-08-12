@@ -204,7 +204,7 @@ For each reconstructed distribution $p(m^z_1|\Theta_i)$, we find an optimized $\
 For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX} algorithm. \todo{Add reference for the algorithm}
 Note that we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the median of the $m^z_1$ posterior samples of each \ac{GW} event
 This is because the reconstruction is only valid in the region where observations are present.
-This procedure gives us a set of optimized $\Lambda_i$ and $\Omega_i$ for each $\Theta_i$.
+As each reconstructed distribution is independent, the optimization can be performed in parallel easily, which reduces the runtime as long as computational resources are available.
 In Fig.~\ref{fig:simulation_comparison}, we show an illustration of the comparison between the two populations.
 
 The resulting distribution of the optimized parameters is not a posterior distribution in a Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
@@ -282,7 +282,6 @@ Finally, we performed the \ac{PE} to infer $H_0$.
 For this test specifically, instead of using the \textsc{scipy} optimization algorithm, we used a grid search to find the optimized $H_0$, as the parameter space is one-dimensional.
 Figure~\ref{fig:simulation_comparison} shows an illustration of the comparison between the reconstructed observed population and the transformed population for different $H_0$.
 For each $H_0$, we computed the $d_\mathrm{JS}$ between the two populations and found the optimized $H_0$ that minimizes $d_\mathrm{JS}$.
-The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
 
 \begin{figure}[h]
     \script{plot_simulation_comparison.py}
@@ -294,6 +293,9 @@ The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
     }
     \label{fig:simulation_comparison}
 \end{figure}
+
+The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
+The result shows that our method can recover the true $H_0$ we used to generate the mock data.
 
 \begin{figure}[h]
     \script{plot_simulation_result_H0.py}
@@ -312,9 +314,14 @@ The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
 
 In this subsection, we test our method with a more realistic case where we infer $H_0$ and a subset of the population model parameters.
 Similar to the previous subsection, we assume only the free parameters are unknown.
+We chose the power law index $\alpha$, the peak mass $\mu$, the peak width $\sigma$, and the peak weight $w$ as the free parameters.
+Other parameters are the minimum and maximum mass, as well as the smoothing index of the boundaries.
+These parameters might not be able to be inferred accurately with our method, as the reconstruction is only valid in the region where the samples are present and the reconstruction may be not accurate at the boundaries.
 
 The reconstruction of the observed $m^z_1$ population distribution is the same as in the previous subsection.
 Note that the same reconstruction result can be reused, as the data does not change.
+
+Following the same procedure as in the previous subsection, except that we use the \textsc{scipy} optimization algorithm mentioned in Sec.~\ref{sec:pe} in this example, we get the result of the \ac{PE} shown in Fig.~\todo{add figure}.
 
 \section{Real data}
 \label{sec:real_data}
@@ -331,8 +338,8 @@ Data from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}
 
 \subsection{Comparison with previous work}
 \label{sec:comparison}
-% diagnostic tool
-% model selection
+% diagnostic tool & model selection
+
 
 \subsection{Future work}
 \label{sec:future_work}
@@ -353,11 +360,8 @@ Furthermore, the inference of cosmological parameters will be more precise, as t
 \begin{acknowledgments}
 T.~N.~ and S.~R.~ acknowledge financial support from the German Excellence Strategy via the Heidelberg Cluster of Excellence (EXC 2181 - 390900948) STRUCTURES.
 S.~R.~ acknowledges financial support from the European Research Council for the ERC Consolidator grant DEMOBLACK, under contract no. 770017. 
-
 This research made use of the bwForCluster Helix: the authors acknowledge support by the state of Baden-Württemberg through bwHPC and the German Research Foundation (DFG) through grant INST 35/1597-1 FUGG.
-
 This research has made use of data or software obtained from the Gravitational Wave Open Science Center (gwosc.org), a service of the LIGO Scientific Collaboration, the Virgo Collaboration, and KAGRA. This material is based upon work supported by NSF's LIGO Laboratory which is a major facility fully funded by the National Science Foundation, as well as the Science and Technology Facilities Council (STFC) of the United Kingdom, the Max-Planck-Society (MPS), and the State of Niedersachsen/Germany for support of the construction of Advanced LIGO and construction and operation of the GEO600 detector. Additional support for Advanced LIGO was provided by the Australian Research Council. Virgo is funded, through the European Gravitational Observatory (EGO), by the French Centre National de Recherche Scientifique (CNRS), the Italian Istituto Nazionale di Fisica Nucleare (INFN) and the Dutch Nikhef, with contributions by institutions from Belgium, Germany, Greece, Hungary, Ireland, Japan, Monaco, Poland, Portugal, Spain. KAGRA is supported by Ministry of Education, Culture, Sports, Science and Technology (MEXT), Japan Society for the Promotion of Science (JSPS) in Japan; National Research Foundation (NRF) and Ministry of Science and ICT (MSIT) in Korea; Academia Sinica (AS) and National Science and Technology Council (NSTC) in Taiwan.
-
 This paper was compiled using \textsc{showyourwork} \cite{Luger2021} to facilitate reproducibility.
 
 \end{acknowledgments}
