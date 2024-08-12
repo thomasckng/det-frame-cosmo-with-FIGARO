@@ -11,7 +11,7 @@ draws = load_density(outdir / f'draws/draws_observed_{label}.json')
 mz, H0, z, m, model_pdf = np.load(paths.data / 'grid.npz').values()
 bounds = np.loadtxt(outdir / "jsd_bounds.txt")
 
-fig = plot_median_cr(draws, hierarchical=True, save=True, show=False)
+fig = plot_median_cr(draws, hierarchical=True, save=True, show=False, median_label='$p(m^z_1|\mathbf{\Theta})$')
 ax = fig.axes[0]
 colors = ['tab:green', 'tab:red', 'tab:orange']
 for i, c in zip([np.argmin(abs(H0-40)), np.argmin(abs(H0-70)), np.argmin(abs(H0-100))], colors):
