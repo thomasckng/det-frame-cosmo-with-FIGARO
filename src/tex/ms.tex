@@ -240,6 +240,7 @@ This procedure ensures the posterior samples are positive.
 After preparing the mock data, we test our method with two cases: the inference of $H_0$ only and the inference of $H_0$ and a subset of the population model parameters.
 
 \subsection{Inference of $H_0$}
+\label{sec:inference_H0}
 
 In this subsection, we first test our method with a simplified case where we only infer $H_0$ to demonstrate the basic idea of our method.
 We assume the selection function, the true population model and its parameters, and the true cosmological model and its parameters except $H_0$ are known.
@@ -311,6 +312,7 @@ The result shows that our method can recover the true $H_0$ we used to generate 
 \end{figure}
 
 \subsection{Inference of $H_0$ and $\Lambda$}
+\label{sec:inference_multi}
 
 In this subsection, we test our method with a more realistic case where we infer $H_0$ and a subset of the population model parameters.
 Similar to the previous subsection, we assume only the free parameters are unknown.
@@ -322,6 +324,10 @@ The reconstruction of the observed $m^z_1$ population distribution is the same a
 Note that the same reconstruction result can be reused, as the data does not change.
 
 Following the same procedure as in the previous subsection, except that we use the \textsc{scipy} optimization algorithm mentioned in Sec.~\ref{sec:pe} in this example, we get the result of the \ac{PE} shown in Fig.~\todo{add figure}.
+The result shows that our method can infer multiple parameters simultaneously.
+
+In principle, more parameters can be inferred with our method, for example, the present mass density $\Omega_m$ in the $\Lambda$CDM model.
+However, the optimization procedure becomes more computationally expensive as the number of parameters increases.
 
 \section{Real data}
 \label{sec:real_data}
@@ -341,8 +347,8 @@ Data from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}
 % diagnostic tool & model selection
 
 
-\subsection{Future work}
-\label{sec:future_work}
+\subsection{Prospective improvements}
+\label{sec:prospective}
 As mentioned in Sec.~\ref{sec:pe}, our method is not a Bayesian inference, as we only consider the optimization of the parameters.
 To perform a full Bayesian inference, we need to develop a likelihood function that considers the comparison of the two populations.
 With this likelihood, our method will give the same result as the standard hierarchical Bayesian inference, as long as the number of reconstructions is large enough.
@@ -353,6 +359,12 @@ The reconstruction of the joint observed distribution can also be performed in t
 However, we need a joint population model that considers both the primary mass and luminosity distance.
 Performing the analysis of the joint distribution will allow us to study mass population models that evolve with redshift.
 Furthermore, the inference of cosmological parameters will be more precise, as the information from the luminosity distance is also considered.
+
+We also mentioned a limitation of the method in Sec.~\ref{sec:inference_multi}.
+The runtime of the optimization procedure scales with the number of parameters.
+To perform higher dimensional analysis, we need to study using, instead of $d_\mathrm{JS}$, other distance measures that allow for faster optimization.
+Either a distance measure that gives a simpler geometry to be optimized or a distance measure that can be calculated faster will be useful.
+Other optimization algorithms should also be considered to allow for higher dimensional analysis and faster runtime.
 
 \section{Conclusion}
 \label{sec:conclusion}
