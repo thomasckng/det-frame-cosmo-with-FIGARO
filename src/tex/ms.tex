@@ -1,12 +1,9 @@
-\documentclass[aps,prd,twocolumn,superscriptaddress,preprintnumbers,nofootinbib,hidelinks]{revtex4-2}
+\documentclass[twocolumn]{aastex631}
 
 \usepackage{showyourwork}
 \usepackage{amsfonts,amssymb,amsmath}
 \usepackage[nolist,nohyperlinks]{acronym}
 \usepackage{bookmark}
-\usepackage{orcidlink}
-\usepackage{mathtools}
-\usepackage{array}
 
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 \newcommand{\ste}[1]{\textcolor{blue}{[Ste: #1]}}
@@ -15,18 +12,18 @@
 
 \title{Inferring cosmology from gravitational waves using non-parametric detector-frame mass distribution}
 
-\author{Thomas~C.~K.~Ng\,\orcidlink{0000-0002-9491-1598}}
-\email{thomas.ng@link.cuhk.edu.hk}
+\author[0000-0002-9491-1598]{Thomas~C.~K.~Ng}
 \affiliation{Department of Physics, The Chinese University of Hong Kong, Shatin, Hong Kong}
 
-\author{Stefano~Rinaldi\,\orcidlink{0000-0001-5799-4155}}
-\email{stefano.rinaldi@uni-heidelberg.de}
+\author[0000-0001-5799-4155]{Stefano~Rinaldi}
 \affiliation{Institut~für~Theoretische~Astrophysik, ZAH, Universität~Heidelberg, Albert-Ueberle-Stra{\ss}e~2, 69120 Heidelberg, Germany}
 \affiliation{Dipartimento di Fisica e Astronomia ``G. Galilei'', Università di Padova, Via Marzolo 8, 35122 Padova, Italy}
 
-\author{Otto~A.~Hannuksela\,\orcidlink{0000-0002-3887-7137}}
-\email{hannuksela@phy.cuhk.edu.hk}
+\author[0000-0002-3887-7137]{Otto~A.~Hannuksela}
 \affiliation{Department of Physics, The Chinese University of Hong Kong, Shatin, Hong Kong}
+
+\correspondingauthor{Thomas~C.~K.~Ng}
+\email{thomas.ng@link.cuhk.edu.hk}
 
 \begin{abstract}
     The challenge of understanding the Universe's dynamics, particularly the Hubble tension, requires precise measurements of the Hubble constant.
@@ -35,7 +32,7 @@
     \todo{Rewrite abstract}
 \end{abstract}
 
-\maketitle
+% \maketitle
 
 \begin{acronym}
     \acro{GW}{gravitational-wave}
@@ -53,13 +50,14 @@
 
 % Motivation
 In recent years, the precision of cosmological measurements has improved significantly, leading to the discovery of the Hubble tension, a discrepancy between the value of the Hubble constant $H_0$ inferred from the \ac{CMB} \citep{Planck:2018vyg} and local measurements \citep{Riess:2021jrx}.
-This tension has motivated the search for new methods to measure $H_0$ with high precision, and \ac{GW} sources have emerged as a promising tool for this purpose.
+This tension has motivated the search for new methods to measure $H_0$ with high precision, and \ac{GW} sources have emerged as a promising tool for this purpose \citep{LIGOScientific:2017adf, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
+
 To infer $H_0$ from \ac{GW} sources, one needs not only the luminosity distance which can be inferred from the signal but also the redshift of the source.
 Some \ac{GW} sources can be associated with \ac{EM} counterparts, allowing for the measurement of the redshift, e.g., GW170817 \citep{LIGOScientific:2017adf, Guidorzi:2017ogy}.
 However, most \ac{GW} sources do not have \ac{EM} counterparts.
-In this case, one can assume \ac{GW} sources are in galaxies and associate the redshift of the galaxy to the \ac{GW} source. \citep{Schutz:1986gp, DelPozzo:2011vcw, Gray:2019ksv, Gray:2023wgj}
+In this case, one can assume \ac{GW} sources are in galaxies and associate the redshift of the galaxy to the \ac{GW} source \citep{Schutz:1986gp, DelPozzo:2011vcw, Gray:2019ksv, Gray:2023wgj}.
 Another alternative method is to use population statistics to infer $H_0$ by marginalizing the redshift distribution of the sources.
-This method is known as the spectral siren method\citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
+This method is known as the spectral siren method \citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
 
 % Previous work
 The fundamental idea of the spectral siren method is to infer cosmology by comparing the observed mass population distribution with the intrinsic mass population distribution since the observed distribution is redshifted due to the expansion of the Universe.
@@ -85,7 +83,7 @@ Our method provides an alternative to studying different models without performi
 This allows us to explore more models before performing the full hierarchical Bayesian inference, which makes our method a powerful diagnostic tool for model selection.
 
 % Section outline
-In Sec.~\ref{sec:method}, we describe our modified method and the testing procedure.
+In Sec.~\ref{sec:method}, we describe our modified method.
 In Sec.~\ref{sec:mock_data}, we present the analysis setup and results of the mock data study.
 In Sec.~\ref{sec:real_data}, we apply our method to the real data from the \ac{LVK}.
 In Sec.~\ref{sec:discussion}, we compare our results with other methods and discuss future directions.
@@ -96,12 +94,11 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 \label{sec:method}
 In this section, we present the framework we developed to infer both the intrinsic population model and the cosmological model simultaneously by leveraging the detector-frame mass population distribution.
 In the remainder of this Section, we will make use of the notation summarized in Table~\ref{tab:notation}, mutuated from \citet{Rinaldi:2021bhm, Rinaldi:2022kyg}.
-\todo{Renew notations}
 
 \begin{table}
     \caption{Notation}
     \begin{ruledtabular}
-        \begin{tabular}{c>{\raggedright\arraybackslash}p{0.8\linewidth}}
+        \begin{tabular}{c>{\raggedright\arraybackslash}p{0.7\linewidth}}
             Notation & Description \\
             \hline
             $m_1$ & Primary mass of the \ac{GW} sources in the source frame \\
@@ -141,9 +138,11 @@ Our method consists of three main steps: the non-parametric reconstruction of th
 \label{sec:reconstruction}
 
 The first step of our method is to reconstruct the detector-frame observed population.
-we choose to consider the primary mass $m_1$ of the \ac{BBH} sources, in principle, we can consider more parameters at once.
-From the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the observed detector-frame primary mass population distribution.
+we choose to consider the primary mass $m_1$ of the \ac{BBH} sources, as we want to study the cosmological parameters with the spectral siren method.
+In principle, we can consider more parameters at once by reconstructing not only a single-parameter observed distribution but instead a multi-parameter observed distribution.
+However, that will require a more sophisticated population model in the later steps, which is beyond the scope of this work.
 
+With the posterior samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the observed detector-frame primary mass population distribution.
 We use the \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed $m^z_1$ population distribution $p(m^z_1|\mathbf{\Theta})$.
 The \ac{(H)DPGMM} is a hierarchy of Gaussian mixture models with a Dirichlet process prior, which allows the model to be flexible to reconstruct arbitrary population distribution from posterior samples.
 To perform the reconstruction, we use the package \textsc{figaro}\footnote{\textsc{figaro} is publicly available at \url{https://github.com/sterinaldi/FIGARO} and via \texttt{pip}.} \citep{Rinaldi:2024eep}.
@@ -218,10 +217,10 @@ The analysis code is publicly available.\footnote{The analysis code is available
 \label{sec:mock_data}
 
 In this section, we test our method with a mock data study.
-To prepare the mock data, we first generated $10000$ sets of $m_1$ and $z$ samples from a \textsc{power law + peak} distribution (see, e.g., Eq.~B4 in \cite{KAGRA:2021duu}) for the $m_1$ distribution and uniform distribution over comoving volume and source-frame time (see, e.g., Eq.~11 in \cite{LIGOScientific:2019zcs}) for the $z$ distribution.
+To prepare the mock data, we first generated $10000$ sets of $m_1$ and $z$ samples from a \textsc{power law + peak} distribution (see, e.g., Eq.~B4 in \cite{KAGRA:2021duu}) for the $m_1$ distribution and uniform distribution over comoving volume and source-frame time (see, e.g., Eq.~11 in \citet{LIGOScientific:2019zcs}) for the $z$ distribution.
 Here we assumed the $m_1$ distribution does not evolve with $z$.
 We then transformed the $m_1$ and $z$ samples to $m^z_1$ and $d_L$ samples.
-Here we chose the $\Lambda$CDM model with parameters consistent with the Planck 2018 results \cite{Planck:2018vyg} as the cosmological model for the transformation of the samples.
+Here we chose the $\Lambda$CDM model with parameters consistent with the Planck 2018 results \citep{Planck:2018vyg} as the cosmological model for the transformation of the samples.
 
 After the transformation, we applied a selection function to the $m^z_1$ and $d_L$ samples.
 We chose the O3 selection function from \todo{add reference} as the selection function.
@@ -345,7 +344,6 @@ Data from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}
 \subsection{Comparison with previous work}
 \label{sec:comparison}
 % diagnostic tool & model selection
-
 
 \subsection{Prospective improvements}
 \label{sec:prospective}
