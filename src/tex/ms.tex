@@ -45,7 +45,6 @@
     \acro{EM}{electromagnetic}
     \acro{(H)DPGMM}{hierarchy of Dirichlet process Gaussian mixture models}
     \acro{BBH}{binary black hole}
-    \acro{GWTC-3}{the third Gravitational-Wave Transient Catalog}
 \end{acronym}
 
 \section{Introduction}
@@ -95,6 +94,7 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 
 \section{Method}
 \label{sec:method}
+
 In this section, we present the framework we developed to infer both the intrinsic population model and the cosmological model simultaneously by leveraging the detector-frame mass population distribution.
 In the remainder of this Section, we will make use of the notation summarized in Table~\ref{tab:notation}, mutated from \citet{Rinaldi:2021bhm, Rinaldi:2022kyg}.
 
@@ -220,10 +220,10 @@ The analysis code is publicly available.\footnote{The analysis code is available
 \label{sec:mock_data}
 
 In this section, we test our method with a mock data study.
-To prepare the mock data, we first generated $10000$ sets of $m_1$ and $z$ samples from a \textsc{power law + peak} distribution (see, e.g., Eq.~B4 in \cite{KAGRA:2021duu}) for the $m_1$ distribution and uniform distribution over comoving volume and source-frame time (see, e.g., Eq.~11 in \citet{LIGOScientific:2019zcs}) for the $z$ distribution.
+To prepare the mock data, we first generated $10000$ sets of $m_1$ and $z$ samples from a \textsc{power law + peak} distribution (see, e.g., Eq.~B4 in \cite{KAGRA:2021duu}) for the $m_1$ distribution and uniform distribution over comoving volume and source-frame time (see, e.g., Eq.~8 in \cite{KAGRA:2021duu}) for the $z$ distribution.
 Here we assumed the $m_1$ distribution does not evolve with $z$.
 We then transformed the $m_1$ and $z$ samples to $m^z_1$ and $d_L$ samples.
-Here we chose the $\Lambda$CDM model with parameters consistent with the Planck 2018 results \citep{Planck:2018vyg} as the cosmological model for the transformation of the samples.
+Here we chose the $\Lambda$CDM model with parameters consistent with the results in \citet{Planck:2018vyg} as the cosmological model for the transformation of the samples.
 
 After the transformation, we applied a selection function to the $m^z_1$ and $d_L$ samples.
 We chose the O3 selection function from \todo{add reference} as the selection function.
@@ -319,13 +319,15 @@ The result shows that our method can recover the true $H_0$ we used to generate 
 In this subsection, we test our method with a more realistic case where we infer $H_0$ and a subset of the population model parameters.
 Similar to the previous subsection, we assume only the free parameters are unknown.
 Other than $H_0$, we also chose the power law index $\alpha$, the peak mass $\mu$, the peak width $\sigma$, and the peak weight $w$ of the \textsc{power law + peak} model as the free parameters.
-Fixed parameters are the minimum and maximum mass, as well as the smoothing index of the boundaries.
+Fixed parameters are the minimum and maximum mass, as well as the range of mass tapering at the low mass end.
 We may not be able to infer these fixed parameters accurately with our method, as the reconstruction is only valid in the region where the samples are present and the reconstruction may be not accurate at the boundaries depending on the boundary features of the observed population\footnote{As we are using a Gaussian mixture model to reconstruct the observed population, the reconstruction may not be accurate at the boundaries if the observed population has sharp features at the boundaries.}.
 
 The reconstruction of the observed $m^z_1$ population distribution is the same as in the previous subsection.
 Note that the same reconstruction result can be reused, as the data does not change.
 
-Following the same procedure as in the previous subsection, except that we use the \textsc{scipy} optimization algorithm mentioned in Sec.~\ref{sec:pe} in this example, we get the result of the \ac{PE} shown in Fig.~\todo{add figure}.
+In this example, instead of transforming the source-frame population model to the detector frame and performing a grid search, we define a function that calculates $d_\mathrm{JS}$ for a given set of the free parameters.
+We then use the \textsc{scipy} optimization algorithm mentioned in Sec.~\ref{sec:pe} to find the optimized free parameters that minimize $d_\mathrm{JS}$.
+The result of the \ac{PE} is shown in Fig.~\todo{add figure}.
 The result shows that our method can infer multiple parameters simultaneously.
 
 In principle, more parameters can be inferred with our method, for example, the present mass density $\Omega_m$ in the $\Lambda$CDM model.
@@ -335,9 +337,21 @@ However, the optimization procedure becomes more computationally expensive as th
 \label{sec:real_data}
 
 In this section, we apply our method to the real data from the \ac{LVK}.
-We use the data from \ac{GWTC-3} \citep{LIGOScientific:2019lzm, KAGRA:2023pio}.
+We included the \ac{GW} events considered in \citet{KAGRA:2021duu}.
 
-% Power law + peak
+We first performed the reconstruction of the observed $m^z_1$ population distribution with \textsc{figaro} as described in Sec.~\ref{sec:reconstruction}.
+We use the posterior samples of the \ac{GW} events from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}.
+The result of the reconstruction is shown in Fig.~\todo{add figure}.
+
+Next, we chose the \textsc{power law + peak} model as the source-frame population model $\Lambda$ and the $\Lambda$CDM model as the cosmological model $\Omega$.
+Similar to Sec.~\ref{sec:inference_multi}, we fixed some parameters of the population model and the cosmological model.
+For the cosmological model, we fixed the parameters to the results from \citet{Planck:2018vyg} except $H_0$.
+For the population model, we fixed the minimum and maximum mass, as well as the range of mass tapering at the low mass end to the results from \citet{KAGRA:2021duu}.
+Note that the fixed parameters are not necessarily the true values\footnote{Result from \citet{KAGRA:2021duu} assumes a cosmological model to infer the population model parameters.}, but they can be considered as a reasonable guess for the parameters.
+The fixed parameters are shown in Table~\todo{add table}.
+
+We then perform the remaining steps similar to Sec.~\ref{sec:inference_multi}.
+The result of the \ac{PE} is shown in Fig.~\todo{add figure} and Fig.~\todo{add figure}.
 
 % PL+P issue
     % Gregoire Pierra's paper
@@ -351,6 +365,7 @@ We use the data from \ac{GWTC-3} \citep{LIGOScientific:2019lzm, KAGRA:2023pio}.
 
 \subsection{Prospective improvements}
 \label{sec:prospective}
+
 As mentioned in Sec.~\ref{sec:pe}, our method is not a Bayesian inference, as we only consider the optimization of the parameters.
 To perform a full Bayesian inference, we need to develop a likelihood function that considers the comparison of the two populations.
 With this likelihood, our method will give the same result as the standard hierarchical Bayesian inference, as long as the number of reconstructions is large enough.
@@ -372,11 +387,13 @@ Other optimization algorithms should also be considered to allow for higher dime
 \label{sec:conclusion}
 
 \begin{acknowledgments}
+
 T.~N.~ and S.~R.~ acknowledge financial support from the German Excellence Strategy via the Heidelberg Cluster of Excellence (EXC 2181 - 390900948) STRUCTURES.
 S.~R.~ acknowledges financial support from the European Research Council for the ERC Consolidator grant DEMOBLACK, under contract no. 770017. 
 This research made use of the bwForCluster Helix: the authors acknowledge support by the state of Baden-Württemberg through bwHPC and the German Research Foundation (DFG) through grant INST 35/1597-1 FUGG.
 This research has made use of data or software obtained from the Gravitational Wave Open Science Center (gwosc.org), a service of the LIGO Scientific Collaboration, the Virgo Collaboration, and KAGRA. This material is based upon work supported by NSF's LIGO Laboratory which is a major facility fully funded by the National Science Foundation, as well as the Science and Technology Facilities Council (STFC) of the United Kingdom, the Max-Planck-Society (MPS), and the State of Niedersachsen/Germany for support of the construction of Advanced LIGO and construction and operation of the GEO600 detector. Additional support for Advanced LIGO was provided by the Australian Research Council. Virgo is funded, through the European Gravitational Observatory (EGO), by the French Centre National de Recherche Scientifique (CNRS), the Italian Istituto Nazionale di Fisica Nucleare (INFN) and the Dutch Nikhef, with contributions by institutions from Belgium, Germany, Greece, Hungary, Ireland, Japan, Monaco, Poland, Portugal, Spain. KAGRA is supported by Ministry of Education, Culture, Sports, Science and Technology (MEXT), Japan Society for the Promotion of Science (JSPS) in Japan; National Research Foundation (NRF) and Ministry of Science and ICT (MSIT) in Korea; Academia Sinica (AS) and National Science and Technology Council (NSTC) in Taiwan.
 This paper was compiled using \textsc{showyourwork} \cite{Luger2021} to facilitate reproducibility.
+
 \end{acknowledgments}
 
 \bibliography{bib}
