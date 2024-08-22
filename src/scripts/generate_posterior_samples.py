@@ -31,7 +31,7 @@ with open(paths.data/'selection_function.pkl', 'rb') as f: # selection_function.
 def selection_function(x):
     return selfunc_interp(x)
 
-n_single_event_draws = 10_000
+n_single_event_draws = 20_000
 outdir = 'simulation'
 if not os.path.exists(paths.data / outdir):
     os.makedirs(paths.data / outdir)

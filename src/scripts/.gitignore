@@ -12,3 +12,5 @@
 *.err
 *.log
 *.txt
+
+condor
