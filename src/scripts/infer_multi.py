@@ -13,7 +13,7 @@ import os
 def p_z(z, H0):
     return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)/(1+z)
 
-if len(sys.argv) < 5:
+if len(sys.argv) < 6:
     print("Invalid number of arguments!")
     sys.exit(1)
 
@@ -92,10 +92,10 @@ def minimize_and_save(i):
     np.save(outdir+'/checkpoints/'+sys.argv[1]+'_'+sys.argv[2]+'_'+str(i), minimize(i))
     return i
 
-n_pool = int(sys.argv[4])
+n_pool = int(sys.argv[5])
 
-label = sys.argv[3]
-outdir = os.path.dirname(os.path.realpath(__file__)) + "/" + label
+label = sys.argv[4]
+outdir = sys.argv[3] + "/" + label
 
 mz = np.linspace(1,200,900)
 H0 = np.linspace(5,150,1000)
