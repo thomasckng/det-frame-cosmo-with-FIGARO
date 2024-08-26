@@ -116,5 +116,5 @@ for event in tqdm.tqdm(events):
         mass_min_min = min(mass_min_min, min(result_lvk['mass_1']))
         mass_max_max = max(mass_max_max, max(result_lvk['mass_1']))
         np.savetxt(paths.data/f'real/data/{event}.txt', result_lvk['mass_1'])
-np.savetxt(paths.data/'jsd_bounds.txt', [mass_med_min, mass_med_max])
+np.savetxt(paths.data/'real/jsd_bounds.txt', [mass_med_min, mass_med_max])
 print(f"Mass sample bounds: {mass_min_min}, {mass_max_max}")
