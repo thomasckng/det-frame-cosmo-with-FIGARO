@@ -14,7 +14,7 @@ import dill
 def p_z(z, H0):
     return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)/(1+z)
 
-if len(sys.argv) < 6:
+if len(sys.argv) != 5:
     print("Invalid number of arguments!")
     sys.exit(1)
 
