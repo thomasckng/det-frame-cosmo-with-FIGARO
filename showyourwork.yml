@@ -30,6 +30,7 @@ datasets:
       grid.npz: src/data/grid.npz
       jsd_bounds.txt: src/data/simulation/jsd_bounds.txt
       obs_samples.txt: src/data/simulation/obs_samples.txt
+      true_samples.txt: src/data/simulation/true_samples.txt
       H0s.txt: src/data/simulation/H0s.txt
       draws_observed_simulation.json: src/data/simulation/draws/draws_observed_simulation.json
 
