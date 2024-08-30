@@ -50,7 +50,6 @@
 \section{Introduction}
 \label{sec:introduction}
 
-% Motivation
 In recent years, the precision of cosmological measurements has improved significantly, leading to the discovery of the Hubble tension, a discrepancy between the value of the Hubble constant $H_0$ inferred from the \ac{CMB} \citep{Planck:2018vyg} and local measurements \citep{Riess:2021jrx}.
 This tension has motivated the search for new methods to measure $H_0$ with high precision, and \ac{GW} sources have emerged as a promising tool for this purpose \citep{LIGOScientific:2017adf, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
 
@@ -61,14 +60,12 @@ In this case, one can assume \ac{GW} sources are in galaxies and associate the r
 Another alternative method is to use population statistics to infer $H_0$ by marginalizing the redshift distribution of the sources.
 This method is known as the spectral siren method \citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
 
-% Previous work
 The fundamental idea of the spectral siren method is to infer cosmology by comparing the observed mass population distribution with the intrinsic mass population distribution since the observed distribution is redshifted due to the expansion of the Universe.
 Assumptions about the intrinsic population model and cosmological model are required to perform the comparison.
 Previous studies often infer either the intrinsic population model or the cosmological model, but not both simultaneously, due to the expensive computational cost.
 \todo{Summarize previous work and add references}
 However, the intrinsic population model and the cosmological model are degenerate in general, and it is necessary to infer both simultaneously.
 
-% Non-parametric methods
 To address this issue, we study an alternative method making use of non-parametric methods.
 Non-parametric methods allow us to reconstruct arbitrary probability densities without making assumptions about the form of the distribution.
 In our context, we can use non-parametric methods to reconstruct the observed mass population distribution directly from the data.
@@ -84,7 +81,6 @@ However, performing standard hierarchical Bayesian inference with the spectral s
 Our method provides an alternative to studying different models without performing lengthy hierarchical analysis.
 This allows us to explore more models before performing the full hierarchical Bayesian inference, which makes our method a powerful diagnostic tool for model selection.
 
-% Section outline
 In Sec.~\ref{sec:method}, we describe our modified method in detail.
 In Sec.~\ref{sec:mock_data}, we present the analysis setup and results of the mock data study.
 In Sec.~\ref{sec:real_data}, we apply our method to the real data from the \ac{LVK}.
