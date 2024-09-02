@@ -51,8 +51,8 @@ dependencies:
   src/scripts/plot_simulation_result_H0.py:
     - src/data/simulation/H0s.txt
   src/scripts/plot_real_reconstruction.py:
-    - src/data/simulation/draws/draws_observed_real.json
-    - src/data/simulation/samples_med.txt
+    - src/data/real/draws/draws_observed_real.json
+    - src/data/real/samples_med.txt
   src/tex/ms.tex:
     - src/tex/bib.bib
 
