@@ -99,6 +99,7 @@ events = [\
 
 mass_med_min, mass_med_max = 0, 0
 mass_min_min, mass_max_max = 0, 0
+med_all = []
 for event in tqdm.tqdm(events):
     h5_paths = find('*' + str(event) + '*' + 'nocosmo.h5', sys.argv[1])
     if len(h5_paths) == 0:
@@ -111,10 +112,13 @@ for event in tqdm.tqdm(events):
             f = f['C01:IMRPhenomXPHM']
             result_lvk = pd.DataFrame.from_records(f["posterior_samples"][()])
             result_lvk = result_lvk.sample(n=n_samples, random_state=seed)
-        mass_med_min = min(mass_med_min, np.median(result_lvk['mass_1']))
-        mass_med_max = max(mass_med_max, np.median(result_lvk['mass_1']))
+        event_med = np.median(result_lvk['mass_1'])
+        med_all.append(event_med)
+        mass_med_min = min(mass_med_min, event_med)
+        mass_med_max = max(mass_med_max, event_med)
         mass_min_min = min(mass_min_min, min(result_lvk['mass_1']))
         mass_max_max = max(mass_max_max, max(result_lvk['mass_1']))
         np.savetxt(paths.data/f'real/data/{event}.txt', result_lvk['mass_1'])
+np.savetxt(paths.data/'real/samples_med.txt', med_all)
 np.savetxt(paths.data/'real/jsd_bounds.txt', [mass_med_min, mass_med_max])
 print(f"Mass sample bounds: {mass_min_min}, {mass_max_max}")
