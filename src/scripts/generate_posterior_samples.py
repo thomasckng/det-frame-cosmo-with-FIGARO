@@ -5,7 +5,7 @@ import os
 import dill
 import paths
 
-np.random.default_rng(12345)
+np.random.default_rng(1234)
 
 # Mass distribution
 from population_models.mass import plpeak # from https://github.com/thomasckng/pop_models_lvk

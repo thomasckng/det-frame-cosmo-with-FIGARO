@@ -23,39 +23,42 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
         print("Invalid number of arguments!")
         sys.exit(1)
 
+    bounds_dict = {
+        "H0": (10, 300),
+        "alpha": (1.01, 10),
+        "mu": (10, 70),
+        "sigma": (0.01, 10),
+        "w": (0, 1),
+        "delta": (0.01, 20),
+        "mmin": (1, 10)
+    }
+
     if sys.argv[1] == "2a":
-        x0 = [uni(10,200), uni(1.01,5)]
-        bounds = ((10,200), (1.01,5))
+        bounds = bounds_dict["H0"], bounds_dict["alpha"]
         def plp(m, x):
             return plpeak(m, alpha=x[0])
     elif sys.argv[1] == "2b":
-        x0 = [uni(10,200), uni(10,50)]
-        bounds = ((10,200), (10,50))
+        bounds = bounds_dict["H0"], bounds_dict["mu"]
         def plp(m, x):
             return plpeak(m, mu=x[0])
     elif sys.argv[1] == "4a":
-        x0 = [uni(10,200), uni(10,50), uni(0.01,10), uni(0.01,15)]
-        bounds = ((10,200), (10,50), (0.01,10), (0.01,15))
+        bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["delta"]
         def plp(m, x):
             return plpeak(m, mu=x[0], sigma=x[1], delta=x[2])
     elif sys.argv[1] == "4b":
-        x0 = [uni(10,200), uni(1.01,5), uni(10,50), uni(0.01,10)]
-        bounds = ((10,200), (1.01,5), (10,50), (0.01,10))
+        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2])
     elif sys.argv[1] == "5a":
-        x0 = [uni(10,200), uni(1.01,5), uni(10,50), uni(0.01,10), uni(0,1)]
-        bounds = ((10,200), (1.01,5), (10,50), (0.01,10), (0,1))
+        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3])
     elif sys.argv[1] == "5b":
-        x0 = [uni(10,200), uni(1.01,5), uni(10,50), uni(1,10), uni(0,1)]
-        bounds = ((10,200), (1.01,5), (10,50), (1,10), (0,1))
+        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["mmin"], bounds_dict["w"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], mmin=x[2], w=x[3])
     elif sys.argv[1] == "6":
-        x0 = [uni(10,200), uni(1.01,5), uni(10,50), uni(0.01,10), uni(0,1), uni(0.01,15)]
-        bounds = ((10,200), (1.01,5), (10,50), (0.01,10), (0,1), (0.01,15))
+        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3], delta=x[4])
     else:
@@ -86,6 +89,7 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
         from scipy.optimize import minimize as scipy_minimize
 
         def minimize(i):
+            x0 = [uni(*bounds[j]) for j in range(len(bounds))]
             return scipy_minimize(jsd, x0=x0, bounds=bounds, args=(i,), method=method).x
         
     elif sys.argv[2] == "CMA-ES":
@@ -93,6 +97,7 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
         import cma
 
         def minimize(i):
+            x0 = [uni(*bounds[j]) for j in range(len(bounds))]
             return cma.fmin2(jsd, x0, 1, {'bounds': np.array(bounds).T.tolist(), 'CMA_stds': np.array(bounds).T[1]/4}, args=(i,))[0]
 
 
@@ -101,8 +106,9 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
         sys.exit(1)
 
     def minimize_and_save(i):
-        np.save(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}', minimize(i))
-        return i
+        result = minimize(i)
+        np.save(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}', result)
+        return result
 
     mz = np.linspace(1,200,900)
     H0 = np.linspace(5,150,1000)
@@ -129,16 +135,20 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
             remaining.remove(i)
     print(f"Remaining number of draws: {str(len(remaining))}")
 
-    print("Starting inference...")
-    n_pool = int(sys.argv[4])
-    with Pool(n_pool) as p:
-        p.map(minimize_and_save, remaining)
+    if len(remaining) > 0:
+        print("Starting inference...")
+        n_pool = int(sys.argv[4])
+        with Pool(n_pool) as p:
+            p.map(minimize_and_save, remaining)
 
     print("Collecting results...")
     result = []
     for i in range(len(pdf_figaro)):
         if os.path.exists(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}.npy'):
-            result.append(np.load(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}.npy'))
+            try:
+                result.append(np.load(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}.npy'))
+            except EOFError:
+                result.append(minimize_and_save(i))
     result = np.array(result)
 
     print("Saving results...")
