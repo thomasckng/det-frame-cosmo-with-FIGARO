@@ -25,8 +25,8 @@ jobs:
         id: build
         uses: showyourwork/showyourwork-action@v1
         with:
-          showyourwork-spec: git+https://github.com/showyourwork/showyourwork.git
+          showyourwork-spec: git+https://github.com/thomasckng/showyourwork.git
         env:
           SANDBOX_TOKEN: ${{ secrets.SANDBOX_TOKEN }}
-          OVERLEAF_EMAIL: ${{ secrets.OVERLEAF_EMAIL }}
-          OVERLEAF_PASSWORD: ${{ secrets.OVERLEAF_PASSWORD }}
+          OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
+          
