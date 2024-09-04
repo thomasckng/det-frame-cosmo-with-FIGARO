@@ -94,7 +94,7 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 In this section, we present the framework we developed to infer both the intrinsic population model and the cosmological model simultaneously by leveraging the detector-frame mass population distribution.
 In the remainder of this Section, we will make use of the notation summarized in Table~\ref{tab:notation}, mutated from \citet{Rinaldi:2021bhm, Rinaldi:2022kyg}.
 
-\begin{table}
+\begin{table}[h]
     \caption{Notation}
     \begin{ruledtabular}
         \begin{tabular}{c>{\raggedright\arraybackslash}p{0.7\linewidth}}
@@ -250,7 +250,7 @@ The result of the reconstruction is shown in Fig.~\ref{fig:simulation_reconstruc
     \script{plot_simulation_reconstruction.py}
     \includegraphics[width=\linewidth]{figures/simulation_reconstruction.pdf}
     \caption{
-        In both panels, the red line is the histogram of the median of the $m^z_1$ posterior probability distribution samples of the \ac{GW} events.
+        In both panels, the red line is the histogram of the true $m^z_1$ of the \ac{GW} events.
         In the upper panel, the blue line is the median of the reconstructed distributions, and the shaded region represents the 68\% and 90\% credible intervals of the reconstructed distributions.
         In the lower panel, the blue lines are the single reconstructed distributions from a subset of all the reconstructed distributions.
         By combining all the single reconstructed distributions, we obtain the distribution in the upper panel.
@@ -321,9 +321,25 @@ We may not be able to infer these fixed parameters accurately with our method, a
 The reconstruction of the observed $m^z_1$ population distribution is the same as in the previous subsection.
 Note that the same reconstruction result can be reused, as the data does not change.
 
-In this example, instead of transforming the source-frame population model to the detector frame and performing a grid search, we define a function that calculates $d_\mathrm{JS}$ for a given set of the free parameters.
+In this example, instead of transforming the source-frame population model to the detector frame for each $H_0$ and performing a grid search, we define a function that calculates $d_\mathrm{JS}$ for a given set of the free parameters.
 We then use the \textsc{scipy} optimization algorithm mentioned in Sec.~\ref{sec:pe} to find the optimized free parameters that minimize $d_\mathrm{JS}$.
-\todo{Add more details about the optimization procedure (e.g., initial guess, bounds, etc.)}
+The optimization method requires bounds for the free parameters, which we show in Table~\ref{tab:bounds}.
+\begin{table}[h]
+    \caption{Bounds for the free parameters}
+    \begin{ruledtabular}
+        \begin{tabular}{ccc}
+            Parameter & Symbol & Bounds \\
+            \hline
+            Hubble constant & $H_0$ & $[10, 300]$ \\
+            Power law index & $\alpha$ & $[1.01, 10]$ \\
+            Peak mass & $\mu$ & $[10, 70]$ \\
+            Peak width & $\sigma$ & $[0.01, 10]$ \\
+            Peak weight & $w$ & $[0, 1]$ \\
+        \end{tabular}
+    \end{ruledtabular}
+    \label{tab:bounds}
+\end{table}
+The initial guesses for the optimization are chosen randomly from a uniform distribution within the bounds.
 The result of the \ac{PE} is shown in Fig.~\todo{add figure}.
 The result shows that our method can infer multiple parameters simultaneously.
 
@@ -338,7 +354,18 @@ We included all events labeled as BBH in Table~I of \citet{KAGRA:2021duu}.
 
 We first performed the reconstruction of the observed $m^z_1$ population distribution with \textsc{figaro} as described in Sec.~\ref{sec:reconstruction}.
 We use the posterior probability distribution samples of the \ac{GW} events from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}.
-The result of the reconstruction is shown in Fig.~\todo{add figure}.
+$10000$ samples are randomly drawn from the posterior probability distribution samples of each \ac{GW} event to perform the reconstruction.
+The result of the reconstruction is shown in Fig.~\ref{fig:real_reconstruction}.
+
+\begin{figure}[h]
+    \script{plot_real_reconstruction.py}
+    \includegraphics[width=\linewidth]{figures/real_reconstruction.pdf}
+    \caption{
+        The red line is the histogram of the median of the $m^z_1$ posterior probability distribution samples of the \ac{GW} events.
+        The blue line is the median of the reconstructed distributions, and the shaded region represents the 68\% and 90\% credible intervals of the reconstructed distributions.
+    }
+    \label{fig:real_reconstruction}
+\end{figure}
 
 Next, we chose the \textsc{power law + peak} model as the source-frame population model $\Lambda$ and the $\Lambda$CDM model as the cosmological model $\Omega$.
 Similar to Sec.~\ref{sec:inference_multi}, we fixed some parameters of the population model and the cosmological model.
@@ -361,7 +388,6 @@ The result shows similar problems mentioned in \citet{Pierra:2024wrk}.
 
 \subsection{Comparison with previous work}
 \label{sec:comparison}
-% diagnostic tool & model selection
 
 \subsection{Prospective improvements}
 \label{sec:prospective}
@@ -369,6 +395,7 @@ The result shows similar problems mentioned in \citet{Pierra:2024wrk}.
 As mentioned in Sec.~\ref{sec:pe}, our method is not a Bayesian inference, as we only consider the optimization of the parameters.
 To perform a full Bayesian inference, we need to develop a likelihood function that considers the comparison of the two populations.
 With this likelihood, our method will give the same result as the standard hierarchical Bayesian inference, as long as the number of reconstructions is large enough.
+This will allow us to perform efficient model selection, as different models can be tested without repeating the reconstruction of the observed population.
 
 Another potential improvement is to consider not only the primary mass distribution.
 For example, we can consider the joint distribution of the primary mass and luminosity distance.
@@ -385,6 +412,8 @@ Other optimization algorithms should also be considered to allow for higher dime
 
 \section{Conclusion}
 \label{sec:conclusion}
+
+\todo{Work as diagnostic tool}
 
 \begin{acknowledgments}
 
