@@ -5,7 +5,14 @@ import paths
 label = sys.argv[3]
 outdir = paths.data / label
 
-if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
+if len(sys.argv) != 5:
+    print("Invalid number of arguments!")
+    sys.exit(1)
+
+param = sys.argv[1]
+method = sys.argv[2]
+
+if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
     import numpy as np
     from numpy.random import uniform as uni
     from scipy.spatial.distance import jensenshannon as scipy_jsd
@@ -19,10 +26,6 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
     def p_z(z, H0):
         return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)/(1+z)
 
-    if len(sys.argv) != 5:
-        print("Invalid number of arguments!")
-        sys.exit(1)
-
     bounds_dict = {
         "H0": (10, 300),
         "alpha": (1.01, 10),
@@ -33,31 +36,31 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
         "mmin": (1, 10)
     }
 
-    if sys.argv[1] == "2a":
+    if param == "2a":
         bounds = bounds_dict["H0"], bounds_dict["alpha"]
         def plp(m, x):
             return plpeak(m, alpha=x[0])
-    elif sys.argv[1] == "2b":
+    elif param == "2b":
         bounds = bounds_dict["H0"], bounds_dict["mu"]
         def plp(m, x):
             return plpeak(m, mu=x[0])
-    elif sys.argv[1] == "4a":
+    elif param == "4a":
         bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["delta"]
         def plp(m, x):
             return plpeak(m, mu=x[0], sigma=x[1], delta=x[2])
-    elif sys.argv[1] == "4b":
+    elif param == "4b":
         bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2])
-    elif sys.argv[1] == "5a":
+    elif param == "5a":
         bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3])
-    elif sys.argv[1] == "5b":
+    elif param == "5b":
         bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["mmin"], bounds_dict["w"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], mmin=x[2], w=x[3])
-    elif sys.argv[1] == "6":
+    elif param == "6":
         bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3], delta=x[4])
@@ -82,9 +85,7 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
         return scipy_jsd(model_pdf_short, pdf_figaro[i])
 
 
-    if sys.argv[2] in ["Powell", "TNC"]:
-
-        method = sys.argv[2]
+    if method in ["Powell", "TNC"]:
 
         from scipy.optimize import minimize as scipy_minimize
 
@@ -92,7 +93,7 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
             x0 = [uni(*bounds[j]) for j in range(len(bounds))]
             return scipy_minimize(jsd, x0=x0, bounds=bounds, args=(i,), method=method).x
         
-    elif sys.argv[2] == "CMA-ES":
+    elif method == "CMA-ES":
 
         import cma
 
@@ -107,7 +108,7 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
 
     def minimize_and_save(i):
         result = minimize(i)
-        np.save(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}', result)
+        np.save(outdir/f'checkpoints/{param}_{method}_{str(i)}', result)
         return result
 
     mz = np.linspace(1,200,900)
@@ -131,7 +132,7 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
     if not os.path.exists(outdir/'checkpoints'):
         os.makedirs(outdir/'checkpoints')
     for i in range(len(pdf_figaro)):
-        if os.path.exists(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}.npy'):
+        if os.path.exists(outdir/f'checkpoints/{param}_{method}_{str(i)}.npy'):
             remaining.remove(i)
     print(f"Remaining number of draws: {str(len(remaining))}")
 
@@ -144,9 +145,9 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
     print("Collecting results...")
     result = []
     for i in range(len(pdf_figaro)):
-        if os.path.exists(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}.npy'):
+        if os.path.exists(outdir/f'checkpoints/{param}_{method}_{str(i)}.npy'):
             try:
-                result.append(np.load(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}.npy'))
+                result.append(np.load(outdir/f'checkpoints/{param}_{method}_{str(i)}.npy'))
             except EOFError:
                 result.append(minimize_and_save(i))
     result = np.array(result)
@@ -154,11 +155,11 @@ if not os.path.exists(outdir/f'multi/{sys.argv[1]}_{sys.argv[2]}.npz'):
     print("Saving results...")
     if not os.path.exists(outdir/'multi'):
         os.makedirs(outdir/'multi')
-    np.savez(outdir/f"multi/{sys.argv[1]}_{sys.argv[2]}.npz", result=result, pdf_figaro=pdf_figaro)
+    np.savez(outdir/f"multi/{param}_{method}.npz", result=result, pdf_figaro=pdf_figaro)
 
 print("Removing checkpoints...")
-for i in range(len(pdf_figaro)):
-    if os.path.exists(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}.npy'):
-        os.remove(outdir/f'checkpoints/{sys.argv[1]}_{sys.argv[2]}_{str(i)}.npy')
+for filename in os.listdir(outdir/'checkpoints'):
+    if filename.startswith(f"{param}_{method}_"):
+        os.remove(outdir/f"checkpoints/{filename}")
 
 print("Done!")
