@@ -199,7 +199,7 @@ where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, a
 $d_\mathrm{JS}$ is a symmetric and smoothed version of $D_\mathrm{KL}$, and it is bounded between 0 and 1.
 
 For each reconstructed distribution $p(m^z_1|\Theta_i)$, we find an optimized $\Lambda_i$ and $\Omega_i$ by minimizing $d_\mathrm{JS}$.
-For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX} algorithm. \todo{Add reference for the algorithm}
+For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX (add reference)} algorithm.
 Note that we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the median of the $m^z_1$ posterior probability distribution samples of each \ac{GW} event
 This is because the reconstruction is only valid in the region where observations are present.
 As each reconstructed distribution is independent, the optimization can be performed in parallel easily, which reduces the runtime as long as computational resources are available.
@@ -250,7 +250,7 @@ The result of the reconstruction is shown in Fig.~\ref{fig:simulation_reconstruc
     \script{plot_simulation_reconstruction.py}
     \includegraphics[width=\linewidth]{figures/simulation_reconstruction.pdf}
     \caption{
-        In both panels, the red line is the histogram of the true $m^z_1$ of the \ac{GW} events.
+        In both panels, the red line is the histogram of the true $m^z_1$ of the simulated \ac{GW} events.
         In the upper panel, the blue line is the median of the reconstructed distributions, and the shaded region represents the 68\% and 90\% credible intervals of the reconstructed distributions.
         In the lower panel, the blue lines are the single reconstructed distributions from a subset of all the reconstructed distributions.
         By combining all the single reconstructed distributions, we obtain the distribution in the upper panel.
