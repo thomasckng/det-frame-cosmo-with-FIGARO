@@ -33,7 +33,8 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         "sigma": (0.01, 10),
         "w": (0, 1),
         "delta": (0.01, 20),
-        "mmin": (1, 10)
+        "mmin": (1, 10),
+        "mmax": (70, 150)
     }
 
     if param == "2a":
@@ -64,6 +65,10 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"]
         def plp(m, x):
             return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3], delta=x[4])
+    elif param == "8":
+        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"], bounds_dict["mmin"], bounds_dict["mmax"]
+        def plp(m, x):
+            return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3], delta=x[4], mmin=x[5], mmax=x[6])
     else:
         print("Invalid argument!")
         sys.exit(1)
