@@ -25,7 +25,7 @@ dag:
 
 # Externally-hosted datasets, e.g. on Zenodo
 datasets:
-  10.5072/zenodo.106403:
+  10.5072/zenodo.109209:
     contents:
       grid.npz: src/data/grid.npz
       jsd_bounds.txt: src/data/simulation/jsd_bounds.txt
@@ -35,6 +35,7 @@ datasets:
       draws_observed_simulation.json: src/data/simulation/draws/draws_observed_simulation.json
       draws_observed_real.json: src/data/real/draws/draws_observed_real.json
       samples_med.txt: src/data/real/samples_med.txt
+      4a_Powell.npz: src/data/simulation/multi/4a_Powell.npz
 
 
 # Custom file dependencies
@@ -50,6 +51,8 @@ dependencies:
     - src/data/simulation/jsd_bounds.txt
   src/scripts/plot_simulation_result_H0.py:
     - src/data/simulation/H0s.txt
+  src/scripts/plot_simulation_result_multi.py:
+    - src/data/simulation/multi/4a_Powell.npz
   src/scripts/plot_real_reconstruction.py:
     - src/data/real/draws/draws_observed_real.json
     - src/data/real/samples_med.txt
