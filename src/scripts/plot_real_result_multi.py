@@ -5,7 +5,7 @@ from figaro.cosmology import Planck18
 from figaro import plot_settings
 import paths
 
-f = np.load(paths.data / 'simulation/multi' / '4b_Powell.npz')
+f = np.load(paths.data / 'real/multi' / '4b_Powell.npz')
 result = f['result']
 parameters = ["$H_0$", "$\\alpha$", "$\\mu$", "$\\sigma$"]
 
