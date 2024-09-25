@@ -17,6 +17,10 @@ def p_z(z, H0):
 label = sys.argv[1]
 outdir = paths.data / label
 
+if label == "real":
+    print("Invalid label!")
+    sys.exit(1)
+
 print("Preparing model pdfs...")
 grid_label = "grid"
 try:
