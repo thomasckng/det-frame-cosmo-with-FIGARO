@@ -23,8 +23,8 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
     import dill
 
     # Redshift distribution
-    def p_z(z, H0):
-        return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)/(1+z)
+    def p_z(z, H0, kappa=0):
+        return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)*(1+z)**(kappa-1)
 
     bounds_dict = {
         "H0": (10, 300),
@@ -34,41 +34,61 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         "w": (0, 1),
         "delta": (0.01, 20),
         "mmin": (1, 10),
-        "mmax": (70, 150)
+        "mmax": (70, 150),
+        "kappa": (-10, 10)
     }
-
-    if param == "2a":
-        bounds = bounds_dict["H0"], bounds_dict["alpha"]
-        def plp(m, x):
-            return plpeak(m, alpha=x[0])
-    elif param == "2b":
-        bounds = bounds_dict["H0"], bounds_dict["mu"]
-        def plp(m, x):
-            return plpeak(m, mu=x[0])
-    elif param == "4a":
-        bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["delta"]
-        def plp(m, x):
-            return plpeak(m, mu=x[0], sigma=x[1], delta=x[2])
-    elif param == "4b":
-        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"]
-        def plp(m, x):
-            return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2])
-    elif param == "5a":
-        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"]
-        def plp(m, x):
-            return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3])
-    elif param == "5b":
-        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["mmin"], bounds_dict["w"]
-        def plp(m, x):
-            return plpeak(m, alpha=x[0], mu=x[1], mmin=x[2], w=x[3])
-    elif param == "6":
-        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"]
-        def plp(m, x):
-            return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3], delta=x[4])
-    elif param == "8":
-        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"], bounds_dict["mmin"], bounds_dict["mmax"]
-        def plp(m, x):
-            return plpeak(m, alpha=x[0], mu=x[1], sigma=x[2], w=x[3], delta=x[4], mmin=x[5], mmax=x[6])
+    if label == "simulation":
+        if param == "2a":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1]), p_z(z, x[0]))
+        elif param == "2b":
+            bounds = bounds_dict["H0"], bounds_dict["mu"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, mu=x[1]), p_z(z, x[0]))
+        elif param == "4a":
+            bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["delta"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, mu=x[1], sigma=x[2], delta=x[3]), p_z(z, x[0]))
+        elif param == "4b":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3]), p_z(z, x[0]))
+        elif param == "5a":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4]), p_z(z, x[0]))
+        elif param == "5b":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["mmin"], bounds_dict["w"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], mmin=x[3], w=x[4]), p_z(z, x[0]))
+        elif param == "6a":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=x[5]), p_z(z, x[0]))
+        elif param == "8":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"], bounds_dict["mmin"], bounds_dict["mmax"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=x[5], mmin=x[6], mmax=x[7]), p_z(z, x[0]))
+        else:
+            print("Invalid argument!")
+            sys.exit(1)
+    elif label == "real":
+        if param == "3":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=31.825703461630482, sigma=3.7904971258458042, w=0.024059947239759398, delta=4.8961636235644015, mmin=5.0808821331157095, mmax=109.03299036617125), p_z(z, x[0], kappa=x[2]))
+        elif param == "5c":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=0.024059947239759398, delta=4.8961636235644015, mmin=5.0808821331157095, mmax=109.03299036617125), p_z(z, x[0], kappa=x[4]))
+        elif param == "6b":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["kappa"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=4.8961636235644015, mmin=5.0808821331157095, mmax=109.03299036617125), p_z(z, x[0], kappa=x[5]))
+        else:
+            print("Invalid argument!")
+            sys.exit(1)
     else:
         print("Invalid argument!")
         sys.exit(1)
@@ -80,7 +100,7 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         return selfunc_interp(x)
 
     def jsd(x, i):
-        model_pdf = np.einsum("ij, j -> ij", plp(m, x[1:]), p_z(z, x[0])) # shape = (len(mz), len(z))
+        model_pdf = p_m_p_z(x) # shape = (len(mz), len(z))
         grid = np.transpose(np.meshgrid(mz, CosmologicalParameters(x[0]/100., 0.315, 0.685, -1., 0., 0.).LuminosityDistance(z))) # shape = (len(mz), len(z), 2)
         SE_grid = selection_function(grid) # shape = (len(mz), len(z))
         model_pdf = np.einsum("ij, ij -> ij", model_pdf, SE_grid) # shape = (len(mz), len(z))
