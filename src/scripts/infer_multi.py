@@ -74,6 +74,7 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
             print("Invalid argument!")
             sys.exit(1)
     elif label == "real":
+        # Fixed parameters according to result from "Constraints on the Cosmic Expansion History from GWTC–3" (SNR > 10 & w0flatLCDM)
         if param == "3":
             bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
             def p_m_p_z(x):
