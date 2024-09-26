@@ -66,8 +66,11 @@ Due to these issues, the spectral-siren method is not straightforward to apply, 
 An alternative approach to the spectral-siren method is to use non-parametric methods to reconstruct the observed mass population distribution directly from the data.
 Non-parametric methods allow us to reconstruct arbitrary probability densities without making assumptions about the form of the distribution \citep{Rinaldi:2021bhm}.
 In our context, we can use non-parametric methods to reconstruct the observed mass population distribution directly from the data.
-This provides an intermediate observation-driven result that encodes both the intrinsic population information and the cosmological information.
-By separating the reconstruction of the observed population from the inference of the intrinsic population and cosmological model, we can explore different models easily.
+We can then compare the reconstructed distribution with the predicted distribution from some intrinsic population model and cosmological model, which allows us to infer the model parameters by minimizing the distance between the two distributions.
+
+This approach allows us to extract the information contained in the observed data without making assumptions about the population model, cosmological model, or selection function.
+The reconstructed distribution can act as an intermediate observation-driven result that encodes both the intrinsic population information and the cosmological information.
+Making use of the reconstructed distribution, we can easily explore the effect of using different models, as the reconstructed distribution can be reused for different models.
 Furthermore, the intermediate result represents the information contained in the observed data without any assumptions about the population model, cosmological model, or selection function, which allows us to study the features of the observed population directly.
 
 Some other studies have made use of non-parametric methods with the spectral-siren framework.
@@ -119,7 +122,7 @@ Second, instead of directly computing the likelihood of the observed data given 
 With these modifications, we separate the spectral-siren method into two distinct parts.
 The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
 We make use of the \ac{(H)DPGMM} developed in \cite{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed population distribution.
-Other assumptions including the population model, cosmological model and selection function are then incorporated in the second half.
+Other assumptions including the population model, cosmological model and selection function are then incorporated in the second half, where we transform the source-frame population model to the detector frame with a given cosmological model.
 This separation allows us to explore the impact of different assumptions easily.
 The intermediate result of the first part can be reused as long as the data does not change, reducing the computational cost of the method.
 
@@ -169,7 +172,14 @@ We assume the $m_1$ distribution does not evolve with $z$.
 The selection effect is included in the derivation in Eq.~\eqref{eq:transformation}, specifically, the first term in the final expression, which is the selection function.
 Note that the selection function in general is a function of the detector-frame mass $m^z_1$, luminosity distance $d_L$, and mass ratio $q$.
 In this work, we marginalized over $q$ to study the $m_1$ population distribution only.
-Due to the censoring of the low and high mass events, we consider the selection function in the transformation instead of the reconstruction.
+
+The selection effect is chosen to be considered in the transformation instead of the reconstruction, as the uncertainty in the reconstruction will diverge in the region where the selection function censoring the data.
+For example, if we consider the selection function in the reconstruction, the uncertainty in the reconstruction will be large at the low mass end, as the selection function censors the low mass events effectively.
+\cite{Essick:2023upv} also pointed out that including the selection function in the reconstruction may lead to insignificant biases in the analysis.
+Therefore, we consider the selection function in the transformation to avoid these issues.
+
+Qualitatively, the transformation described in Eq.~\eqref{eq:transformation} redshifts the source-frame intrinsic population distribution to the detector frame, where the redshift is determined by the cosmological model.
+The selection function is then applied to the redshifted distribution to obtain the detector-frame observed population distribution.
 With different $\Lambda$ or $\Omega$, the resulting $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ will be different.
 In Fig.~\ref{fig:simulation_transformation}, we show an example of the transformation.
 
@@ -396,9 +406,9 @@ With this likelihood, our method will give the same result as the standard hiera
 This will allow us to perform efficient model selection, as different models can be tested without repeating the reconstruction of the observed population.
 
 Another potential improvement is to consider not only the primary mass distribution.
-For example, we can consider the joint distribution of the primary mass and luminosity distance.
+For example, we can consider the joint distribution of the primary mass, mass ratio, and redshift.
 The reconstruction of the joint observed distribution can also be performed in the current framework.
-However, we need a joint population model that considers both the primary mass and luminosity distance.
+However, we need a joint population model that considers all the parameters, including the possible correlations between the parameters.
 Performing the analysis of the joint distribution will allow us to study mass population models that evolve with redshift.
 Furthermore, the inference of cosmological parameters will be more precise, as the information from the luminosity distance is also considered.
 
