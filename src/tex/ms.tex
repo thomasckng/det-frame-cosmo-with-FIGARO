@@ -1,4 +1,4 @@
-\documentclass[twocolumn]{aastex631}
+\documentclass[sn-aps]{sn-jnl}
 
 \usepackage{showyourwork}
 \usepackage{amsfonts,amssymb,amsmath}
@@ -15,27 +15,22 @@
 
 \title{Inferring cosmology from gravitational waves using non-parametric detector-frame mass distribution}
 
-\author{Thomas~C.~K.~Ng}
-\affiliation{Department of Physics, The Chinese University of Hong Kong, Shatin, Hong Kong}
+\author*[1]{Thomas C. K. Ng}\email{thomas.ng@link.cuhk.edu.hk}
+\author[2,3]{Stefano Rinaldi}\email{stefano.rinaldi@uni-heidelberg.de}
+\author[1]{Otto A. Hannuksela}\email{hannuksela@phy.cuhk.edu.hk}
 
-\author{Stefano~Rinaldi}
-\affiliation{Institut~für~Theoretische~Astrophysik, ZAH, Universität~Heidelberg, Albert-Ueberle-Stra{\ss}e~2, 69120 Heidelberg, Germany}
-\affiliation{Dipartimento di Fisica e Astronomia ``G. Galilei'', Università di Padova, Via Marzolo 8, 35122 Padova, Italy}
+\affil[1]{Department of Physics, The Chinese University of Hong Kong, Shatin, Hong Kong}
+\affil[2]{Institut~für~Theoretische~Astrophysik, ZAH, Universität~Heidelberg, Albert-Ueberle-Stra{\ss}e~2, 69120 Heidelberg, Germany}
+\affil[3]{Dipartimento di Fisica e Astronomia ``G. Galilei'', Università di Padova, Via Marzolo 8, 35122 Padova, Italy}
 
-\author{Otto~A.~Hannuksela}
-\affiliation{Department of Physics, The Chinese University of Hong Kong, Shatin, Hong Kong}
-
-\correspondingauthor{Thomas~C.~K.~Ng}
-\email{thomas.ng@link.cuhk.edu.hk}
-
-\begin{abstract}
+\abstract{
     The challenge of understanding the Universe's dynamics, particularly the Hubble tension, requires precise measurements of the Hubble constant.
-    Building upon the existing spectral siren method, which capitalizes on population information from gravitational wave sources, this study explores an alternative way to analyze the population data to obtain the cosmological parameters in $\Lambda$CDM.
-    We will focus on how non-parametric methods, which are flexible models that can be used to agnostically reconstruct arbitrary probability densities, can be incorporated into this framework and leverage the detector-frame mass distribution to infer the cosmological parameters.
+    Building upon the existing spectral-siren method, which capitalizes on population information from gravitational-wave sources, this paper explores an alternative way to analyze the population data to obtain the cosmological parameters in $\Lambda$CDM.
+    We demonstrated how non-parametric methods, which are flexible models that can be used to agnostically reconstruct arbitrary probability densities, can be incorporated into this framework and leverage the detector-frame mass distribution to infer the cosmological parameters.
     \todo{Rewrite abstract}
-\end{abstract}
+}
 
-% \maketitle
+\maketitle
 
 \begin{acronym}
     \acro{GW}{gravitational-wave}
@@ -58,28 +53,25 @@ Some \ac{GW} sources can be associated with \ac{EM} counterparts, allowing for t
 However, most \ac{GW} sources do not have \ac{EM} counterparts.
 In this case, one can assume \ac{GW} sources are in galaxies and associate the redshift of the galaxy to the \ac{GW} source \citep{Schutz:1986gp, DelPozzo:2011vcw, Gray:2019ksv, Gray:2023wgj}.
 Another alternative method is to use population statistics to infer $H_0$ by marginalizing the redshift distribution of the sources.
-This method is known as the spectral siren method \citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
+This method is known as the spectral-siren method \citep{You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
 
-The fundamental idea of the spectral siren method is to infer cosmology by comparing the observed mass population distribution with the intrinsic mass population distribution since the observed distribution is redshifted due to the expansion of the Universe.
-Assumptions about the intrinsic population model and cosmological model are required to perform the comparison.
-Previous studies often infer either the intrinsic population model or the cosmological model, but not both simultaneously, due to the expensive computational cost.
-\todo{Summarize previous work and add references}
-However, the intrinsic population model and the cosmological model are degenerate in general, and it is necessary to infer both simultaneously.
+The fundamental idea of the spectral-siren method is to infer cosmology by comparing the observed mass population distribution with the intrinsic mass population distribution since the observed distribution is redshifted due to the expansion of the Universe.
+The method works best when the intrinsic distribution is well understood.
+However, the intrinsic distribution is not known, and the method depends on the choice of the population model.
+Furthermore, the intrinsic distribution is degenerate with cosmology.
+For example, an intrinsic distribution with a linear redshift evolution is degenerate with $H_0$, as they both redshift the observed distribution in the same way.
+While this example is not physical, this degeneracy still affects the inference of $H_0$.
+Due to these issues, the spectral-siren method is not straightforward to apply, intrinsic population model parameters and cosmological parameters are required to be inferred simultaneously, which makes the method computationally expensive.
 
-To address this issue, we study an alternative method making use of non-parametric methods.
-Non-parametric methods allow us to reconstruct arbitrary probability densities without making assumptions about the form of the distribution.
+An alternative approach to the spectral-siren method is to use non-parametric methods to reconstruct the observed mass population distribution directly from the data.
+Non-parametric methods allow us to reconstruct arbitrary probability densities without making assumptions about the form of the distribution \citep{Rinaldi:2021bhm}.
 In our context, we can use non-parametric methods to reconstruct the observed mass population distribution directly from the data.
 This provides an intermediate observation-driven result that encodes both the intrinsic population information and the cosmological information.
 By separating the reconstruction of the observed population from the inference of the intrinsic population and cosmological model, we can explore different models easily.
 Furthermore, the intermediate result represents the information contained in the observed data without any assumptions about the population model, cosmological model, or selection function, which allows us to study the features of the observed population directly.
 
-Some other studies have made use of non-parametric methods with the spectral siren framework.
-\todo{Summarize previous work, add references and compare with our work}
-
-Considering the increasing number of \ac{GW} events and the improvement of the detectors, we expect that the spectral siren method will give us an independent and precise measurement of $H_0$ which is comparable to the previous measurements \citep{Planck:2018vyg, Riess:2021jrx}.
-However, performing standard hierarchical Bayesian inference with the spectral siren method is computationally expensive, and it depends on the choice of the population model and the cosmological model.
-Our method provides an alternative to studying different models without performing lengthy hierarchical analysis.
-This allows us to explore more models before performing the full hierarchical Bayesian inference, which makes our method a powerful diagnostic tool for model selection.
+Some other studies have made use of non-parametric methods with the spectral-siren framework.
+\todo{summarize previous work with non-parametric methods and compare with our work}
 
 In Sec.~\ref{sec:method}, we describe our modified method in detail.
 In Sec.~\ref{sec:mock_data}, we present the analysis setup and results of the mock data study.
@@ -92,41 +84,41 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary.
 \label{sec:method}
 
 In this section, we present the framework we developed to infer both the intrinsic population model and the cosmological model simultaneously by leveraging the detector-frame mass population distribution.
-In the remainder of this Section, we will make use of the notation summarized in Table~\ref{tab:notation}, mutated from \citet{Rinaldi:2021bhm, Rinaldi:2022kyg}.
+In the remainder of this Section, we will make use of the notation summarized in Table~\ref{tab:notation}, taken from \cite{Rinaldi:2021bhm, Rinaldi:2022kyg}.
 
-\begin{table}[h]
-    \caption{Notation}
-    \begin{ruledtabular}
-        \begin{tabular}{c>{\raggedright\arraybackslash}p{0.7\linewidth}}
-            Notation & Description \\
-            \hline
-            $m_1$ & Primary mass of the \ac{GW} sources in the source frame \\
-            $q$ & Mass ratio of the \ac{GW} sources \\
-            $z$ & Redshift of the \ac{GW} sources \\
-            $d_L$ & Luminosity distance of the \ac{GW} sources \\
-            $m^z_1$ & Primary mass of the \ac{BBH} sources in the detector frame \\
-            $Y_t$ & detector-frame primary mass posterior probability distribution samples of the $t$-th \ac{GW} event \\
-            $\mathbf{Y}$ & Set of detector-frame primary mass posterior probability distribution samples of all \ac{GW} events \\
-            $\Theta_i$ & Hyperparameters of the \ac{(H)DPGMM} \\
-            $\mathbf{\Theta}$ & Set of hyperparameters of the \ac{(H)DPGMM} \\
-            $p(m^z_1|\mathbf{\Theta})$ & Detector-frame observed primary mass population distribution reconstructed with the \ac{(H)DPGMM} \\
-            $\Lambda$ & Source-frame population model \\
-            $\Omega$ & Cosmological model \\
-            $p(m_1|\Lambda)$ & Source-frame primary mass population distribution assuming the population model $\Lambda$ \\
-            $p(m^z_1|\Lambda, \Omega)$ & Detector-frame primary mass population distribution assuming the population model $\Lambda$ and cosmological model $\Omega$ \\
-            $\mathrm{det}$ & detectability of the \ac{GW} events \\
-        \end{tabular}
-    \end{ruledtabular}
+\begin{table}[htbp]
+    \caption{Notation used in this paper}
+    \begin{tabular}{cp{0.7\linewidth}}
+        \toprule
+        Notation & Description \\
+        \midrule
+        $m_1$ & Primary mass of the \ac{GW} sources in the source frame \\
+        $q$ & Mass ratio of the \ac{GW} sources \\
+        $z$ & Redshift of the \ac{GW} sources \\
+        $d_L$ & Luminosity distance of the \ac{GW} sources \\
+        $m^z_1$ & Primary mass of the \ac{BBH} sources in the detector frame \\
+        $Y_t$ & detector-frame primary mass posterior probability distribution samples of the $t$-th \ac{GW} event \\
+        $\mathbf{Y}$ & Set of detector-frame primary mass posterior probability distribution samples of all \ac{GW} events \\
+        $\Theta_i$ & Hyperparameters of the \ac{(H)DPGMM} \\
+        $\mathbf{\Theta}$ & Set of hyperparameters of the \ac{(H)DPGMM} \\
+        $p(m^z_1|\mathbf{\Theta})$ & Detector-frame observed primary mass population distribution reconstructed with the \ac{(H)DPGMM} \\
+        $\Lambda$ & Source-frame population model \\
+        $\Omega$ & Cosmological model \\
+        $p(m_1|\Lambda)$ & Source-frame primary mass population distribution assuming the population model $\Lambda$ \\
+        $p(m^z_1|\Lambda, \Omega)$ & Detector-frame primary mass population distribution assuming the population model $\Lambda$ and cosmological model $\Omega$ \\
+        $\mathrm{det}$ & detectability of the \ac{GW} events \\
+        \botrule
+    \end{tabular}
     \label{tab:notation}
 \end{table}
 
-Specifically, we propose two major modifications to the standard spectral siren method.
+Specifically, we propose two major modifications to the standard spectral-siren method.
 First, instead of transforming the individual-event posterior probability distribution samples from the detector frame to the source frame during the \ac{PE} process, we transform the population model to the detector frame before performing \ac{PE}.
 Second, instead of directly computing the likelihood of the observed data given the population model, we reconstruct the observed population distribution from the data using a non-parametric method and compare it with the population model.
 
-With these modifications, we separate the spectral siren method into two distinct parts.
+With these modifications, we separate the spectral-siren method into two distinct parts.
 The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
-We make use of the \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed population distribution.
+We make use of the \ac{(H)DPGMM} developed in \cite{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed population distribution.
 Other assumptions including the population model, cosmological model and selection function are then incorporated in the second half.
 This separation allows us to explore the impact of different assumptions easily.
 The intermediate result of the first part can be reused as long as the data does not change, reducing the computational cost of the method.
@@ -137,12 +129,12 @@ Our method consists of three main steps: the non-parametric reconstruction of th
 \label{sec:reconstruction}
 
 The first step of our method is to reconstruct the detector-frame observed population.
-we choose to consider the primary mass $m_1$ of the \ac{BBH} sources, as we want to study the cosmological parameters with the spectral siren method.
+We choose to consider the primary mass $m_1$ of the \ac{BBH} sources, as we want to study the cosmological parameters with the spectral-siren method.
 In principle, we can consider more parameters at once by reconstructing not only a single-parameter observed distribution but instead a multi-parameter observed distribution.
 However, that will require a more sophisticated population model in the later steps, which is beyond the scope of this work.
 
 With the posterior probability distribution samples obtained from the \ac{PE} of each \ac{GW} event, we reconstruct the observed detector-frame primary mass population distribution.
-We use the \ac{(H)DPGMM} developed in \citet{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed $m^z_1$ population distribution $p(m^z_1|\mathbf{\Theta})$.
+We use the \ac{(H)DPGMM} developed in \cite{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed $m^z_1$ population distribution $p(m^z_1|\mathbf{\Theta})$.
 The \ac{(H)DPGMM} is a hierarchy of Gaussian mixture models with a Dirichlet process prior probability distribution, which allows the model to be flexible to reconstruct arbitrary population distribution from individual-event posterior probability distribution samples.
 To perform the reconstruction, we use the package \textsc{figaro}\footnote{\textsc{figaro} is publicly available at \url{https://github.com/sterinaldi/FIGARO} and via \texttt{pip}.} \citep{Rinaldi:2024eep}.
 Performing the reconstruction once will give a distribution $p(m^z_1|\Theta_i)$ that is consistent with $\mathbf{Y}$ with a given set of hyperparameters $\Theta_i$.
@@ -152,7 +144,7 @@ It is important to note that the reconstruction is only valid in the region wher
 In Fig.~\ref{fig:simulation_reconstruction}, we show an example of the reconstruction obtained with \textsc{figaro}.
 
 This part of the method is completely data-driven.
-Therefore the intermediate result is independent of the population, cosmological model and selection function, and we can reuse the result for testing different models.
+Therefore, the intermediate result is independent of the population, cosmological model and selection function, and we can reuse the result for testing different models.
 This reduces the computational cost of the method, as we only need to perform the reconstruction once to analyze different models.
 
 \subsection{Transformation of source-frame population model}
@@ -161,20 +153,19 @@ This reduces the computational cost of the method, as we only need to perform th
 On the other hand, we assume a population model $\Lambda$ to obtain a source-frame primary mass $m_1$ population distribution $p(m_1|\Lambda)$, which represents the underlying population distribution given the model $\Lambda$.
 Note that, either a parametric model can be used to only assume the form of the population distribution, or a fixed population model can be used to assume an exact population distribution.
 We then transform $p(m_1|\Lambda)$ to the detector frame with a given cosmological model $\Omega$ to obtain the population distribution $p(m^z_1|\Lambda, \Omega)$ by
-\begin{widetext}
 \begin{equation}
     \begin{aligned}
         &p(m^z_1|\Lambda, \Omega, \mathrm{det}) \\
         &= \int p(m^z_1|m_1, z, \Lambda, \Omega, \mathrm{det}) p(m_1, z|\Lambda, \Omega, \mathrm{det}) \mathrm{d}m_1 \mathrm{d}z \\
         &= \int p(m^z_1|m_1, z) \frac{p(\mathrm{det}|m_1, z, \Lambda, \Omega)p(m_1, z|\Lambda, \Omega)}{p(\mathrm{det}|\Lambda, \Omega)} \mathrm{d}m_1 \mathrm{d}z \\
-        &= \frac{1}{p(\mathrm{det}|\Lambda, \Omega)}\int \delta(m^z_1-m_1(1+z))p(\mathrm{det}|m_1, z, \Omega)p(m_1|\Lambda)p(z|\Lambda) \mathrm{d}m_1 \mathrm{d}z \\
-        &\propto \int p\left(\mathrm{det}\middle|\frac{m^z_1}{1+z},z,\Omega\right)p\left(\frac{m^z_1}{1+z}\middle|\Lambda\right)p(z|\Lambda) \mathrm{d}z\,,
+        &= \frac{1}{p(\mathrm{det}|\Lambda, \Omega)}\int \delta(m^z_1-m_1(1+z))p(\mathrm{det}|m_1, z, \Omega)p(m_1|\Lambda)p(z|\Lambda, \Omega) \mathrm{d}m_1 \mathrm{d}z \\
+        &\propto \int p\left(\mathrm{det}\middle|\frac{m^z_1}{1+z},z,\Omega\right)p\left(\frac{m^z_1}{1+z}\middle|\Lambda\right)p(z|\Lambda, \Omega) \mathrm{d}z\,,
     \end{aligned}
     \label{eq:transformation}
 \end{equation}
-\end{widetext}
 where $\mathrm{det}$ represents whether the event is detectable or not.
 We assume the $m_1$ distribution does not evolve with $z$.
+
 The selection effect is included in the derivation in Eq.~\eqref{eq:transformation}, specifically, the first term in the final expression, which is the selection function.
 Note that the selection function in general is a function of the detector-frame mass $m^z_1$, luminosity distance $d_L$, and mass ratio $q$.
 In this work, we marginalized over $q$ to study the $m_1$ population distribution only.
@@ -182,15 +173,14 @@ Due to the censoring of the low and high mass events, we consider the selection 
 With different $\Lambda$ or $\Omega$, the resulting $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ will be different.
 In Fig.~\ref{fig:simulation_transformation}, we show an example of the transformation.
 
-Opposite to the first part of the method, this part includes the assumptions about the population and cosmological model, as well as the selection function.
+In contrast to the first part of the method, this part includes the assumptions about the population and cosmological model, as well as the selection function.
 After obtaining $p(m^z_1|\Lambda, \Omega, \mathrm{det})$, we can perform the \ac{PE} to infer the optimized $\Omega$ and $\Lambda$.
 
 \subsection{Parameter estimation}
 \label{sec:pe}
 
-With $p(m^z_1|\mathbf{\Theta})$ and $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we can perform the \ac{PE} to infer the free parameters in the parametric models assumed in Sec.~\ref{sec:transformation}.
-The \ac{PE} is performed by comparing $p(m^z_1|\Theta_i)$ with $p(m^z_1|\Lambda, \Omega)$.
-To compare the two populations, we use the Jensen-Shannon distance $d_\mathrm{JS}$ as the distance measure.
+With $p(m^z_1|\mathbf{\Theta})$ and $p(m^z_1|\Lambda, \Omega, \mathrm{det})$ obtained from Sec.~\ref{sec:reconstruction} and Sec.~\ref{sec:transformation} respectively, we need a way of translating each realization of the reconstructed distribution to a set of population and cosmological parameters.
+To do so, we define a notion of "closeness" using the Jensen-Shannon distance $d_\mathrm{JS}$ between the two distributions.
 $d_\mathrm{JS}$ is calculated as
 \begin{equation}
     d_\mathrm{JS}(p, q) = \sqrt{\frac{D_\mathrm{KL}(p||m) + D_\mathrm{KL}(q||m)}{2}},
@@ -199,8 +189,8 @@ where $p$ and $q$ are the two distributions to be compared, $m = (p + q) / 2$, a
 $d_\mathrm{JS}$ is a symmetric and smoothed version of $D_\mathrm{KL}$, and it is bounded between 0 and 1.
 
 For each reconstructed distribution $p(m^z_1|\Theta_i)$, we find an optimized $\Lambda_i$ and $\Omega_i$ by minimizing $d_\mathrm{JS}$.
-For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the \todo{XXX (add reference)} algorithm.
-Note that we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the median of the $m^z_1$ posterior probability distribution samples of each \ac{GW} event
+For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the modified Powell algorithm.
+Note that we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the median of the $m^z_1$ posterior probability distribution samples of each \ac{GW} event.
 This is because the reconstruction is only valid in the region where observations are present.
 As each reconstructed distribution is independent, the optimization can be performed in parallel easily, which reduces the runtime as long as computational resources are available.
 In Fig.~\ref{fig:simulation_comparison}, we show an illustration of the comparison between the two populations.
@@ -210,7 +200,7 @@ Instead, it is a distribution of the optimized parameters that are consistent wi
 That is, the uncertainty in the comparison of the two populations is not considered in the resulting distribution.
 By considering this optimization procedure only, we can estimate the optimized parameters without performing computationally expensive likelihood calculations.
 
-The analysis code is publicly available.\footnote{The analysis code is available at \url{https://github.com/thomasckng/det-frame-cosmo-with-FIGARO/tree/main/src/scripts}.}
+The analysis code we developed to implement the method presented in this section is publicly available on GitHub\footnote{ \url{https://github.com/thomasckng/det-frame-cosmo-with-FIGARO/tree/main/src/scripts}}.
 
 \section{Mock data}
 \label{sec:mock_data}
@@ -219,7 +209,7 @@ In this section, we test our method with a mock data study.
 To prepare the mock data, we first generated \variable{output/n_true_samples.txt} sets of $m_1$ and $z$ samples from a \textsc{power law + peak} distribution (see, e.g., Eq.~B4 in \cite{KAGRA:2021duu}) for the $m_1$ distribution and uniform distribution over comoving volume and source-frame time (see, e.g., Eq.~8 in \cite{KAGRA:2021duu}) for the $z$ distribution.
 Here we assumed the $m_1$ distribution does not evolve with $z$.
 We then transformed the $m_1$ and $z$ samples to $m^z_1$ and $d_L$ samples.
-Here we chose the $\Lambda$CDM model with parameters consistent with the results in \citet{Planck:2018vyg} as the cosmological model for the transformation of the samples.
+Here we chose the $\Lambda$CDM model with parameters consistent with the results in \cite{Planck:2018vyg} as the cosmological model for the transformation of the samples.
 
 After the transformation, we applied a selection function to the $m^z_1$ and $d_L$ samples.
 We chose the O3 selection function from \todo{add reference} as the selection function.
@@ -241,18 +231,17 @@ After preparing the mock data, we test our method with two cases: the inference 
 \label{sec:inference_H0}
 
 In this subsection, we first test our method with a simplified case where we only infer $H_0$ to demonstrate the basic idea of our method.
-We assume the selection function, the true population model and its parameters, and the true cosmological model and its parameters except $H_0$ are known.
+We assume the selection function, the true mass and redshift population model and its parameters, and the true cosmological model and its parameters except $H_0$ are known.
 
-We first performed the reconstruction of the observed $m^z_1$ population distribution with \textsc{figaro} as described in Sec.~\ref{sec:reconstruction}.
+We first reconstructed the observed $m^z_1$ population distribution with \textsc{figaro} as described in Sec.~\ref{sec:reconstruction}.
 The result of the reconstruction is shown in Fig.~\ref{fig:simulation_reconstruction}.
-
-\begin{figure}[h]
+\begin{figure}[htbp]
     \script{plot_simulation_reconstruction.py}
     \includegraphics[width=\linewidth]{figures/simulation_reconstruction.pdf}
     \caption{
         In both panels, the red line is the histogram of the true $m^z_1$ of the simulated \ac{GW} events.
         In the upper panel, the blue line is the median of the reconstructed distributions, and the shaded region represents the 68\% and 90\% credible intervals of the reconstructed distributions.
-        In the lower panel, the blue lines are the single reconstructed distributions from a subset of all the reconstructed distributions.
+        In the lower panel, the blue lines are the single-reconstructed distributions from a subset of all the reconstructed distributions.
         By combining all the single reconstructed distributions, we obtain the distribution in the upper panel.
     }
     \label{fig:simulation_reconstruction}
@@ -264,8 +253,7 @@ We performed the transformation for each $H_0$ in the range from $5$ to $150$.
 After the transformation, we applied the selection function we used to generate the mock data to the transformed distribution.
 Here we only free $H_0$ in the transformation to test if our method can recover the true $H_0$ while we fixed the other cosmological parameters to the true values.
 The result of the transformation is shown in Fig.~\ref{fig:simulation_transformation}.
-
-\begin{figure}[h]
+\begin{figure}[htbp]
     \script{plot_simulation_transformation.py}
     \includegraphics[width=\linewidth]{figures/simulation_transformation.pdf}
     \caption{
@@ -281,8 +269,7 @@ Finally, we performed the \ac{PE} to infer $H_0$.
 For this test specifically, instead of using the \textsc{scipy} optimization algorithm, we used a grid search to find the optimized $H_0$, as the parameter space is one-dimensional.
 Figure~\ref{fig:simulation_comparison} shows an illustration of the comparison between the reconstructed observed population and the transformed population for different $H_0$.
 For each $H_0$, we computed the $d_\mathrm{JS}$ between the two populations and found the optimized $H_0$ that minimizes $d_\mathrm{JS}$.
-
-\begin{figure}[h]
+\begin{figure}[htbp]
     \script{plot_simulation_comparison.py}
     \includegraphics[width=\linewidth]{figures/simulation_comparison.pdf}
     \caption{
@@ -294,29 +281,26 @@ For each $H_0$, we computed the $d_\mathrm{JS}$ between the two populations and 
 \end{figure}
 
 The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
-The result shows that our method can recover the true $H_0$ we used to generate the mock data.
-
-\begin{figure}[h]
+\begin{figure}[htbp]
     \script{plot_simulation_result_H0.py}
     \includegraphics[width=\linewidth]{figures/simulation_result_H0.pdf}
     \caption{
         The histogram shows the distribution of the optimized $H_0$.
         The vertical blue line and shaded regions represent the median, 68\%, and 90\% credible intervals of the distribution.
         The vertical orange line represents the true $H_0$ we used to generate the mock data.
-        Note that the distribution only shows the uncertainty in the reconstruction.
-        The uncertainty in the comparison is not considered in the distribution.
     }
     \label{fig:simulation_result_H0}
 \end{figure}
+We find that the $H_0$ distribution, with which the uncertainty associated comes from the uncertainty in the reconstruction, is consistent with the simulated $H_0$ value.
 
 \subsection{Inference of $H_0$ and $\Lambda$}
 \label{sec:inference_multi}
 
 In this subsection, we test our method with a more realistic case where we infer $H_0$ and a subset of the population model parameters.
 Similar to the previous subsection, we assume only the free parameters are unknown.
-Other than $H_0$, we also chose the power law index $\alpha$, the peak mass $\mu$, the peak width $\sigma$, and the peak weight $w$ of the \textsc{power law + peak} model as the free parameters.
-Fixed parameters are the minimum and maximum mass, as well as the range of mass tapering at the low mass end.
-We may not be able to infer these fixed parameters accurately with our method, as the reconstruction is only valid in the region where the samples are present and the reconstruction may be not accurate at the boundaries depending on the boundary features of the observed population\footnote{As we are using a Gaussian mixture model to reconstruct the observed population, the reconstruction may not be accurate at the boundaries if the observed population has sharp features at the boundaries.}.
+Other than $H_0$, we also chose the power law index $\alpha$, the peak mass $\mu$, and the peak width $\sigma$ of the \textsc{power law + peak} model as the free parameters.
+Fixed parameters are the minimum and maximum mass, the range of mass tapering at the low mass end $\delta$, the peak weight $w$, and the cosmological parameters except $H_0$.
+We may not be able to infer some of these fixed parameters (e.g., the minimum and maximum mass, and $\delta$) accurately with our method, as the reconstruction is only valid in the region where the samples are present, and the reconstruction may be not accurate at the boundaries depending on the boundary features of the observed population\footnote{As we are using a Gaussian mixture model to reconstruct the observed population, the reconstruction may not be accurate at the boundaries if the observed population has sharp features at the boundaries.}.
 
 The reconstruction of the observed $m^z_1$ population distribution is the same as in the previous subsection.
 Note that the same reconstruction result can be reused, as the data does not change.
@@ -324,24 +308,35 @@ Note that the same reconstruction result can be reused, as the data does not cha
 In this example, instead of transforming the source-frame population model to the detector frame for each $H_0$ and performing a grid search, we define a function that calculates $d_\mathrm{JS}$ for a given set of the free parameters.
 We then use the \textsc{scipy} optimization algorithm mentioned in Sec.~\ref{sec:pe} to find the optimized free parameters that minimize $d_\mathrm{JS}$.
 The optimization method requires bounds for the free parameters, which we show in Table~\ref{tab:bounds}.
-\begin{table}[h]
+\begin{table}[htbp]
     \caption{Bounds for the free parameters}
-    \begin{ruledtabular}
-        \begin{tabular}{ccc}
-            Parameter & Symbol & Bounds \\
-            \hline
-            Hubble constant & $H_0$ & $[10, 300]$ \\
-            Power law index & $\alpha$ & $[1.01, 10]$ \\
-            Peak mass & $\mu$ & $[10, 70]$ \\
-            Peak width & $\sigma$ & $[0.01, 10]$ \\
-            Peak weight & $w$ & $[0, 1]$ \\
-        \end{tabular}
-    \end{ruledtabular}
+    \begin{tabular}{ccc}
+        \toprule
+        Parameter & Symbol & Bounds \\
+        \midrule
+        Hubble constant & $H_0$ & $[10, 300]$ \\
+        Power law index & $\alpha$ & $[1.01, 10]$ \\
+        Peak mass & $\mu$ & $[10, 70]$ \\
+        Peak width & $\sigma$ & $[0.01, 10]$ \\
+        \botrule
+    \end{tabular}
     \label{tab:bounds}
 \end{table}
 The initial guesses for the optimization are chosen randomly from a uniform distribution within the bounds.
-The result of the \ac{PE} is shown in Fig.~\todo{add figure}.
-The result shows that our method can infer multiple parameters simultaneously.
+The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_multi}.
+\begin{figure}[htbp]
+    \script{plot_simulation_result_multi.py}
+    \includegraphics[width=\linewidth]{figures/simulation_result_multi.pdf}
+    \caption{
+        The corner plot shows the distribution of the optimized parameters.
+        The diagonal histograms show the marginalized distributions.
+        The off-diagonal contour plots show the joint distributions, where the contours represent the 39.35\%, 90\% credible intervals.
+        The red lines and points represent the true values we used to generate the mock data.
+    }
+    \label{fig:simulation_result_multi}
+\end{figure}
+We find that the distribution, with the uncertainty associated comes from the uncertainty in the reconstruction, is consistent with the simulated values.
+Some features of the result are discussed together with the result of the real data in Sec.~\ref{sec:real_data}.
 
 In principle, more parameters can be inferred with our method, for example, the present mass density $\Omega_m$ in the $\Lambda$CDM model.
 However, the optimization procedure becomes more computationally expensive as the number of parameters increases.
@@ -350,14 +345,13 @@ However, the optimization procedure becomes more computationally expensive as th
 \label{sec:real_data}
 
 In this section, we apply our method to the real data from the \ac{LVK}.
-We included all $70$ events labeled as BBH in Table~I of \citet{KAGRA:2021duu}.
+We included all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}.
 
-We first performed the reconstruction of the observed $m^z_1$ population distribution with \textsc{figaro} as described in Sec.~\ref{sec:reconstruction}.
-We use the posterior probability distribution samples of the \ac{GW} events from \citet{LIGOScientific:2019lzm, KAGRA:2023pio}.
+Similar to Sec.~\ref{sec:mock_data}, we first reconstructed the observed $m^z_1$ population distribution.
+We use the posterior probability distribution samples of the \ac{GW} events from \cite{LIGOScientific:2019lzm, KAGRA:2023pio}.
 $10000$ samples are randomly drawn from the posterior probability distribution samples of each \ac{GW} event to perform the reconstruction.
 The result of the reconstruction is shown in Fig.~\ref{fig:real_reconstruction}.
-
-\begin{figure}[h]
+\begin{figure}[htbp]
     \script{plot_real_reconstruction.py}
     \includegraphics[width=\linewidth]{figures/real_reconstruction.pdf}
     \caption{
@@ -369,18 +363,28 @@ The result of the reconstruction is shown in Fig.~\ref{fig:real_reconstruction}.
 
 Next, we chose the \textsc{power law + peak} model as the source-frame population model $\Lambda$ and the $\Lambda$CDM model as the cosmological model $\Omega$.
 Similar to Sec.~\ref{sec:inference_multi}, we fixed some parameters of the population model and the cosmological model.
-For the cosmological model, we fixed the parameters to the results from \citet{Planck:2018vyg} except $H_0$.
-For the population model, we fixed the minimum and maximum mass, as well as the range of mass tapering at the low mass end to the results from \citet{KAGRA:2021duu}.
-Note that the fixed parameters are not necessarily the true values\footnote{Result from \citet{KAGRA:2021duu} assumes a cosmological model to infer the population model parameters.}, but they can be considered as a reasonable guess for the parameters.
+For the cosmological model, we fixed the parameters to the results from \cite{Planck:2018vyg} except $H_0$.
+For the population model, we fixed the minimum and maximum mass, as well as the range of mass tapering at the low mass end to the results from \cite{KAGRA:2021duu}.
+\todo{Update the fixed parameters}
+Note that the fixed parameters are not necessarily the true values\footnote{Result from \cite{KAGRA:2021duu} assumes a cosmological model to infer the population model parameters.}, but they can be considered as a reasonable guess for the parameters.
 The fixed parameters are shown in Table~\todo{add table}.
 \todo{Add more details about the selection function}
 \todo{Consider using values from another paper}
 
 We then perform the remaining steps similar to Sec.~\ref{sec:inference_multi}.
-The result of the \ac{PE} is shown in Fig.~\todo{add figure} and Fig.~\todo{add figure}.
-\todo{Discuss the result}
-
-The result shows similar problems mentioned in \citet{Pierra:2024wrk}.
+The result of the \ac{PE} is shown in Fig.~\ref{fig:real_result_multi}.
+\begin{figure}[htbp]
+    \script{plot_real_result_multi.py}
+    \includegraphics[width=\linewidth]{figures/real_result_multi.pdf}
+    \caption{
+        The corner plot shows the distribution of the optimized parameters.
+        The diagonal histograms show the marginalized distributions.
+        The off-diagonal contour plots show the joint distributions, where the contours represent the 39.35\%, 90\% credible intervals.
+    }
+    \label{fig:real_result_multi}
+\end{figure}
+\todo{Discuss the result (choice of redshift distribution)}
+The result shows similar problems mentioned in \cite{Pierra:2023deu}.
 \todo{Discuss mass-redshift dependent population model \& possible issues with PL+P model}
 
 \section{Discussion}
@@ -407,17 +411,19 @@ Other optimization algorithms should also be considered to allow for higher dime
 \section{Conclusion}
 \label{sec:conclusion}
 
-\todo{Work as diagnostic tool}
+With the numbers of observed \ac{GW} events that are expected to grow larger and larger, potentially hitting the thousand mark by the end of the fifth observing run, performing a complete analysis from scratch with different astrophysical models will soon become too computationally expensive.
+The method we propose in this paper can help to mitigate this issue by providing a fast and efficient way to explore different models before performing the full hierarchical Bayesian inference.
+This makes our method a powerful diagnostic tool for model selection.
 
-\begin{acknowledgments}
+\backmatter
 
-T.~N.~ and S.~R.~ acknowledge financial support from the German Excellence Strategy via the Heidelberg Cluster of Excellence (EXC 2181 - 390900948) STRUCTURES.
-S.~R.~ acknowledges financial support from the European Research Council for the ERC Consolidator grant DEMOBLACK, under contract no. 770017. 
+\bmhead{Acknowledgements}
+
+T.~N. and S.~R. acknowledge financial support from the German Excellence Strategy via the Heidelberg Cluster of Excellence (EXC 2181 - 390900948) STRUCTURES.
+S.~R. acknowledges financial support from the European Research Council for the ERC Consolidator grant DEMOBLACK, under contract no. 770017. 
 This research made use of the bwForCluster Helix: the authors acknowledge support by the state of Baden-Württemberg through bwHPC and the German Research Foundation (DFG) through grant INST 35/1597-1 FUGG.
 This research has made use of data or software obtained from the Gravitational Wave Open Science Center (gwosc.org), a service of the LIGO Scientific Collaboration, the Virgo Collaboration, and KAGRA. This material is based upon work supported by NSF's LIGO Laboratory which is a major facility fully funded by the National Science Foundation, as well as the Science and Technology Facilities Council (STFC) of the United Kingdom, the Max-Planck-Society (MPS), and the State of Niedersachsen/Germany for support of the construction of Advanced LIGO and construction and operation of the GEO600 detector. Additional support for Advanced LIGO was provided by the Australian Research Council. Virgo is funded, through the European Gravitational Observatory (EGO), by the French Centre National de Recherche Scientifique (CNRS), the Italian Istituto Nazionale di Fisica Nucleare (INFN) and the Dutch Nikhef, with contributions by institutions from Belgium, Germany, Greece, Hungary, Ireland, Japan, Monaco, Poland, Portugal, Spain. KAGRA is supported by Ministry of Education, Culture, Sports, Science and Technology (MEXT), Japan Society for the Promotion of Science (JSPS) in Japan; National Research Foundation (NRF) and Ministry of Science and ICT (MSIT) in Korea; Academia Sinica (AS) and National Science and Technology Council (NSTC) in Taiwan.
 This paper was compiled using \textsc{showyourwork} \cite{Luger2021} to facilitate reproducibility.
-
-\end{acknowledgments}
 
 \bibliography{bib}
 
