@@ -1,5 +1,6 @@
-To generate results in the paper, the following steps need to be followed.
-First, run the following command to generate the selection function for the simulation:
+To generate results in the paper, first install the required packages listed in [`environment.yml`](/environment.yml).
+
+Then, run the following command to generate the selection function for the simulation:
 ```
 python generate_selection_function.py
 ```
@@ -22,9 +23,9 @@ python infer_H0.py simulation
 
 To infer multiple parameters instead, run the following command:
 ```
-python infer_multi.py method parameters simulation n_parallel
+python infer_multi.py <method> <parameters> simulation <n_parallel>
 ```
-where `method` is the method to be used for inference, `parameters` is the index for which parameters to infer, and `n_parallel` is the number of parallel processes to use.
+where `<method>` is the method to be used for inference, `<parameters>` is the index for which parameters to infer, and `<n_parallel>` is the number of parallel processes to use.
 Check the script for more details.
 
 For running the analysis on the LVK data, first store all single-event PE results of [GWTC-2.1](https://zenodo.org/records/6513631) and [GWTC-3](https://zenodo.org/records/8177023) in a directory.

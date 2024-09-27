@@ -20,3 +20,4 @@ The paper can be reproduced programmatically from this repo using [_showyourwork
 </p>
 
 Click [here](https://github.com/thomasckng/det_frame_cosmo/blob/main-pdf/ms.pdf) to view PDF without automatically downloading.
+To perform the analysis in the paper, follow the instructions in the [README](src/scripts/README.md).
