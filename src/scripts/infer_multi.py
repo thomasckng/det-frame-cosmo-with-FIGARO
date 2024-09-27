@@ -76,7 +76,7 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
     elif label == "real":
         # Fixed parameters according to result from "Constraints on the Cosmic Expansion History from GWTC–3" (SNR > 10 & w0flatLCDM)
         if param == "3":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["kappa"]
             def p_m_p_z(x):
                 return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=31.825703461630482, sigma=3.7904971258458042, w=0.024059947239759398, delta=4.8961636235644015, mmin=5.0808821331157095, mmax=109.03299036617125), p_z(z, x[0], kappa=x[2]))
         elif param == "5c":
