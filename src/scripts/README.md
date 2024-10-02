@@ -31,8 +31,8 @@ Check the script for more details.
 For running the analysis on the LVK data, first store all single-event PE results of [GWTC-2.1](https://zenodo.org/records/6513631) and [GWTC-3](https://zenodo.org/records/8177023) in a directory.
 Then, to get samples from LVK PE results, run the following command:
 ```
-python get_lvk_samples.py outdir
+python get_lvk_samples.py <outdir>
 ```
-where `outdir` is the path to the directory containing the PE results in the format of `*.h5`.
+where `<outdir>` is the path to the directory containing the PE results in the format of `*.h5`.
 
 For the reconstruction and inference, run the above commands with the appropriate configuration files and options.

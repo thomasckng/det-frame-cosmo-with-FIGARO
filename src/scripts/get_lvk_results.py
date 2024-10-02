@@ -97,8 +97,8 @@ events = [\
 'GW200216_220804',
 ]
 
-mass_med_min, mass_med_max = 0, 0
-mass_min_min, mass_max_max = 0, 0
+mass_med_min, mass_med_max = 1000, 0
+mass_min_min, mass_max_max = 1000, 0
 med_all = []
 for event in tqdm.tqdm(events):
     h5_paths = find('*' + str(event) + '*' + 'nocosmo.h5', sys.argv[1])
