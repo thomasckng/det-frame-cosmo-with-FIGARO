@@ -24,6 +24,7 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
 
     # Redshift distribution
     def p_z(z, H0, kappa=0):
+        # Fixed parameters are from the result of Planck 2018
         return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)*(1+z)**(kappa-1)
 
     bounds_dict = {
@@ -74,19 +75,32 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
             print("Invalid argument!")
             sys.exit(1)
     elif label == "real":
-        # Fixed parameters according to result from "Constraints on the Cosmic Expansion History from GWTC–3" (SNR > 10 & w0flatLCDM)
+        # Fixed parameters are the median values from the result of "Constraints on the Cosmic Expansion History from GWTC–3" (SNR > 10 & w0flatLCDM)
+        fixed_params = {
+            "alpha": 4.2487241670754035,
+            "mu": 31.825703461630482,
+            "sigma": 3.7904971258458042,
+            "w": 0.024059947239759398,
+            "delta": 4.8961636235644015,
+            "mmin": 5.0808821331157095,
+            "mmax": 109.03299036617125
+        }
         if param == "3":
             bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["kappa"]
             def p_m_p_z(x):
-                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=31.825703461630482, sigma=3.7904971258458042, w=0.024059947239759398, delta=4.8961636235644015, mmin=5.0808821331157095, mmax=109.03299036617125), p_z(z, x[0], kappa=x[2]))
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"]), p_z(z, x[0], kappa=x[2]))
         elif param == "5c":
             bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
             def p_m_p_z(x):
-                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=0.024059947239759398, delta=4.8961636235644015, mmin=5.0808821331157095, mmax=109.03299036617125), p_z(z, x[0], kappa=x[4]))
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"]), p_z(z, x[0], kappa=x[4]))
         elif param == "6b":
             bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["kappa"]
             def p_m_p_z(x):
-                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=4.8961636235644015, mmin=5.0808821331157095, mmax=109.03299036617125), p_z(z, x[0], kappa=x[5]))
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"]), p_z(z, x[0], kappa=x[5]))
+        elif param == "9":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"], bounds_dict["mmin"], bounds_dict["mmax"], bounds_dict["kappa"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=x[5], mmin=x[6], mmax=x[7]), p_z(z, x[0], kappa=x[8]))
         else:
             print("Invalid argument!")
             sys.exit(1)
