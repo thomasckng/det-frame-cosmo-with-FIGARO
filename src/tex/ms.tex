@@ -196,14 +196,17 @@ For each reconstructed distribution $p(m^z_1|\Theta_i)$, we find an optimized $\
 For the minimization, we use the \textsc{scipy} \citep{2020SciPy-NMeth} implementation of the modified Powell algorithm.
 Note that we calculate $d_\mathrm{JS}$ in the range from the minimum to the maximum of the median of the $m^z_1$ posterior probability distribution samples of each \ac{GW} event.
 This is because the reconstruction is only valid in the region where observations are present as mentioned in Sec.~\ref{sec:reconstruction}.
-The optimization procedure can be performed in parallel for each reconstructed distribution, as each reconstructed distribution is independent.
-This reduces the runtime as long as computational resources are available.
 In Fig.~\ref{fig:simulation_comparison}, we show an illustration of the comparison between the two populations.
 
 The resulting distribution of the optimized parameters is not a posterior probability distribution in a Bayesian sense, as we do not consider the likelihood of the observed data given the population model.
 Instead, it is a distribution of the optimized parameters that are consistent with the observed data, distributed according to the uncertainty in the reconstruction of the population.
 That is, the uncertainty in the comparison of the two populations is not considered in the resulting distribution.
-By considering this optimization procedure only, we can estimate the optimized parameters without performing computationally expensive likelihood calculations.
+
+The optimization procedure does not scale with the number of \ac{GW} events, as the optimization is performed for each reconstructed distribution.
+Therefore, the more \ac{GW} events we have, the longer the runtime of the reconstruction, but the runtime of the optimization remains the same.
+This is advantageous for performing the analysis with different models when more \ac{GW} events are available, as the reconstruction can be reused.
+Other than that, the optimization procedure can be performed in parallel for each reconstructed distribution, as each reconstructed distribution is independent.
+This reduces the runtime as long as computational resources are available.
 
 The analysis code we developed to implement the method presented in this section is publicly available on GitHub\footnote{ \url{https://github.com/thomasckng/det-frame-cosmo-with-FIGARO/tree/main/src/scripts}}.
 
