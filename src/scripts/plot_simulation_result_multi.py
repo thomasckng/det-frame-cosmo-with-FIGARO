@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from corner import corner
 from figaro.cosmology import Planck18
 from figaro import plot_settings
