@@ -315,7 +315,7 @@ The recovered $H_0$ distribution, whose uncertainty budget comes from the remapp
 In this subsection, we test our method with a more realistic case where we infer $H_0$ and a subset of the population model parameters.
 Similar to the previous subsection, we assume perfect knowledge of both models, the selection function and all the parameters that are not objects of the inference.
 Other than $H_0$, we included the power law index $\alpha$, the peak mass $\mu$, and the peak width $\sigma$ of the \textsc{power law + peak} model as the free parameters in the analysis.
-The minimum and maximum mass, and the range of mass tapering at the low mass end $\delta$ are fixed.
+The minimum mass $m_\mathrm{min}$ and maximum mass $m_\mathrm{max}$, and the range of mass tapering at the low mass end $\delta$ are fixed.
 These parameters, which control the boundary features of the observed population distribution, were chosen because the reconstructions are only valid in the region where the samples are present, and the reconstructed distributions may not be accurate at the boundaries depending on the boundary features of the observed population distribution.
 In principle, more parameters can be inferred with our method, for example, the peak weight $w$ in the mass population model and the present mass density $\Omega_m$ in the $\Lambda$CDM model.
 However, the optimization procedure becomes more computationally expensive as the number of parameters increases, therefore, we only chose a subset of the parameters to demonstrate the idea of our method.
@@ -382,19 +382,26 @@ Next, we chose the \textsc{power law + peak} model as the source-frame populatio
 For the redshift population model, instead of the uniform distribution over comoving volume and source-frame time, we used the \textsc{power law} redshift evolution model described in \cite{KAGRA:2021duu}.
 Similar to Sec.~\ref{sec:inference_multi}, we fixed some parameters of the population model and the cosmological model.
 For the cosmological model, we fixed the parameters to the results from \cite{Planck:2018vyg} except $H_0$.
-For the population model, we fixed the minimum mass $m_\mathrm{min}$ and maximum mass $m_\mathrm{max}$, as well as the range of mass tapering at the low mass end to the results from \cite{LIGOScientific:2021aug}.
+For the population model, we fixed $\sigma$, $w$, $m_\mathrm{min}$, $m_\mathrm{max}$, and $\delta$ to the results from \cite{LIGOScientific:2021aug}.
 Note that the fixed parameters are not necessarily the true values, but they can be considered as a reasonable guess for the parameters.
 The fixed parameters of the population model are shown in Table~\ref{tab:fixed_parameters}.
 \begin{table}[htbp]
-    \caption{Fixed parameters}
+    \caption{Fixed parameters of the $\Lambda$CDM model (upper) and the \textsc{power law + peak} model (lower)}
     \begin{tabular}{cc}
         \toprule
         Parameter & Value \\
         \midrule
-        $m_\mathrm{min}$ & $5.08$ \\
-        $m_\mathrm{max}$ & $109.03$ \\
-        $\delta$ & $4.89$ \\
-        $w$ & $0.02$ \\
+        % Cosmological model
+        $\Omega_m$ & $0.315$ \\
+        $\Omega_\Lambda$ & $0.685$ \\
+        $w$ & $-1$ \\
+        \midrule
+        % Population model
+        $\sigma$ & $3.7904971258458042$ \\
+        $w$ & $0.024059947239759398$ \\
+        $m_\mathrm{min}$ & $5.0808821331157095$ \\
+        $m_\mathrm{max}$ & $109.03299036617125$ \\
+        $\delta$ & $4.8961636235644015$ \\
         \botrule
     \end{tabular}
     \label{tab:fixed_parameters}
