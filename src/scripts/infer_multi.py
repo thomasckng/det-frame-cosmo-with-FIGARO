@@ -85,10 +85,22 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
             "mmin": 5.0808821331157095,
             "mmax": 109.03299036617125
         }
-        if param == "3":
+        if param == "3a":
             bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["kappa"]
             def p_m_p_z(x):
                 return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"]), p_z(z, x[0], kappa=x[2]))
+        elif param == "3b":
+            bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["kappa"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, mu=x[1], alpha=fixed_params["alpha"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"]), p_z(z, x[0], kappa=x[2]))
+        elif param == "4c":
+            bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=fixed_params["alpha"], mu=x[1], sigma=x[2], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"]), p_z(z, x[0], kappa=x[3]))
+        elif param == "4d":
+            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["kappa"]
+            def p_m_p_z(x):
+                return np.einsum("ij, j -> ij", plpeak(m, alpha=x[1], mu=x[2], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"]), p_z(z, x[0], kappa=x[3]))
         elif param == "5c":
             bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
             def p_m_p_z(x):
