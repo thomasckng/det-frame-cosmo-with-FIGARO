@@ -53,12 +53,13 @@ This method is known as the spectral-siren method \citep{You:2020wju, Mastrogiov
 
 The fundamental idea of the spectral-siren method is to infer cosmology by comparing the observed mass population distribution with the intrinsic mass population distribution since the observed distribution is redshifted due to the expansion of the Universe.
 The method works best when the intrinsic distribution is well understood.
-However, the intrinsic distribution is not known, and the method depends on the choice of the population model.
+However, the features present in the mass distribution are not so well characterized yet, and their astrophysical origin is a debated topic \citep{Mapelli:2020vfa, Mandel:2018hfr}.
+In this case, the spectral-siren method depends on the choice of the population model, which can introduce biases in the inference \citep{Mastrogiovanni:2021wsd, Pierra:2023deu}.
 Furthermore, the intrinsic distribution is degenerate with cosmology: for example, an intrinsic distribution with a linear redshift evolution is degenerate with $H_0$, as they both redshift the observed distribution in the same way.
 While this example is not physical, this degeneracy still affects the inference of $H_0$.
-Due to these issues, the spectral-siren method is not straightforward to apply, intrinsic population model parameters and cosmological parameters are required to be inferred simultaneously, which makes the method computationally expensive.
+Due to these issues, astrophysics and cosmology are tightly linked to each other, and a proper inference of the astrophysical and cosmological parameters should be done simultaneously, which makes the method computationally expensive.
 
-An alternative approach to the spectral-siren method is to use non-parametric methods to reconstruct the observed mass population distribution directly from the data.
+A possible alternative approach, which we will propose in this paper, is to use non-parametric methods to reconstruct the observed mass population distribution directly from the data.
 Non-parametric methods allow us to reconstruct arbitrary probability densities without making assumptions about the form of the distribution \citep{Rinaldi:2021bhm}.
 In our context, we can use non-parametric methods to reconstruct the observed mass population distribution directly from the data.
 We can then compare the reconstructed distribution with the predicted distribution from some intrinsic population model and cosmological model, which allows us to infer the model parameters by minimizing the distance between the two distributions.
@@ -115,7 +116,7 @@ Second, instead of directly computing the likelihood of the observed data given 
 With these modifications, we separate the spectral-siren method into two distinct parts.
 The first part is the reconstruction of the observed population from the data, which does not require any assumptions about the population model, and the intermediate result is completely data-driven.
 We make use of the \ac{(H)DPGMM} developed in \cite{Rinaldi:2021bhm} as a non-parametric model to reconstruct the observed population distribution.
-Other assumptions including the population model, cosmological model and selection function are then incorporated in the second half, where we transform the source-frame population model to the detector frame with a given cosmological model.
+In the second part, we make use of all the other assumptions, namely the population model, cosmological model and selection function, to transform the source-frame population model into the detector frame.
 This separation allows us to explore the impact of different assumptions easily.
 The intermediate result of the first part can be reused as long as the data does not change, reducing the computational cost of the method.
 
@@ -166,9 +167,12 @@ The selection effect is included in the derivation in Eq.~\eqref{eq:transformati
 Note that the selection function in general is a function of the detector-frame mass $m^z_1$, luminosity distance $d_L$, and mass ratio $q$.
 In this work, we marginalized over $q$ to study the $m_1$ population distribution only.
 
-The selection effect is chosen to be considered in the transformation instead of the reconstruction, as the uncertainty in the reconstruction will diverge in the region where the selection function censoring the data.
+The selection effect is chosen to be considered in the transformation instead of the reconstruction, as the uncertainty in the reconstruction will diverge in the region where the selection function censors the data.
 For example, if we consider the selection function in the reconstruction, the uncertainty in the reconstruction will be large at the low mass end, as the selection function censors the low mass events effectively.
-\cite{Essick:2023upv} also pointed out that including the selection function in the reconstruction may lead to insignificant biases in the analysis.
+This way of including selection effects in the analysis, albeit simple and straightforward, is only an approximation of the real selection process, as pointed out in \cite{Essick:2023upv}.
+Nonetheless, the large uncertainties currently associated with \ac{GW} measurements are most likely to be dominant with respect to the bias induced by this approximation.
+Therefore, we opted for including the selection function in the transformation itself.
+We will explore an exact way of including selection effects in this method in a future paper.
 Therefore, we consider the selection function in the transformation to avoid these issues.
 
 Qualitatively, the transformation described in Eq.~\eqref{eq:transformation} redshifts the source-frame intrinsic population distribution to the detector frame, where the redshift is determined by the cosmological model.
@@ -201,8 +205,8 @@ The resulting distribution of the optimized parameters is not a posterior probab
 Instead, it is a distribution of the optimized parameters that are consistent with the observed data, distributed according to the uncertainty in the reconstruction of the population.
 That is, the uncertainty in the comparison of the two populations is not considered in the resulting distribution.
 
-The optimization procedure does not scale with the number of \ac{GW} events, as the optimization is performed for each reconstructed distribution.
-Therefore, the more \ac{GW} events we have, the longer the runtime of the reconstruction, but the runtime of the optimization remains the same.
+The optimization procedure is highly efficient as it does not scale with the number of \ac{GW} events, since the optimization is performed for each reconstructed distribution independently.
+Therefore, even as the number of \ac{GW} events increases, the runtime of the optimization remains constant, making our method scalable and robust for future large datasets.
 This is advantageous for performing the analysis with different models when more \ac{GW} events are available, as the reconstruction can be reused.
 Other than that, the optimization procedure can be performed in parallel for each reconstructed distribution, as each reconstructed distribution is independent.
 This reduces the runtime as long as computational resources are available.
@@ -221,7 +225,7 @@ Here we chose the $\Lambda$CDM model with parameters consistent with the results
 After the transformation, we applied a selection function to the $m^z_1$ and $d_L$ samples.
 We used the physically modelled selection function implemented in \cite{Lorenzo-Medina:2024opt}.
 Note that we marginalized over $q$ for the selection function, similar to the transformation in Sec.~\ref{sec:transformation}.
-After applying the selection function, there were \variable{output/n_obs_samples.txt} sets of samples left.
+After applying the selection function, which filters out the non-detectable events based on their $m^z_1$ and $d_L$, we retained \variable{output/n_obs_samples.txt} sets of samples for further analysis.
 
 We then generated the $m^z_1$ posterior probability distribution samples for each true $m^z_1$ sample by
 \begin{gather*}
@@ -303,16 +307,16 @@ The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_H0}.
     }
     \label{fig:simulation_result_H0}
 \end{figure}
-We find that the $H_0$ distribution, whose associated uncertainty comes from the reconstruction uncertainty, is consistent with the simulated $H_0$ value.
+The recovered $H_0$ distribution, whose uncertainty budget comes from the remapping of the uncertainty in the non-parametric reconstruction, is consistent with the simulated value.
 
 \subsection{Inference of $H_0$ and $\Lambda$}
 \label{sec:inference_multi}
 
 In this subsection, we test our method with a more realistic case where we infer $H_0$ and a subset of the population model parameters.
 Similar to the previous subsection, we assume perfect knowledge of both models, the selection function and all the parameters that are not objects of the inference.
-Other than $H_0$, we also chose the power law index $\alpha$, the peak mass $\mu$, and the peak width $\sigma$ of the \textsc{power law + peak} model as the free parameters.
-The minimum and maximum mass, and the range of mass tapering at the low mass end $\delta$ are fixed, as we may not be able to infer these parameters accurately with our method.
-This is because the reconstructions are only valid in the region where the samples are present, and they may be not accurate at the boundaries depending on the boundary features of the observed population distribution.
+Other than $H_0$, we included the power law index $\alpha$, the peak mass $\mu$, and the peak width $\sigma$ of the \textsc{power law + peak} model as the free parameters in the analysis.
+The minimum and maximum mass, and the range of mass tapering at the low mass end $\delta$ are fixed.
+These parameters, which control the boundary features of the observed population distribution, were chosen because the reconstructions are only valid in the region where the samples are present, and the reconstructed distributions may not be accurate at the boundaries depending on the boundary features of the observed population distribution.
 In principle, more parameters can be inferred with our method, for example, the peak weight $w$ in the mass population model and the present mass density $\Omega_m$ in the $\Lambda$CDM model.
 However, the optimization procedure becomes more computationally expensive as the number of parameters increases, therefore, we only chose a subset of the parameters to demonstrate the idea of our method.
 
@@ -351,14 +355,14 @@ The result of the \ac{PE} is shown in Fig.~\ref{fig:simulation_result_multi}.
     }
     \label{fig:simulation_result_multi}
 \end{figure}
-We find that the distribution, whose associated uncertainty comes from the reconstruction uncertainty, is consistent with the simulated values.
+The recovered distribution, whose uncertainty budget comes from the remapping of the uncertainty in the non-parametric reconstruction, is consistent with the simulated values.
 Some features of the result are discussed together with the result of the real data in Sec.~\ref{sec:real_data}.
 
 \section{Real data}
 \label{sec:real_data}
 
 In this section, we apply our method to the real data from the \ac{LVK}.
-We included all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}.
+We included all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}, which are different from the events used in \cite{LIGOScientific:2021aug}.
 
 Similar to Sec.~\ref{sec:mock_data}, we first reconstructed the observed $m^z_1$ population distribution.
 We use the posterior probability distribution samples of the \ac{GW} events from \cite{LIGOScientific:2019lzm, KAGRA:2023pio}.
