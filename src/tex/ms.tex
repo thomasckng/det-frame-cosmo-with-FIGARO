@@ -26,7 +26,7 @@
     The challenge of understanding the Universe's dynamics, particularly the Hubble tension, requires precise measurements of the Hubble constant.
     Building upon the existing spectral-siren method, which capitalizes on population information from gravitational-wave sources, this paper explores an alternative way to analyze the population data to obtain the cosmological parameters in $\Lambda$CDM.
     We demonstrated how non-parametric methods, which are flexible models that can be used to agnostically reconstruct arbitrary probability densities, can be incorporated into this framework and leverage the detector-frame mass distribution to infer the cosmological parameters.
-    We tested our method with mock data and applied it to the real data from the LIGO-Virgo-KAGRA Collaboration.
+    We tested our method with mock data and applied it to $70$ real events from the third gravitational-wave transient catalog of the LIGO-Virgo-KAGRA Collaboration.
 }
 
 \maketitle
@@ -356,7 +356,7 @@ The result of the remapping is shown in Fig.~\ref{fig:simulation_result_multi}.
     \script{plot_simulation_result_multi.py}
     \includegraphics[width=\linewidth]{figures/simulation_result_multi.pdf}
     \caption{
-        Optimised parameter distribution for the mock data inference. Simulated values are marked in red.
+        Optimized parameter distribution for the mock data inference. Simulated values are marked in red.
     }
     \label{fig:simulation_result_multi}
 \end{figure}
@@ -371,7 +371,8 @@ Fig.~\ref{fig:simulation_reconstruction}.
 \label{sec:real_data}
 
 In this section, we apply our method to the real data from the \ac{LVK}.
-We included all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}, which are different from the events used in \cite{LIGOScientific:2021aug}.
+We included all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}, these correspond to all the events with $\mathrm{FAR_{min}} < 1\ \mathrm{yr}^{-1}$, where $\mathrm{FAR_{min}}$ is the smallest false alarm rate over all search pipelines.
+These events are different from the events used in \cite{LIGOScientific:2021aug}, therefore, the results are not directly comparable.
 
 Similar to Sec.~\ref{sec:mock_data}, we first reconstructed the observed $m^z_1$ population distribution.
 We use the posterior probability distribution samples of the \ac{GW} events from \cite{LIGOScientific:2019lzm, KAGRA:2023pio}.
@@ -416,10 +417,12 @@ The result of the remapping is shown in Fig.~\ref{fig:real_result_multi}, and it
     \script{plot_real_result_multi.py}
     \includegraphics[width=\linewidth]{figures/real_result_multi.pdf}
     \caption{
-        Optimised parameter distribution for the real data inference.
+        Optimized parameter distribution for the real data inference.
     }
     \label{fig:real_result_multi}
 \end{figure}
+The result implies that \output{real_H0.txt}, which has an uncertainty much smaller than the one reported in \cite{KAGRA:2021duu}.
+This is because the uncertainty only includes the uncertainty from the reconstruction, which underestimates the true uncertainty which also includes the mismatch between the population model and the observed population distribution.
 
 This analysis we report here is a proof of concept of the method presented in this paper, and we simply aim at demonstrating that our method can be applied to the real data with relatively little effort.
 To perform a detailed analysis, a more comprehensive configuration that considers different population models, cosmological models, and selection functions is required, as well as a more robust optimization scheme to include more astrophysical parameters.
