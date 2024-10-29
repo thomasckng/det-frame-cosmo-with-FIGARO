@@ -262,7 +262,7 @@ The result of the reconstruction is shown in Fig.~\ref{fig:simulation_reconstruc
     \script{plot_simulation_reconstruction.py}
     \includegraphics[width=\linewidth]{figures/simulation_reconstruction.pdf}
     \caption{
-        Top: non-parametric reconstruction of the observed distribution using 315 GW events (red histogram). The blue line marks the median of the reconstructed distributions, and he shaded regions represent the corresponding 68\% and 90\% credible intervals.
+        Top: non-parametric reconstruction of the observed distribution using 315 GW events (red histogram). The blue line marks the median of the reconstructed distributions, and the shaded regions represent the corresponding 68\% and 90\% credible intervals.
         Bottom: subset of individual draws for the non-parametric reconstruction.
     }
     \label{fig:simulation_reconstruction}
@@ -300,7 +300,7 @@ Figure~\ref{fig:simulation_comparison} shows an illustration of the comparison b
     \script{plot_simulation_comparison.py}
     \includegraphics[width=\linewidth]{figures/simulation_comparison.pdf}
     \caption{
-        Comparison between the reconstructed observed distribution (blue line and shaded areas) and the predicted observed distribution with different $H_0$ choices. The gray shaded areas marks the boundaries for the $d_\mathrm{JS}$ calculation.
+        Comparison between the reconstructed observed distribution (blue line and shaded areas) and the predicted observed distribution with different $H_0$ choices. The gray shaded areas mark the boundaries for the $d_\mathrm{JS}$ calculation.
     }
     \label{fig:simulation_comparison}
 \end{figure}
@@ -363,7 +363,7 @@ The result of the remapping is shown in Fig.~\ref{fig:simulation_result_multi}.
 The recovered distribution, whose uncertainty budget comes from the remapping of the individual-\ac{PE} uncertainty in the non-parametric reconstruction, is consistent with the simulated values.
 
 This is an expected result, as the mock data is generated with the same population model and cosmological model we used in the analysis.
-We can also see that the uncertainty in $H_0$ is larger compare to the analysis in Sec.~\ref{sec:inference_H0}, as more parameters are inferred simultaneously.
+We can also see that the uncertainty in $H_0$ is larger compared to the analysis in Sec.~\ref{sec:inference_H0}, as more parameters are inferred simultaneously.
 The uncertainty in $\sigma$ is relatively large, this may be due to the large uncertainty in the reconstruction at the gap between the low-mass and high-mass peaks, which can be seen in 
 Fig.~\ref{fig:simulation_reconstruction}.
 
@@ -371,7 +371,7 @@ Fig.~\ref{fig:simulation_reconstruction}.
 \label{sec:real_data}
 
 In this section, we apply our method to the real data from the \ac{LVK}.
-We included all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}, these correspond to all the events with $\mathrm{FAR_{min}} < 1\ \mathrm{yr}^{-1}$, where $\mathrm{FAR_{min}}$ is the smallest false alarm rate over all search pipelines.
+We included all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}, these correspond to all the events with $\mathrm{FAR_{min}} < 1\ \mathrm{yr}^{-1}$, where $\mathrm{FAR_{min}}$ is the smallest false alarm rate among all search pipelines.
 These events are different from the events used in \cite{LIGOScientific:2021aug}, therefore, the results are not directly comparable.
 
 Similar to Sec.~\ref{sec:mock_data}, we first reconstructed the observed $m^z_1$ population distribution.
@@ -421,8 +421,8 @@ The result of the remapping is shown in Fig.~\ref{fig:real_result_multi}, and it
     }
     \label{fig:real_result_multi}
 \end{figure}
-The result implies that \variable{output/real_H0.txt}, which has an uncertainty much smaller than the one reported in \cite{KAGRA:2021duu}.
-This is because the uncertainty only includes the uncertainty from the reconstruction, which underestimates the true uncertainty which also includes the mismatch between the population model and the observed population distribution.
+The result implies that \variable{output/real_H0.txt}, which has an uncertainty much smaller than $H_0 = 50^{+37}_{-30}$ reported in \cite{KAGRA:2021duu}.
+This is mainly because the uncertainty only includes the uncertainty from the reconstruction, which underestimates the true uncertainty which also includes the mismatch between the population model and the observed population distribution.
 
 This analysis we report here is a proof of concept of the method presented in this paper, and we simply aim to demonstrate that our method can be applied to real data with relatively little effort.
 To perform a detailed analysis, a more comprehensive configuration that considers different population models, cosmological models, and selection functions is required, as well as a more robust optimization scheme to include more astrophysical parameters.
@@ -441,7 +441,7 @@ First, as mentioned in Sec.~\ref{sec:remapping}, our method is not a Bayesian in
 To perform a full Bayesian inference, we need to develop a likelihood function that considers the comparison of the two populations.
 With this likelihood, our method will give the same result as the standard hierarchical Bayesian inference, as long as the number of reconstructions is large enough.
 This will allow us to perform efficient Bayesian model selection, as different models can be tested without repeating the reconstruction of the observed population distribution.
-We will explore this possibility in a future work.
+We will explore this possibility in future work.
 
 Another potential improvement is to consider not only the primary mass distribution.
 For example, we can consider the joint distribution of the primary mass, mass ratio, and redshift.
