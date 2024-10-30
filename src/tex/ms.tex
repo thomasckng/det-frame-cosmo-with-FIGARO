@@ -51,9 +51,9 @@ This tension has motivated the search for new methods to measure $H_0$ with high
 To infer $H_0$ from \ac{GW} sources, one needs not only the luminosity distance which can be inferred from the signal but also the redshift of the source.
 Some \ac{GW} sources can be associated with \ac{EM} counterparts, allowing for the measurement of the redshift, e.g., GW170817 \citep{LIGOScientific:2017adf, Guidorzi:2017ogy}.
 However, most \ac{GW} sources do not have \ac{EM} counterparts.
-In this case, one can assume \ac{GW} sources are in galaxies and associate the redshift of the galaxy to the \ac{GW} source \citep{Schutz:1986gp, DelPozzo:2011vcw, Gray:2019ksv, Gray:2023wgj}.
+In this case, one can assume \ac{GW} sources are in galaxies and associate the redshift of the galaxy to the \ac{GW} source \citep{Schutz:1986gp, DelPozzo:2011vcw, Gray:2019ksv, Mukherjee:2020hyn, Mukherjee:2022afz, Gray:2023wgj}.
 Another alternative method is to use population statistics to infer $H_0$ by marginalizing the redshift distribution of the sources.
-This method is known as the spectral-siren method \citep{Farr:2019twy, You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx}.
+This method is known as the spectral-siren method \citep{Farr:2019twy, You:2020wju, Mastrogiovanni:2021wsd, LIGOScientific:2021aug, Ezquiaga:2022zkx, Karathanasis:2022rtr}.
 
 The fundamental idea of the spectral-siren method is to infer cosmology by comparing the observed mass population distribution with the intrinsic mass population distribution since the observed distribution is redshifted due to the expansion of the Universe.
 The method works best when the intrinsic distribution is well understood.
@@ -72,8 +72,8 @@ This approach allows us to extract the information contained in the observed dat
 Making use of the reconstructed distribution, we can easily explore the effect of using different models, as the reconstructed distribution can be reused for different models.
 Furthermore, the intermediate result represents the information contained in the observed data without any assumptions about the population model, cosmological model, or selection function, which allows us to study the features of the observed population directly.
 
-Other studies have made use of non-parametric methods for population studies \citep[e.g.,][]{Mandel:2018mve, Tiwari:2020vym, Rinaldi:2021bhm, Edelman:2021zkw, Sadiq:2021fin, Edelman:2022ydv, Callister:2023tgi, Ray:2023upk}, and now these methods are starting to be applied to the spectral siren method.
-For example, \cite{Farah:2024xub} used a Gaussian process to model the intrinsic mass distribution, which allows for a flexible model that can capture the features of the intrinsic distribution.
+Other studies have made use of non-parametric methods for population studies \citep[e.g.,][]{Mandel:2016prl, Mandel:2018mve, Tiwari:2020vym, Rinaldi:2021bhm, Edelman:2021zkw, Sadiq:2021fin, Edelman:2022ydv, Callister:2023tgi, Ray:2023upk}, and now these methods are starting to be applied to the spectral siren method.
+For example, \cite{Farah:2024xub} and \cite{MaganaHernandez:2024uty} used different non-parametric models to model the intrinsic mass distribution, which allows for a flexible model that can capture the features of the intrinsic distribution.
 
 In Sec.~\ref{sec:method}, we describe our modified method in detail.
 In Sec.~\ref{sec:mock_data}, we present the analysis setup and results of the mock data study.
@@ -224,7 +224,7 @@ This is advantageous for performing the analysis with different models when more
 Other than that, the optimization procedure can be performed in parallel for each reconstructed distribution, as each reconstructed distribution is independent.
 This reduces the runtime as long as computational resources are available.
 
-The analysis code we developed to implement the method presented in this section is publicly available on GitHub\footnote{ \url{https://github.com/thomasckng/det-frame-cosmo-with-FIGARO/tree/main/src/scripts}}.
+The analysis code we developed to implement the method presented in this section and the results of the following sections are publicly available on GitHub\footnote{\url{https://github.com/thomasckng/det-frame-cosmo-with-FIGARO/tree/main/src/scripts}} and Zenodo \citep{ng_2024_13968239} respectively.
 
 \section{Mock data}
 \label{sec:mock_data}
@@ -371,7 +371,7 @@ Fig.~\ref{fig:simulation_reconstruction}.
 \section{Real data}
 \label{sec:real_data}
 
-In this section, we apply our method to the \ac{GW} events released by the \ac{LVK} as part of the GWTC-2.1 \cite{LIGOScientific:2021usb} and GWTC-3 \cite{KAGRA:2021vkt} catalogs.
+In this section, we apply our method to the \ac{GW} events released by the \ac{LVK} as part of the GWTC-2.1 \cite{LIGOScientific:2021usb, ligo_scientific_collaboration_and_virgo_2022_6513631} and GWTC-3 \cite{KAGRA:2021vkt, ligo_scientific_collaboration_and_virgo_2023_8177023} catalogs.
 We included all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}, these correspond to all the events with $\mathrm{FAR_{min}} < 1\, \mathrm{yr}^{-1}$, where $\mathrm{FAR_{min}}$ is the smallest \ac{FAR} among all search pipelines.
 These events are different from the events used in \cite{LIGOScientific:2021aug}, where the authors use a \ac{FAR} threshold of $\mathrm{FAR_{min}} < 0.25\, \mathrm{yr}^{-1}$, therefore the results we present here might be slightly different from the ones in \cite{LIGOScientific:2021aug}.
 We opted for a larger \ac{FAR} threshold -- consistent, however, with the one used in population studies such as \cite{KAGRA:2021duu} -- to have a larger number of events to include in the non-parametric analysis.
