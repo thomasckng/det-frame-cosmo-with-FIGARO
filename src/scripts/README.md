@@ -7,7 +7,7 @@ python generate_selection_function.py
 
 Next, run the following command to generate the simulated data:
 ```
-python generate_simulated_data.py
+python generate_posterior_samples.py
 ```
 
 After installing [FIGARO](https://github.com/sterinaldi/FIGARO), reconstruction of the simulation can be done using the following command:
