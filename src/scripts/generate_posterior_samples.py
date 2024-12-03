@@ -5,7 +5,7 @@ import os
 import dill
 import paths
 
-np.random.default_rng(42)
+np.random.seed(42)
 
 # Mass distribution
 from population_models.mass import plpeak # from https://github.com/thomasckng/pop_models_lvk
@@ -44,7 +44,7 @@ posterior = generate_mz_posterior_samples(samples_single_event[:,0]) # shape = (
 
 np.savetxt(outdir / 'true_samples.txt', samples[:,0])
 np.savetxt(outdir / 'obs_samples.txt', samples_single_event[:,0])
-np.savetxt(outdir / 'jsd_bounds.txt', [np.median(posterior, axis=1).min(), np.median(posterior, axis=1).max()])
+np.savetxt(outdir / 'jsd_bounds.txt', [posterior.min(), posterior.max()])
 
 if not os.path.exists(outdir / 'data'):
     os.makedirs(outdir / 'data')
