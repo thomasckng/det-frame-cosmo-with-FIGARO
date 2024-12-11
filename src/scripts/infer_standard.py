@@ -164,7 +164,7 @@ class Inference(raynest.model.Model):
 if __name__ == '__main__':
 
     W = Inference()
-    work = raynest.raynest(W, verbose = 2, output = outdir/'inference', nnest = 8, nensemble = int(sys.argv[3]), nlive = 1000)
+    work = raynest.raynest(W, verbose = 2, output = outdir/'inference', nnest = int(sys.argv[3])//10, nensemble = int(sys.argv[3]), nlive = 100)
     work.run()
     post = work.posterior_samples.ravel()
     np.savez(outdir/f'multi/{param}_standard.npy', post=post)
