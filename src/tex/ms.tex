@@ -406,7 +406,7 @@ The result of the reconstruction is shown in Fig.~\ref{fig:real_reconstruction}.
 \end{figure}
 
 Next, we chose the \textsc{power law + peak} model as the source-frame population model $\Lambda$ and the $\Lambda$CDM model as the cosmological model $\Omega$.
-For the redshift population model, instead of the uniform distribution over comoving volume and source-frame time, we used the \textsc{power law} redshift evolution model described in \cite{KAGRA:2021duu}.
+For the redshift population model, instead of the uniform distribution over comoving volume and source-frame time, we used the \textsc{power law} redshift evolution model described in Eq.~8 of \cite{KAGRA:2021duu}.
 Similar to Sec.~\ref{sec:inference_multi}, we fixed some parameters of the population model and the cosmological model.
 For the cosmological model, we fixed the parameters to the results from \cite{Planck:2018vyg} except $H_0$.
 For the population model, we fixed $\alpha$, $w$, $m_\mathrm{min}$, $m_\mathrm{max}$, and $\delta$ to the results from \cite{LIGOScientific:2021aug}.
@@ -430,7 +430,7 @@ The fixed parameters of the population model are shown in Table~\ref{tab:fixed_p
 
 We then perform the remaining steps similar to Sec.~\ref{sec:inference_multi}.
 We set the bounds for the power-law index of the redshift population model $\kappa$ to $[-100, 100]$, and the bounds for other free parameters are the same as in Table~\ref{tab:bounds}.
-The result of the remapping is shown in Fig.~\ref{fig:real_result_multi}, and it is consistent with the posterior distribution reported in \cite{KAGRA:2021duu}.
+The result of the remapping is shown in Fig.~\ref{fig:real_result_multi}, and it is consistent with the posterior distribution reported in \cite{LIGOScientific:2021aug}.
 \begin{figure}
     \script{plot_real_result_multi.py}
     \includegraphics[width=\linewidth]{figures/real_result_multi.pdf}
@@ -440,13 +440,9 @@ The result of the remapping is shown in Fig.~\ref{fig:real_result_multi}, and it
     \label{fig:real_result_multi}
 \end{figure}
 The result implies that \variable{output/real_H0.txt}, with symmetric $90\%$-credible intervals around the median.
-The uncertainty is smaller than the one reported in \cite{KAGRA:2021duu} ($H_0 = 50^{+37}_{-30} \, \mathrm{km/s/Mpc}$), mainly because it only includes the uncertainty from the reconstruction, which underestimates the true uncertainty which also includes the mismatch between the population model and the observed population distribution.
-Figure \ref{fig:real_result_multi} shows a peak in the marginalized posterior distribution of $H_0$ around $70\, \mathrm{km/s/Mpc}$.
-This means a significant fraction of the reconstructed observed population distribution has an optimized $H_0$ around $70\, \mathrm{km/s/Mpc}$, which again does not include the uncertainty from the mismatch between the population model and the observed population distribution.
-The peak should be interpreted as an artifact of the optimization procedure.
-
-% This analysis we report here is a proof of concept of the method presented in this paper, and we simply aim to demonstrate that our method can be applied to real data with relatively little effort.
-% To perform a detailed analysis, a more comprehensive configuration that considers different population models, cosmological models, and selection functions is required, as well as a more robust optimization scheme to include more astrophysical parameters.
+The uncertainty is slightly smaller than the one reported in \cite{LIGOScientific:2021aug} ($H_0 = 50^{+37}_{-30} \, \mathrm{km/s/Mpc}$), mainly because it only includes the uncertainty from the reconstruction, which underestimates the true uncertainty which also includes the mismatch between the population model and the observed population distribution.
+Figure \ref{fig:real_result_multi} shows a peak in the marginalized posterior distribution of $H_0$ around $140\, \mathrm{km/s/Mpc}$.
+This means a significant fraction of the reconstructed observed population distribution has an optimized $H_0$ around $140\, \mathrm{km/s/Mpc}$, which again does not include the uncertainty from the mismatch between the population model and the observed population distribution.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -454,7 +450,7 @@ The peak should be interpreted as an artifact of the optimization procedure.
 In this paper, we proposed a method to infer both the intrinsic population model and the cosmological model simultaneously by leveraging the detector-frame mass population distribution and making use of non-parametric methods.
 We demonstrated the method with a mock data study and applied it to the real data from the \ac{LVK}.
 With the numbers of observed \ac{GW} events that are expected to grow larger and larger, potentially hitting the thousand mark by the end of the fifth observing run, performing a complete analysis from scratch with different astrophysical models will soon become too computationally expensive.
-The method we propose in this paper can help mitigate this issue by providing a fast and efficient way to explore different models before performing the full hierarchical Bayesian inference, especially keeping in mind that, if a wrong population model is chosen, the inference result will be biased \citep{Mukherjee:2021rtw, Mastrogiovanni:2021wsd, Pierra:2023deu, LIGOScientific:2020kqk, KAGRA:2021duu}.
+The method we propose in this paper can help mitigate this issue by providing a fast and efficient way to explore different models before performing the full hierarchical Bayesian inference, especially keeping in mind that, if a wrong population model is chosen, the inference result will be biased \citep{Mukherjee:2021rtw, Mastrogiovanni:2021wsd, Pierra:2023deu, LIGOScientific:2020kqk, KAGRA:2021duu, LIGOScientific:2021aug}.
 This makes our method a powerful diagnostic tool for model selection.
 
 To further improve the method, there are several directions we can explore.
