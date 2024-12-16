@@ -14,7 +14,7 @@ ax.axvline(true_H0, lw = 0.7, ls = '--', c = 'red', label = f'$H_0={true_H0:.1f}
 ax.axvline(percs[2], c = 'steelblue', lw=0.7, label = f'$H_0={percs[2]:.1f}^{{+{percs[3]-percs[2]:.1f}}}_{{-{percs[2]-percs[1]:.1f}}}$')
 ax.axvspan(percs[1], percs[3], alpha=0.35, color='mediumturquoise')
 ax.axvspan(percs[0], percs[4], alpha=0.2, color='darkturquoise')
-ax.legend()
+ax.legend(loc='upper left')
 ax.set_xlabel('$H_0\ [\mathrm{km/s/Mpc}]$')
 ax.set_ylabel('$\mathrm{Density}$')
 ax.set_xlim(percs[2]-30, percs[2]+30)

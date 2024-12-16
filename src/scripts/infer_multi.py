@@ -28,15 +28,15 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)*(1+z)**(kappa-1)
 
     bounds_dict = {
-        "H0": (10, 300),
-        "alpha": (1.01, 10),
-        "mu": (10, 70),
-        "sigma": (0.01, 10),
+        "H0": (1, 350),
+        "alpha": (1.01, 15),
+        "mu": (0.01, 70),
+        "sigma": (0.01, 60),
         "w": (0, 1),
         "delta": (0.01, 20),
         "mmin": (1, 10),
         "mmax": (70, 150),
-        "kappa": (-10, 10)
+        "kappa": (-100, 100)
     }
     if label == "simulation":
         if param == "2a":
@@ -164,7 +164,6 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         return result
 
     mz = np.linspace(1,200,900)
-    H0 = np.linspace(5,150,1000)
     z = np.linspace(0.001,2,800)
     m = np.einsum("i, j -> ij", mz, np.reciprocal(1+z)) # shape = (len(mz), len(z))
 
