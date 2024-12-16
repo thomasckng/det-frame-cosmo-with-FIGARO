@@ -1,7 +1,7 @@
 import numpy as np
 import paths
 
-f = np.load(paths.data / 'real/multi' / '4d_Powell.npz')
+f = np.load(paths.data / 'real/multi' / '4c_Powell.npz')
 result = f['result']
 result = result[(result[:, 0] > 40) & (result[:, 0] < 100)]
 H0 = result[:, 0]
