@@ -4,6 +4,6 @@ dependencies:
   - python < 3.11
   - pip
   - pip:
-    - figaro
+    - git+https://github.com/sterinaldi/FIGARO.git
     - numpy < 2
     - git+https://github.com/thomasckng/pop_models_lvk.git
