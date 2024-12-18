@@ -10,7 +10,7 @@ rule get_number_of_simulated_events:
 
 rule compute_real_H0:
     input:
-        "src/data/real/multi/4d_Powell.npz"
+        "src/data/real/multi/4c_Powell.npz"
     output:
         "src/tex/output/real_H0.txt"
     script:
