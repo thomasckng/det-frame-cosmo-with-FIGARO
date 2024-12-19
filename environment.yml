@@ -5,6 +5,4 @@ dependencies:
   - pip
   - pip:
     - git+https://github.com/thomasckng/pop_models_lvk.git
-    - figaro
-    - numpy < 2
-    - matplotlib
+    - git+https://github.com/thomasckng/FIGARO.git
