@@ -5,4 +5,4 @@ dependencies:
   - pip
   - pip:
     - git+https://github.com/thomasckng/pop_models_lvk.git
-    - git+https://github.com/thomasckng/FIGARO.git
+    - git+https://github.com/sterinaldi/FIGARO.git
