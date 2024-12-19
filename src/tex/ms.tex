@@ -386,7 +386,7 @@ We can also see that the uncertainty in $H_0$ is larger compared to the analysis
 
 In this section, we apply our method to the \ac{GW} events released by the \ac{LVK} as part of the GWTC-2.1 \cite{LIGOScientific:2021usb, ligo_scientific_collaboration_and_virgo_2022_6513631} and GWTC-3 \cite{KAGRA:2021vkt, ligo_scientific_collaboration_and_virgo_2023_8177023} catalogs.
 We include all $70$ events labeled as BBH in Table~I of \cite{KAGRA:2021duu}, these correspond to all the events with $\mathrm{FAR_{min}} < 1\, \mathrm{yr}^{-1}$, where $\mathrm{FAR_{min}}$ is the smallest \ac{FAR} among all search pipelines.
-These events are different from the events used in \cite{LIGOScientific:2021aug}, where the authors use a \ac{FAR} threshold of $\mathrm{FAR_{min}} < 0.25\, \mathrm{yr}^{-1}$, therefore the results we present here might be slightly different from the ones in \cite{LIGOScientific:2021aug}.
+The cut used to select these events is different from the one used in \cite{LIGOScientific:2021aug}, against which we will compare our results: there, the authors use a \ac{FAR} threshold of $\mathrm{FAR_{min}} < 0.25\, \mathrm{yr}^{-1}$, therefore the results we present here will be, in principle, different.
 We opted for a larger \ac{FAR} threshold -- consistent, however, with the one used in population studies such as \cite{KAGRA:2021duu} -- to have a larger number of events to include in the non-parametric analysis.
 
 Similar to Sec.~\ref{sec:mock_data}, we first reconstruct the observed $m^z_1$ population distribution.
@@ -426,7 +426,7 @@ The fixed parameters of the population model are shown in Table~\ref{tab:fixed_p
     \label{tab:fixed_parameters}
 \end{table}
 
-We then perform the remaining steps similar to Sec.~\ref{sec:inference_multi}.
+We then perform the remaining steps in the same way as Sec.~\ref{sec:inference_multi}.
 We set the bounds for the power-law index of the redshift population model $\kappa$ to $[-100, 100]$, and the bounds for other free parameters are the same as in Table~\ref{tab:bounds}.
 The result of the remapping is shown in Fig.~\ref{fig:real_result_multi}, and it is consistent with the posterior distribution reported in \cite{LIGOScientific:2021aug}.
 \begin{figure}
@@ -437,11 +437,10 @@ The result of the remapping is shown in Fig.~\ref{fig:real_result_multi}, and it
     }
     \label{fig:real_result_multi}
 \end{figure}
-The result implies that \variable{output/real_H0.txt}, with symmetric $90\%$-credible intervals around the median.
-The uncertainty is larger than the one reported in \cite{LIGOScientific:2021aug} ($H_0 = 50^{+37}_{-30} \, \mathrm{km/s/Mpc}$), .
-Figure \ref{fig:real_result_multi} shows a peak in the marginalized posterior distribution of $H_0$ around $140\, \mathrm{km/s/Mpc}$.
-This means a significant fraction of the reconstructed observed population distribution has an optimized $H_0$ around $140\, \mathrm{km/s/Mpc}$, which does not include the uncertainty from the mismatch between the population model and the observed population distribution.
-The reason for the peak differing from the one reported in \cite{LIGOScientific:2021aug}, which is around $50\, \mathrm{km/s/Mpc}$, .
+we find \variable{output/real_H0.txt}, (68\% credible interval around the median). Nonetheless, Figure~\ref{fig:real_result_multi} shows a peak in the marginalized posterior distribution of $H_0$ around $140\, \mathrm{km/s/Mpc}$, with a width of around $30-35\, \mathrm{km/s/Mpc}$ roughly consistent with the uncertainty reported in \cite{LIGOScientific:2021aug} ($H_0 = 50^{+37}_{-30} \, \mathrm{km/s/Mpc}$).
+%This means a significant fraction of the reconstructed observed population distribution has an optimized $H_0$ around $140\, \mathrm{km/s/Mpc}$, which does not include the uncertainty from the mismatch between the population model and the observed population distribution.
+
+The reason for the peak differing from the one reported in \cite{LIGOScientific:2021aug}, which is around $50\, \mathrm{km/s/Mpc}$, can be several, and most likely stemming from the various approximations made in this work. First of all, the choice of the Jensen-Shannon distance as a measure of ``closeness'' between the non-parametric reconstruction and the predicted population is an arbitrary choice and, despite being a commonly used metric, does not stem from a specific derivation and/or assumption on the process that generated the observations. As we stated in Section~\ref{sec:remapping}, the output of our method is not a posterior distribution in the strict sense due to this choice: the derivation of a well-grounded metric to connect non-parametric and parametric distributions will be discussed in a future paper. Another possibility is the approximation made while including the selection effects: as discussed in \cite{Essick:2023upv}, this choice can lead, to some extent, to a bias in the reconstruction, and thus be the reason why the peak of the posterior distribution for $H_0$ is shifted. Accounting for selection effects while reconstructing the observed distribution is in principle possible -- although not explored in the currently available literature -- and will be, as well, investigated in the future.
 
 \section{Conclusion}
 \label{sec:conclusion}
