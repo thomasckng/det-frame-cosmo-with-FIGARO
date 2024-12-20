@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage{mathtools}
 \usepackage{orcidlink}
+\usepackage{tabularx}
 
 \begin{document}
 
@@ -92,7 +93,7 @@ Finally, we conclude in Sec.~\ref{sec:conclusion} with a summary and outlook.
 In this section, we present the framework we developed to infer both the intrinsic population model and the cosmological model simultaneously by leveraging the detector-frame mass population distribution.
 We will make use of the notation summarized in Table~\ref{tab:notation}, taken from~\cite{Rinaldi:2021bhm, Rinaldi:2022kyg}.
 
-\begin{table}[htbp]
+\begin{table}
     \caption{Notation used in this paper}
     \begin{tabular}{cp{0.7\linewidth}}
         \toprule
@@ -351,9 +352,9 @@ With more and more events in the near future, the standard spectral-siren method
 In this example, instead of transforming the source-frame population model to the detector frame for each $H_0$ and performing a grid search, we define a function that calculates $d_\mathrm{JS}$ for a given set of the free parameters.
 We then use the optimization algorithm mentioned in Sec.~\ref{sec:remapping} to find the optimized free parameters that minimize $d_\mathrm{JS}$.
 The optimization method requires bounds for the free parameters, which we show in Table~\ref{tab:bounds}.
-\begin{table}[htbp]
+\begin{table}
     \caption{Free parameter bounds for the joint inference presented in Section~\ref{sec:inference_multi}.}
-    \begin{tabular}{cc}
+    \begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X}
         \toprule
         Parameter & Bounds \\
         \midrule
@@ -362,7 +363,7 @@ The optimization method requires bounds for the free parameters, which we show i
         $\mu$ & $[0.01, 70]$ \\
         $\sigma$ & $[0.01, 60]$ \\
         \botrule
-    \end{tabular}
+    \end{tabularx}
     \label{tab:bounds}
 \end{table}
 The initial guesses for the optimization are chosen randomly from a uniform distribution within the bounds.
@@ -411,19 +412,19 @@ For the cosmological model, we fixed the parameters to the results from \cite{Pl
 For the population model, we fixed $\alpha$, $w$, $m_\mathrm{min}$, $m_\mathrm{max}$, and $\delta$ to the results from \cite{LIGOScientific:2021aug}.
 Note that the fixed parameters are not necessarily the true values, but they can be considered as a reasonable guess for the parameters.
 The fixed parameters of the population model are shown in Table~\ref{tab:fixed_parameters}.
-\begin{table}[htbp]
+\begin{table}
     \caption{Fixed parameters of the $\Lambda$CDM model (left) and the \textsc{power law + peak} model (right).}
-    \begin{tabular}{cc|cc}
+    \begin{tabularx}{\linewidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X | >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
         \toprule
-        Parameter & Value & Parameter & Value  \\
+        Parameter & Value & Parameter & Value \\
         \midrule
          & & $w$ & $0.024$ \\
-        $\Omega_m$ & $0.315$ & $\alpha$ & $4.2\ \mathrm{M}_\odot$\\
+        $\Omega_m$ & $0.315$ & $\alpha$ & $4.2\ \mathrm{M}_\odot$ \\
         $\Omega_\Lambda$ & $0.685$ & $m_\mathrm{min}$ & $5\ \mathrm{M}_\odot$ \\
         $w$ & $-1$ & $m_\mathrm{max}$ & $109\ \mathrm{M}_\odot$ \\
-         & & $\delta$ & $4.9\ \mathrm{M}_\odot$\\
+         & & $\delta$ & $4.9\ \mathrm{M}_\odot$ \\
         \botrule
-    \end{tabular}
+    \end{tabularx}
     \label{tab:fixed_parameters}
 \end{table}
 
