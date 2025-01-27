@@ -116,7 +116,7 @@ stamp:
 synctex: True
 
 # Command-line options to be passed to tectonic when building the manuscript
-tectonic_args: ["--print"]
+tectonic_args: []
 
 # Preprocessing script for arXiv tarball
 # (such as to switch `minted` from `finalizecache` to `frozencache`)
