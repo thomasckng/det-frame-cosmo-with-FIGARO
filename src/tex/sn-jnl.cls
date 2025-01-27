@@ -1668,7 +1668,7 @@
 \if@APS@refstyle%
   \usepackage[numbers,sort&compress]{natbib}%
   \gdef\NumBib{YES}%
-  \bibliographystyle{sn-APS}%
+  \bibliographystyle{sn-aps}%
   \setlength{\bibsep}{1em}%
   \def\bibfont{\reset@font\fontfamily{\rmdefault}\normalsize\selectfont}%
 \fi%
