@@ -61,6 +61,7 @@ dependencies:
     - src/data/real/samples_med.txt
   src/tex/ms.tex:
     - src/tex/bib.bib
+    - src/tex/sn-aps.bst
 
 # Name of the `.tex` manuscript and corresponding `.pdf` article
 ms_name: ms
