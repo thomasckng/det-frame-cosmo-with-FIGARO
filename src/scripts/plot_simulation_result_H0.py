@@ -1,11 +1,14 @@
 from figaro import plot_settings
-from figaro.cosmology import Planck18
+from figaro.cosmology import Planck15
 import numpy as np
 import matplotlib.pyplot as plt
 import paths
+import sys
 
-H0_samples = np.loadtxt(paths.data / 'simulation' / 'H0s.txt')
-true_H0 = Planck18.h*100
+mz = float(sys.argv[1])
+
+H0_samples = np.load(paths.data / f'simulation/multi/1_Grid_{mz}.npz')['result']
+true_H0 = Planck15.h*100
 
 fig, ax = plt.subplots()
 ax.hist(H0_samples, bins = int(np.sqrt(len(H0_samples))), histtype = 'step', density = True, color = 'tab:blue')
@@ -17,5 +20,5 @@ ax.axvspan(percs[0], percs[4], alpha=0.2, color='darkturquoise')
 ax.legend(loc='upper left')
 ax.set_xlabel('$H_0\ [\mathrm{km/s/Mpc}]$')
 ax.set_ylabel('$\mathrm{Density}$')
-ax.set_xlim(percs[2]-30, percs[2]+30)
-fig.savefig(paths.figures / "simulation_result_H0.pdf", bbox_inches='tight')
+# ax.set_xlim(percs[2]-30, percs[2]+30)
+fig.savefig(paths.figures / f"simulation_result_H0_{mz}.pdf", bbox_inches='tight')

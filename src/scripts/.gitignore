@@ -12,6 +12,7 @@
 *.err
 *.log
 *.txt
+!lvk_result_list.txt
 
 condor
 outcmaes
