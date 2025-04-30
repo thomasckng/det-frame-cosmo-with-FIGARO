@@ -21,7 +21,7 @@ def generate_truth(n_single_event_draws):
     return np.array([m * (1 + z), z]).T
 
 # Generate detector frame mass posterior samples
-def generate_mz_posterior_samples(truth, sigma = 0.03, n_samples = 1000):
+def generate_posterior_samples(truth, sigma = 0.03, n_samples = 1000):
     log_obs_mean = np.log(truth) + np.random.normal(0, sigma, truth.shape) # shape = (n_events)
     return np.exp(np.random.normal(log_obs_mean, sigma, (n_samples, len(truth)))).T # shape = (n_events, n_samples)
 
@@ -40,11 +40,14 @@ outdir = paths.data / outdir
 samples = generate_truth(n_single_event_draws) # shape = (n_events, n_params)
 samples[:,1] = Omega.LuminosityDistance(samples[:,1])
 samples_single_event = samples[np.random.uniform(0,1,samples.shape[0]) <= selection_function(samples)] # shape = (n_events, n_params)
-posterior = generate_mz_posterior_samples(samples_single_event[:,0]) # shape = (n_events, n_samples)
+posterior_mz = generate_posterior_samples(samples_single_event[:,0]) # shape = (n_events, n_samples)
+posterior_dL = generate_posterior_samples(samples_single_event[:,1], sigma = 0.1) # shape = (n_events, n_samples)
+posterior = np.array([posterior_mz, posterior_dL]) # shape = (n_params, n_events, n_samples)
+posterior = np.transpose(posterior, (1, 2, 0)) # shape = (n_events, n_samples, n_params)
 
-np.savetxt(outdir / 'true_samples.txt', samples[:,0])
-np.savetxt(outdir / 'obs_samples.txt', samples_single_event[:,0])
-np.savetxt(outdir / 'jsd_bounds.txt', [posterior.min(), posterior.max()])
+np.savetxt(outdir / 'true_samples.txt', samples)
+np.savetxt(outdir / 'obs_samples.txt', samples_single_event)
+np.savetxt(outdir / 'jsd_bounds.txt', [[np.min(posterior_mz), np.max(posterior_mz)], [np.min(posterior_dL), np.max(posterior_dL)]])
 
 if not os.path.exists(outdir / 'data'):
     os.makedirs(outdir / 'data')

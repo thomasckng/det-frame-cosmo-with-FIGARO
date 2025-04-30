@@ -18,7 +18,7 @@ Use `figaro-hierarchical` instead of `figaro-par-hierarchical` if you want to ru
 
 To infer $H_0$ from the simulation results, run the following command:
 ```
-python infer_H0.py simulation
+python infer_H0.py
 ```
 
 To infer multiple parameters instead, run the following command:
