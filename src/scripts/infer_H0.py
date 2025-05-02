@@ -83,7 +83,7 @@ jsd = np.array(jsd)
 H0_samples = H0[np.argmin(jsd, axis=1)]
 
 print("Saving results...")
-np.save(outdir / f"H0_samples_{label}.npy", H0_samples) # shape = (len(draws),)
-np.save(outdir / f"jsd_{label}.npy", jsd) # shape = (len(draws), len(H0))
+np.save(outdir / f"H0_samples.npy", H0_samples) # shape = (len(draws),)
+np.save(outdir / f"jsd.npy", jsd) # shape = (len(draws), len(H0))
 
 print("Done!")
