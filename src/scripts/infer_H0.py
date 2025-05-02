@@ -1,11 +1,12 @@
 import numpy as np
 from figaro.cosmology import CosmologicalParameters
-from scipy.spatial.distance import jensenshannon as scipy_jsd
+from scipy.spatial.distance import jensenshannon
 from figaro.load import load_density
-import sys
 from tqdm import tqdm
 import dill
 import paths
+import multiprocessing
+import sys
 
 # Mass distribution
 from population_models.mass import plpeak # from from https://github.com/sterinaldi/cbc_pdet
@@ -21,10 +22,12 @@ outdir = paths.data / label
 print("Preparing model pdfs...")
 grid_label = "grid"
 try:
-    mz, H0, z, m, model_pdf = np.load(outdir / f"../{grid_label}.npz").values()
-except:
+    mz, H0, dL, model_pdf = np.load(outdir / f"../{grid_label}.npz").values()
+except Exception as e:
+    print(f"Error loading {grid_label}.npz: {e}")
+    print("Generating model pdfs...")
     mz = np.linspace(1,200,90)
-    H0 = np.linspace(5,150,1000)
+    H0 = np.linspace(5,150,500)
     dL = np.linspace(10, 25000, 80)
 
     # Calculate source-frame population model pdf for each H0
@@ -64,16 +67,23 @@ dL_short = dL[_dL_mask]
 
 model_pdf_short = model_pdf[:, _mz_mask, :][:, :, _dL_mask] # shape = (len(H0), len(mz_short), len(dL_short))
 
-figaro_pdf = np.array([draw.pdf(mz_short, dL_short) for draw in draws]) # shape = (len(draws), len(mz_short), len(dL_short))
+grid = np.transpose(np.meshgrid(mz_short, dL_short)) # shape = (len(mz_short), len(dL_short), 2)
+figaro_pdf = np.array([draw.pdf(grid) for draw in draws]) # shape = (len(draws), len(mz_short), len(dL_short))
+
+def compute_jsd_for_draw(args):
+    figaro_pdf_j, model_pdf_short = args
+    return [jensenshannon(model_pdf_short[h].ravel(), figaro_pdf_j.ravel()) for h in range(len(H0))]
 
 print("Inferring H0...")
 # Compute JSD between (reconstructed observed distributions for each DPGMM draw) and (model mz distributions for each H0)
-jsd = np.array([scipy_jsd(model_pdf_short, np.full((len(H0), len(mz_short), len(dL_short)), np.transpose(figaro_pdf[j]), (0, 2, 1))) for j in tqdm(range(len(figaro_pdf)), desc='JSD')]) # shape = (len(draws), len(H0))
+with multiprocessing.Pool(int(sys.argv[1])) as pool:
+    jsd = pool.map(compute_jsd_for_draw, [(figaro_pdf[j], model_pdf_short) for j in range(len(figaro_pdf))])
+jsd = np.array(jsd)
 # Find H0 that minimizes JSD for each DPGMM draw
 H0_samples = H0[np.argmin(jsd, axis=1)]
 
 print("Saving results...")
-np.savetxt(outdir / "jsds.txt", jsd)
-np.savetxt(outdir / "H0s.txt", H0_samples)
+np.save(outdir / f"H0_samples_{label}.npy", H0_samples) # shape = (len(draws),)
+np.save(outdir / f"jsd_{label}.npy", jsd) # shape = (len(draws), len(H0))
 
 print("Done!")
