@@ -25,7 +25,8 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
     # Redshift distribution
     def p_z(z, H0, kappa=0):
         # Fixed parameters are from the result of Planck 2018
-        return CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.).ComovingVolumeElement(z)*(1+z)**(kappa-1)
+        Omega = CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.)
+        return Omega.ComovingVolumeElement(z)*(1+z)**(kappa-1)/Omega.dDLdz(z)
 
     bounds_dict = {
         "H0": (1, 350),
