@@ -26,7 +26,7 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
     def p_z(z, H0, kappa=0):
         # Fixed parameters are from the result of Planck 2018
         Omega = CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.)
-        return Omega.ComovingVolumeElement(z)*(1+z)**(kappa-1)/Omega.dDLdz(z)
+        return Omega.ComovingVolumeElement(z)*(1+z)**(kappa-2)/Omega.dDLdz(z) # Jacobian for m, z to mz, dL is included. Jacobian = (1+z)**(-1)/Omega.dDLdz(z)
 
     bounds_dict = {
         "H0": (1, 350),
@@ -40,41 +40,16 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         "kappa": (-100, 100)
     }
     if label == "simulation":
-        if param == "2a":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1])
-        elif param == "2b":
-            bounds = bounds_dict["H0"], bounds_dict["mu"]
-            def p_m(m, x):
-                return plpeak(m, mu=x[1])
-        elif param == "4a":
-            bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["delta"]
-            def p_m(m, x):
-                return plpeak(m, mu=x[1], sigma=x[2], delta=x[3])
-        elif param == "4b":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], sigma=x[3])
-        elif param == "5a":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4])
-        elif param == "5b":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["mmin"], bounds_dict["w"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], mmin=x[3], w=x[4])
-        elif param == "6a":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=x[5])
-        elif param == "8":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"], bounds_dict["mmin"], bounds_dict["mmax"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=x[5], mmin=x[6], mmax=x[7])
-        else:
-            print("Invalid argument!")
-            sys.exit(1)
+        fixed_params = {
+            "alpha": 3.5,
+            "mmin": 5,
+            "mmax": 90,
+            "delta": 5,
+            "mu": 35,
+            "sigma": 5,
+            "w": 0.2,
+            "kappa": 0
+        }
     elif label == "real":
         # Fixed parameters are the median values from the result of "Constraints on the Cosmic Expansion History from GWTC–3" (SNR > 10 & w0flatLCDM)
         fixed_params = {
@@ -86,40 +61,59 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
             "mmin": 5.0808821331157095,
             "mmax": 109.03299036617125
         }
-        if param == "3a":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["kappa"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-        elif param == "3b":
-            bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["kappa"]
-            def p_m(m, x):
-                return plpeak(m, mu=x[1], alpha=fixed_params["alpha"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-        elif param == "4c":
-            bounds = bounds_dict["H0"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
-            def p_m(m, x):
-                return plpeak(m, alpha=fixed_params["alpha"], mu=x[1], sigma=x[2], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-        elif param == "4d":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["kappa"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-        elif param == "5c":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["kappa"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-        elif param == "6b":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["kappa"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-        elif param == "9":
-            bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"], bounds_dict["mmin"], bounds_dict["mmax"], bounds_dict["kappa"]
-            def p_m(m, x):
-                return plpeak(m, alpha=x[1], mu=x[2], sigma=x[3], w=x[4], delta=x[5], mmin=x[6], mmax=x[7])
-        else:
-            print("Invalid argument!")
-            sys.exit(1)
     else:
-        print("Invalid argument!")
+        print("Invalid label!")
         sys.exit(1)
+
+    if param == "2a":
+        param_list = ['H0', 'alpha']
+        def p_m(m, x):
+            return plpeak(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "2b":
+        param_list = ['H0', 'mu']
+        def p_m(m, x):
+            return plpeak(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "3a":
+        param_list = ['H0', 'alpha', 'kappa']
+        def p_m(m, x):
+            return plpeak(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "3b":
+        param_list = ['H0', 'mu', 'kappa']
+        def p_m(m, x):
+            return plpeak(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "4a":
+        param_list = ['H0', 'alpha', 'mu', 'sigma']
+        def p_m(m, x):
+            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "4b":
+        param_list = ['H0', 'mu', 'sigma', 'kappa']
+        def p_m(m, x):
+            return plpeak(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "4c":
+        param_list = ['H0', 'alpha', 'mu', 'kappa']
+        def p_m(m, x):
+            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "5a":
+        param_list = ['H0', 'alpha', 'mu', 'sigma', 'w']
+        def p_m(m, x):
+            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "5b":
+        param_list = ['H0', 'alpha', 'mu', 'sigma', 'kappa']
+        def p_m(m, x):
+            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "6":
+        param_list = ['H0', 'alpha', 'mu', 'sigma', 'w', 'kappa']
+        def p_m(m, x):
+            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+    elif param == "9":
+        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"], bounds_dict["mmin"], bounds_dict["mmax"], bounds_dict["kappa"]
+        def p_m(m, x):
+            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=x[param_list.index("delta")], mmin=x[param_list.index("mmin")], mmax=x[param_list.index("mmax")])
+    else:
+        print("Invalid parameter!")
+        sys.exit(1)
+    
+    bounds = [bounds_dict[p] for p in param_list]
 
     
     print("Reading bounds and draws...")
@@ -146,22 +140,22 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
     pdf_figaro = np.array([draw.pdf(grid) for draw in draws])  # shape = (n_draws, len(mz_short), len(dL_short))
 
     # Model PDF construction
-    if label == "simulation":
+    if "kappa" in param_list:
         def model_pdf_func(x):
             # x: parameter vector, x[0] is H0
-            z = get_z_from_dL(x[0], dL_short)  # shape = (len(dL_short),)
+            z = get_z_from_dL(x[param_list.index("H0")], dL_short) # shape = (len(dL_short),)
             m = np.einsum("i, j -> ij", mz_short, np.reciprocal(1+z))  # shape = (len(mz_short), len(dL_short))
             model_pdf_m = p_m(m, x) # shape = (len(mz_short), len(dL_short))
-            model_pdf_z = p_z(z, x[0]) # shape = (len(mz_short), len(dL_short))
+            model_pdf_z = p_z(z, x[param_list.index("H0")], x[param_list.index("kappa")]) # shape = (len(mz_short), len(dL_short))
             return np.einsum("ij, j -> ij", model_pdf_m, model_pdf_z)  # shape = (len(mz_short), len(dL_short))
-    elif label == "real":
+    else:
         def model_pdf_func(x):
             # x: parameter vector, x[0] is H0
-            z = get_z_from_dL(x[0], dL_short)  # shape = (len(dL_short),)
-            m = np.einsum("i, j -> ij", mz_short, np.reciprocal(1+z))  # shape = (len(mz_short), len(dL_short))
+            z = get_z_from_dL(x[param_list.index("H0")], dL_short) # shape = (len(dL_short),)
+            m = np.einsum("i, j -> ij", mz_short, np.reciprocal(1+z)) # shape = (len(mz_short), len(dL_short))
             model_pdf_m = p_m(m, x) # shape = (len(mz_short), len(dL_short))
-            model_pdf_z = p_z(z, x[0], x[-1]) # shape = (len(mz_short), len(dL_short))
-            return np.einsum("ij, j -> ij", model_pdf_m, model_pdf_z)  # shape = (len(mz_short), len(dL_short))
+            model_pdf_z = p_z(z, x[param_list.index("H0")], fixed_params["kappa"]) # shape = (len(mz_short), len(dL_short))
+            return np.einsum("ij, j -> ij", model_pdf_m, model_pdf_z) # shape = (len(mz_short), len(dL_short))
 
     # Load selection function
     with open(paths.data/'selection_function.pkl', 'rb') as f: # selection_function.pkl is generated by generate_selection_function.py
@@ -183,7 +177,6 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         def minimize(i):
             x0 = [uni(*bounds[j]) for j in range(len(bounds))]
             return scipy_minimize(jsd, x0=x0, bounds=bounds, args=(i,), method=method).x
-        
     elif method == "CMA-ES":
 
         import cma
@@ -191,10 +184,8 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         def minimize(i):
             x0 = [uni(*bounds[j]) for j in range(len(bounds))]
             return cma.fmin2(jsd, x0, 1, {'bounds': np.array(bounds).T.tolist(), 'CMA_stds': np.array(bounds).T[1]/4}, args=(i,))[0]
-
-
     else:
-        print("Invalid argument!")
+        print("Invalid method!")
         sys.exit(1)
 
     def minimize_and_save(i):

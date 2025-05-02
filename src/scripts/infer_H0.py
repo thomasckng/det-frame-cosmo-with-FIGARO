@@ -14,7 +14,7 @@ from population_models.mass import plpeak # from from https://github.com/sterina
 # Redshift distribution
 def p_z(z, H0):
     Omega = CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.)
-    return Omega.ComovingVolumeElement(z)/((1+z)*Omega.dDLdz(z))
+    return Omega.ComovingVolumeElement(z)*(1+z)**(-2)/Omega.dDLdz(z)
 
 label = 'simulation'
 outdir = paths.data / label
