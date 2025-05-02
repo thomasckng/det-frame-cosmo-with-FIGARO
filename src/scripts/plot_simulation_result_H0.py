@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import paths
 
-H0_samples = np.loadtxt(paths.data / 'simulation' / 'H0s.txt')
+H0_samples = np.load(paths.data / 'simulation' / 'H0_samples.npy')
 true_H0 = Planck18.h*100
 
 fig, ax = plt.subplots()
