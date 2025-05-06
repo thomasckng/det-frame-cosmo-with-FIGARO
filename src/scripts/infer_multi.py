@@ -106,7 +106,7 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         def p_m(m, x):
             return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "9":
-        bounds = bounds_dict["H0"], bounds_dict["alpha"], bounds_dict["mu"], bounds_dict["sigma"], bounds_dict["w"], bounds_dict["delta"], bounds_dict["mmin"], bounds_dict["mmax"], bounds_dict["kappa"]
+        param_list = ['H0', 'alpha', 'mu', 'sigma', 'w', 'delta', 'mmin', 'mmax', 'kappa']
         def p_m(m, x):
             return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=x[param_list.index("delta")], mmin=x[param_list.index("mmin")], mmax=x[param_list.index("mmax")])
     else:
