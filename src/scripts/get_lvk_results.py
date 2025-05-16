@@ -97,8 +97,8 @@ events = [\
 'GW200216_220804',
 ]
 
-mass_med_min, mass_med_max = 1000, 0
-mass_min_min, mass_max_max = 1000, 0
+mass_min_min, mass_max_max = np.inf, -np.inf
+d_min_min, d_max_max = np.inf, -np.inf
 med_all = []
 for event in tqdm.tqdm(events):
     h5_paths = find('*' + str(event) + '*' + 'nocosmo.h5', sys.argv[1])
@@ -112,13 +112,16 @@ for event in tqdm.tqdm(events):
             f = f['C01:IMRPhenomXPHM']
             result_lvk = pd.DataFrame.from_records(f["posterior_samples"][()])
             result_lvk = result_lvk.sample(n=n_samples, random_state=seed)
-        event_med = np.median(result_lvk['mass_1'])
+        event_med = np.median(result_lvk['mass_1']), np.median(result_lvk['luminosity_distance'])
         med_all.append(event_med)
-        mass_med_min = min(mass_med_min, event_med)
-        mass_med_max = max(mass_med_max, event_med)
+        # mass_med_min = min(mass_med_min, event_med)
+        # mass_med_max = max(mass_med_max, event_med)
         mass_min_min = min(mass_min_min, min(result_lvk['mass_1']))
         mass_max_max = max(mass_max_max, max(result_lvk['mass_1']))
-        np.savetxt(paths.data/f'real/data/{event}.txt', result_lvk['mass_1'])
-np.savetxt(paths.data/'real/samples_med.txt', med_all)
-np.savetxt(paths.data/'real/jsd_bounds.txt', [mass_min_min, mass_max_max])
+        d_min_min = min(d_min_min, min(result_lvk['luminosity_distance']))
+        d_max_max = max(d_max_max, max(result_lvk['luminosity_distance']))
+        np.savetxt(paths.data/f'real/data/{event}.txt', result_lvk[['mass_1', 'luminosity_distance']].to_numpy())
+np.savetxt(paths.data/'real/samples_med.txt', np.array(med_all))
+np.savetxt(paths.data/'real/jsd_bounds.txt', [[mass_min_min, mass_max_max], [d_min_min, d_max_max]])
 print(f"Mass sample bounds: {mass_min_min}, {mass_max_max}")
+print(f"Distance sample bounds: {d_min_min}, {d_max_max}")
