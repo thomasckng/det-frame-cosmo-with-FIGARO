@@ -47,7 +47,10 @@ posterior = np.transpose(posterior, (1, 2, 0)) # shape = (n_events, n_samples, n
 
 np.savetxt(outdir / 'true_samples.txt', samples)
 np.savetxt(outdir / 'obs_samples.txt', samples_single_event)
-np.savetxt(outdir / 'jsd_bounds.txt', [[np.min(posterior_mz), np.max(posterior_mz)], [np.min(posterior_dL), np.max(posterior_dL)]])
+event_median_mz = np.median(posterior_mz, axis=1)
+event_median_dL = np.median(posterior_dL, axis=1)
+np.savetxt(outdir / 'jsd_bounds.txt', [[np.min(event_median_mz), np.max(event_median_mz)],
+                                        [np.min(event_median_dL), np.max(event_median_dL)]])
 
 if not os.path.exists(outdir / 'data'):
     os.makedirs(outdir / 'data')
