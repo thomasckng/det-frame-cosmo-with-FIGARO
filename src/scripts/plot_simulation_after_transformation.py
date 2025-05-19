@@ -1,8 +1,7 @@
-from figaro.load import load_density
-from figaro.plot import plot_multidim
+from matplotlib import pyplot as plt
+import numpy as np
 from figaro.cosmology import CosmologicalParameters
 from figaro import plot_settings
-import numpy as np
 import paths
 import dill
 
@@ -20,21 +19,17 @@ with open(paths.data / 'selection_function.pkl', 'rb') as f:
 def selection_function(grid):
     return selfunc_interp(grid)
 
-label = 'simulation'
-outdir = paths.data / label
-
-draws = load_density(outdir / f'draws/draws_observed_{label}.json')
-obs_samples = np.loadtxt(outdir / 'obs_samples.txt')
-
-bounds = np.loadtxt(outdir / 'jsd_bounds.txt')
-
-fig = plot_multidim(draws, hierarchical=True, median_label='$p(m^z_1, d_L|\mathbf{\Theta})$', labels=['m^z_1', 'd_L'], units=['M_\odot', '\mathrm{Mpc}'], bounds=bounds)
-
 # Set up grids
-mz = np.linspace(bounds[0, 0], bounds[0, 1], 200)
-dL = np.linspace(bounds[1, 0], bounds[1, 1], 200)
+mz = np.linspace(1, 100, 200)
+dL = np.linspace(10, 8000, 200)
 H0_cases = [30, 70, 110]
-colors = ['tab:green', 'tab:red', 'tab:orange']
+colors = ['tab:blue', 'tab:orange', 'tab:green']
+
+fig = plt.figure(figsize=(7,7))
+gs = fig.add_gridspec(2, 2, width_ratios=[4,1], height_ratios=[1,4], wspace=0.05, hspace=0.05)
+ax_joint = fig.add_subplot(gs[1,0])
+ax_marg_mz = fig.add_subplot(gs[0,0], sharex=ax_joint)
+ax_marg_dl = fig.add_subplot(gs[1,1], sharey=ax_joint)
 
 for h0_val, color in zip(H0_cases, colors):
     # Calculate z from dL for this H0
@@ -56,11 +51,15 @@ for h0_val, color in zip(H0_cases, colors):
     pdf_mz /= np.trapz(pdf_mz, mz)
     pdf_dl /= np.trapz(pdf_dl, dL)
     # 2D contour
-    c = fig.axes[2].contour(mz, dL, pdf_mzdl.T, levels=[1e-6, 5e-6], colors=color, linewidths=1, alpha=0.6)
+    c = ax_joint.contour(mz, dL, pdf_mzdl.T, levels=[1e-6, 5e-6], colors=color, linewidths=1, alpha=0.6)
     # 1D marginals
-    fig.axes[0].plot(mz, pdf_mz, color=color, label=f'$H_0={h0_val}$')
-    fig.axes[3].plot(dL, pdf_dl, color=color)
+    ax_marg_mz.plot(mz, pdf_mz, color=color, label=f'$H_0={h0_val}$')
+    ax_marg_dl.plot(pdf_dl, dL, color=color)
 
-fig.axes[1].legend(*fig.axes[0].get_legend_handles_labels(), loc = 'center')
-
-fig.savefig(paths.figures / 'simulation_comparison.pdf', bbox_inches='tight')
+ax_joint.set_xlabel(r'$m^z_1\ [M_\odot]$')
+ax_joint.set_ylabel(r'$d_L\ [\mathrm{Mpc}]$')
+ax_marg_mz.axis('off')
+ax_marg_dl.axis('off')
+ax_marg_mz.legend(loc='upper right', bbox_to_anchor=(1.3, 1))
+fig.savefig(paths.figures / 'simulation_after_transformation.pdf', bbox_inches='tight')
+plt.close(fig)

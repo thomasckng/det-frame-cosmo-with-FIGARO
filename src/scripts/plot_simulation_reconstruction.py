@@ -1,5 +1,5 @@
 from figaro.load import load_density
-from figaro.plot import plot_median_cr
+from figaro.plot import plot_multidim
 from figaro import plot_settings
 import numpy as np
 from matplotlib import pyplot as plt
@@ -11,22 +11,10 @@ outdir = paths.data / label
 draws = load_density(outdir / f'draws/draws_observed_{label}.json')
 obs_samples = np.loadtxt(outdir / 'obs_samples.txt')
 
-fig, (ax1, ax2) = plt.subplots(2, figsize=(7,6), gridspec_kw={'hspace': 0.3})
-fig = plot_median_cr(draws, hierarchical=True, save=True, show=False, fig=fig, median_label='$p(m^z_1|\mathbf{\Theta})$')
-ax1.hist(obs_samples, bins = int(np.sqrt(len(obs_samples))), histtype = 'step', density = True, label = '$T_t$', color = 'red')
-ax1.set_xlim(0,200)
-ax1.set_ylim(0)
-ax1.set_xlabel('$m^z_1\ [\mathrm{M}_\odot]$')
-ax1.set_ylabel('$\mathrm{Density}$')
-ax1.legend()
-m_z = np.linspace(0,200,1000)
-ax2.plot(m_z, draws[0].pdf(m_z), alpha = 0.5, color = 'tab:blue', label = '$p(m^z_1|\Theta_i)$')
-for i, draw in enumerate(draws[1:10]):
-    ax2.plot(m_z, draw.pdf(m_z), alpha = 0.5, color = 'tab:blue')
-ax2.hist(obs_samples, bins = int(np.sqrt(len(obs_samples))), histtype = 'step', density = True, label = '$T_t$', color = 'red')
-ax2.set_xlim(0,200)
-ax2.set_ylim(0)
-ax2.set_xlabel('$m^z_1\ [\mathrm{M}_\odot]$')
-ax2.set_ylabel('$\mathrm{Density}$')
-ax2.legend()
+fig = plot_multidim(draws, hierarchical=True, median_label='$p(m^z_1, d_L|\mathbf{\Theta})$', labels=['m^z_1', 'd_L'], units=['M_\odot', '\mathrm{Mpc}'], bounds=np.loadtxt(outdir / 'jsd_bounds.txt'))
+fig.axes[0].hist(obs_samples[:, 0], bins = int(np.sqrt(len(obs_samples))), histtype = 'step', density = True, label = '$T_t$', color = 'red')
+fig.axes[3].hist(obs_samples[:, 1], bins = int(np.sqrt(len(obs_samples))), histtype = 'step', density = True, color = 'red')
+
+fig.axes[1].legend(*fig.axes[0].get_legend_handles_labels(), loc = 'center')
+
 fig.savefig(paths.figures / 'simulation_reconstruction.pdf', bbox_inches='tight')
