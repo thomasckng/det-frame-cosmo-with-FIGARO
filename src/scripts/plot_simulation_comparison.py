@@ -56,7 +56,7 @@ for h0_val, color in zip(H0_cases, colors):
     pdf_mz /= np.trapz(pdf_mz, mz)
     pdf_dl /= np.trapz(pdf_dl, dL)
     # 2D contour
-    c = fig.axes[2].contour(mz, dL, pdf_mzdl.T, levels=[1e-6, 5e-6], colors=color, linewidths=1, alpha=0.6)
+    c = fig.axes[2].contour(mz, dL, pdf_mzdl.T, levels=[1e-6, 5e-6], colors=color, linewidths=1, alpha=0.7)
     # 1D marginals
     fig.axes[0].plot(mz, pdf_mz, color=color, label=f'$H_0={h0_val}$')
     fig.axes[3].plot(dL, pdf_dl, color=color)

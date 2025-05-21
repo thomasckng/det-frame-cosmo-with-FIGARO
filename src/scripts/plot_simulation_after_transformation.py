@@ -23,7 +23,7 @@ def selection_function(grid):
 mz = np.linspace(1, 100, 200)
 dL = np.linspace(10, 8000, 200)
 H0_cases = [30, 70, 110]
-colors = ['tab:blue', 'tab:orange', 'tab:green']
+colors = ['tab:green', 'tab:red', 'tab:orange']
 
 fig = plt.figure(figsize=(7,7))
 gs = fig.add_gridspec(2, 2, width_ratios=[4,1], height_ratios=[1,4], wspace=0.05, hspace=0.05)
@@ -51,7 +51,7 @@ for h0_val, color in zip(H0_cases, colors):
     pdf_mz /= np.trapz(pdf_mz, mz)
     pdf_dl /= np.trapz(pdf_dl, dL)
     # 2D contour
-    c = ax_joint.contour(mz, dL, pdf_mzdl.T, levels=[1e-6, 5e-6], colors=color, linewidths=1, alpha=0.6)
+    c = ax_joint.contour(mz, dL, pdf_mzdl.T, levels=[1e-6, 5e-6], colors=color, linewidths=1, alpha=0.7)
     # 1D marginals
     ax_marg_mz.plot(mz, pdf_mz, color=color, label=f'$H_0={h0_val}$')
     ax_marg_dl.plot(pdf_dl, dL, color=color)

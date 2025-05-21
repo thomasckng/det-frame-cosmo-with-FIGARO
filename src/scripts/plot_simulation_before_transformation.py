@@ -34,7 +34,7 @@ ax_marg_m = fig.add_subplot(gs[0,0], sharex=ax_joint)
 ax_marg_z = fig.add_subplot(gs[1,1], sharey=ax_joint)
 
 # 2D contour
-c = ax_joint.contourf(m_grid, z_grid, PDF_mz.T, levels=np.logspace(-2, -1, 5), cmap='Blues')
+c = ax_joint.contour(m_grid, z_grid, PDF_mz.T, levels=[5e-3, 1e-2, 8e-2], colors='tab:blue', linewidths=1, alpha=0.7)
 ax_joint.set_xlabel(r'$m_1\ [M_\odot]$')
 ax_joint.set_ylabel(r'$z$')
 
