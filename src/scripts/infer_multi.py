@@ -5,22 +5,31 @@ import paths
 label = sys.argv[3]
 outdir = paths.data / label
 
-if len(sys.argv) != 5:
+if len(sys.argv) != 6:
     print("Invalid number of arguments!")
     sys.exit(1)
 
 param = sys.argv[1]
 method = sys.argv[2]
+mass_dist = sys.argv[5]
 
-if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
+if not os.path.exists(outdir/f'multi/{mass_dist}_{param}_{method}.npz'):
     import numpy as np
     from numpy.random import uniform as uni
     from scipy.spatial.distance import jensenshannon
     from figaro.load import load_density
     from figaro.cosmology import CosmologicalParameters
     from multiprocessing import Pool
-    from population_models.mass import plpeak
     import dill
+
+    # Mass distribution
+    if mass_dist == "PLP":
+        from population_models.mass import plpeak as m_model
+    elif mass_dist == "PL":
+        from population_models.mass import powerlaw_smoothed as m_model
+    else:
+        print("Invalid mass distribution!")
+        sys.exit(1)
 
     # Redshift distribution
     def p_z(z, H0, kappa=0):
@@ -39,7 +48,7 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
         "mmax": (70, 150),
         "kappa": (-10, 10)
     }
-    if label == "simulation":
+    if label.startswith("simulation"):
         fixed_params = {
             "alpha": 3.5,
             "mmin": 5,
@@ -68,47 +77,47 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
     if param == "2a":
         param_list = ['H0', 'alpha']
         def p_m(m, x):
-            return plpeak(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "2b":
         param_list = ['H0', 'mu']
         def p_m(m, x):
-            return plpeak(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "3a":
         param_list = ['H0', 'alpha', 'kappa']
         def p_m(m, x):
-            return plpeak(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "3b":
         param_list = ['H0', 'mu', 'kappa']
         def p_m(m, x):
-            return plpeak(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "4a":
         param_list = ['H0', 'alpha', 'mu', 'sigma']
         def p_m(m, x):
-            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "4b":
         param_list = ['H0', 'mu', 'sigma', 'kappa']
         def p_m(m, x):
-            return plpeak(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "4c":
         param_list = ['H0', 'alpha', 'mu', 'kappa']
         def p_m(m, x):
-            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "5a":
         param_list = ['H0', 'alpha', 'mu', 'sigma', 'w']
         def p_m(m, x):
-            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "5b":
         param_list = ['H0', 'alpha', 'mu', 'sigma', 'kappa']
         def p_m(m, x):
-            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "6":
         param_list = ['H0', 'alpha', 'mu', 'sigma', 'w', 'kappa']
         def p_m(m, x):
-            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
     elif param == "9":
         param_list = ['H0', 'alpha', 'mu', 'sigma', 'w', 'delta', 'mmin', 'mmax', 'kappa']
         def p_m(m, x):
-            return plpeak(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=x[param_list.index("delta")], mmin=x[param_list.index("mmin")], mmax=x[param_list.index("mmax")])
+            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=x[param_list.index("delta")], mmin=x[param_list.index("mmin")], mmax=x[param_list.index("mmax")])
     else:
         print("Invalid parameter!")
         sys.exit(1)
@@ -172,21 +181,24 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
 
         def minimize(i):
             x0 = [uni(*bounds[j]) for j in range(len(bounds))]
-            return scipy_minimize(jsd, x0=x0, bounds=bounds, args=(i,), method=method).x
+            opt_result = scipy_minimize(jsd, x0=x0, bounds=bounds, args=(i,), method=method)
+            return opt_result.x, opt_result.fun
     elif method == "CMA-ES":
 
         import cma
 
         def minimize(i):
             x0 = [uni(*bounds[j]) for j in range(len(bounds))]
-            return cma.fmin2(jsd, x0, 1, {'bounds': np.array(bounds).T.tolist(), 'CMA_stds': np.array(bounds).T[1]/4}, args=(i,))[0]
+            opt_result = cma.fmin2(jsd, x0, 1, {'bounds': np.array(bounds).T.tolist(), 'CMA_stds': np.array(bounds).T[1]/4}, args=(i,))
+            return opt_result[0], opt_result[1].result[5]
     else:
         print("Invalid method!")
         sys.exit(1)
 
     def minimize_and_save(i):
-        result = minimize(i)
-        np.save(outdir/f'checkpoints/{param}_{method}_{str(i)}', result)
+        result, jsd = minimize(i)
+        np.save(outdir/f'checkpoints/{mass_dist}_{param}_{method}_{str(i)}_jsd', jsd)
+        np.save(outdir/f'checkpoints/{mass_dist}_{param}_{method}_{str(i)}', result)
         return result
 
 
@@ -194,7 +206,7 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
     if not os.path.exists(outdir/'checkpoints'):
         os.makedirs(outdir/'checkpoints')
     for i in range(len(pdf_figaro)):
-        if os.path.exists(outdir/f'checkpoints/{param}_{method}_{str(i)}.npy'):
+        if os.path.exists(outdir/f'checkpoints/{mass_dist}_{param}_{method}_{str(i)}.npy'):
             remaining.remove(i)
     print(f"Remaining number of draws: {str(len(remaining))}")
 
@@ -206,22 +218,25 @@ if not os.path.exists(outdir/f'multi/{param}_{method}.npz'):
 
     print("Collecting and saving results...")
     result = []
+    jsd = []
     for i in range(len(pdf_figaro)):
-        if os.path.exists(outdir/f'checkpoints/{param}_{method}_{str(i)}.npy'):
+        if os.path.exists(outdir/f'checkpoints/{mass_dist}_{param}_{method}_{str(i)}.npy'):
             try:
-                result.append(np.load(outdir/f'checkpoints/{param}_{method}_{str(i)}.npy'))
+                result.append(np.load(outdir/f'checkpoints/{mass_dist}_{param}_{method}_{str(i)}.npy'))
+                jsd.append(np.load(outdir/f'checkpoints/{mass_dist}_{param}_{method}_{str(i)}_jsd.npy'))
             except EOFError:
                 result.append(minimize_and_save(i))
     result = np.array(result)
+    jsd = np.array(jsd)
 
     print("Saving final results to disk...")
     if not os.path.exists(outdir/'multi'):
         os.makedirs(outdir/'multi')
-    np.savez(outdir/f"multi/{param}_{method}.npz", result=result, pdf_figaro=pdf_figaro)
+    np.savez(outdir/f"multi/{mass_dist}_{param}_{method}.npz", result=result, pdf_figaro=pdf_figaro, jsd=jsd)
 
 print("Cleaning up checkpoints...")
 for filename in os.listdir(outdir/'checkpoints'):
-    if filename.startswith(f"{param}_{method}_"):
+    if filename.startswith(f"{mass_dist}_{param}_{method}_"):
         os.remove(outdir/f"checkpoints/{filename}")
 
 print("All done!")

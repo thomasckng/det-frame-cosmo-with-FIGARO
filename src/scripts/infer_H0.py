@@ -9,8 +9,11 @@ import multiprocessing
 import sys
 
 # Mass distribution
-from population_models.mass import plpeak # from from https://github.com/sterinaldi/cbc_pdet
-
+mass_dist = sys.argv[2]
+if mass_dist == 'PLP':
+    from population_models.mass import plpeak as p_m
+elif mass_dist == 'PL':
+    from population_models.mass import powerlaw_smoothed as p_m
 # Redshift distribution
 def p_z(z, H0):
     Omega = CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.)
@@ -30,10 +33,10 @@ H0 = np.linspace(5,150,500)
 print("Generating model PDFs for each H0 value...")
 # Calculate source-frame population model pdf for each H0
 model_pdf = []
-for h0 in tqdm(H0, desc = 'H0'):
+for h0 in tqdm(H0, desc = 'model pdf'):
     z = CosmologicalParameters(h0/100., 0.315, 0.685, -1., 0., 0.).Redshift(dL) # shape = (len(dL))
     m = np.einsum("i, j -> ij", mz, np.reciprocal(1+z)) # shape = (len(mz), len(dL))
-    model_pdf_m = plpeak(m) # shape = (len(mz), len(dL))
+    model_pdf_m = p_m(m) # shape = (len(mz), len(dL))
     model_pdf_z = p_z(z, h0) # shape = (len(z))
     model_pdf.append(np.einsum("ij, j -> ij", model_pdf_m, model_pdf_z)) # shape = (len(mz), len(dL))
 model_pdf = np.array(model_pdf) # shape = (len(H0), len(mz), len(dL))
@@ -66,10 +69,12 @@ with multiprocessing.Pool(int(sys.argv[1])) as pool:
     jsd = pool.map(compute_jsd_for_draw, [(figaro_pdf[j], model_pdf) for j in range(len(figaro_pdf))])
 jsd = np.array(jsd)
 # Find H0 that minimizes JSD for each DPGMM draw
+jsd_min = np.min(jsd, axis=1)
 H0_samples = H0[np.argmin(jsd, axis=1)]
 
 print("Saving H0 samples and JSD results...")
-np.save(outdir / f"H0_samples.npy", H0_samples) # shape = (len(draws),)
-np.save(outdir / f"jsd.npy", jsd) # shape = (len(draws), len(H0))
+# Make H0 directory
+(outdir / "H0").mkdir(exist_ok=True)
+np.savez(outdir / f"H0/{mass_dist}", samples=H0_samples, jsd=jsd_min)
 
 print("All done!")
