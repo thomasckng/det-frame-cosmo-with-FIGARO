@@ -22,15 +22,6 @@ if not os.path.exists(outdir/f'multi/{mass_dist}_{param}_{method}.npz'):
     from multiprocessing import Pool
     import dill
 
-    # Mass distribution
-    if mass_dist == "PLP":
-        from population_models.mass import plpeak as m_model
-    elif mass_dist == "PL":
-        from population_models.mass import powerlaw_smoothed as m_model
-    else:
-        print("Invalid mass distribution!")
-        sys.exit(1)
-
     # Redshift distribution
     def p_z(z, H0, kappa=0):
         # Fixed parameters are from the result of Planck 2018
@@ -46,7 +37,10 @@ if not os.path.exists(outdir/f'multi/{mass_dist}_{param}_{method}.npz'):
         "delta": (0.01, 20),
         "mmin": (1, 10),
         "mmax": (70, 150),
-        "kappa": (-10, 10)
+        "kappa": (-10, 10),
+        "alpha1": (1.01, 15),
+        "alpha2": (1.01, 15),
+        "b": (0, 1)
     }
     if label.startswith("simulation"):
         fixed_params = {
@@ -74,54 +68,86 @@ if not os.path.exists(outdir/f'multi/{mass_dist}_{param}_{method}.npz'):
         print("Invalid label!")
         sys.exit(1)
 
-    if param == "2a":
-        param_list = ['H0', 'alpha']
-        def p_m(m, x):
-            return m_model(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "2b":
-        param_list = ['H0', 'mu']
-        def p_m(m, x):
-            return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "3a":
-        param_list = ['H0', 'alpha', 'kappa']
-        def p_m(m, x):
-            return m_model(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "3b":
-        param_list = ['H0', 'mu', 'kappa']
-        def p_m(m, x):
-            return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "4a":
-        param_list = ['H0', 'alpha', 'mu', 'sigma']
-        def p_m(m, x):
-            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "4b":
-        param_list = ['H0', 'mu', 'sigma', 'kappa']
-        def p_m(m, x):
-            return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "4c":
-        param_list = ['H0', 'alpha', 'mu', 'kappa']
-        def p_m(m, x):
-            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "5a":
-        param_list = ['H0', 'alpha', 'mu', 'sigma', 'w']
-        def p_m(m, x):
-            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "5b":
-        param_list = ['H0', 'alpha', 'mu', 'sigma', 'kappa']
-        def p_m(m, x):
-            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "6":
-        param_list = ['H0', 'alpha', 'mu', 'sigma', 'w', 'kappa']
-        def p_m(m, x):
-            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
-    elif param == "9":
-        param_list = ['H0', 'alpha', 'mu', 'sigma', 'w', 'delta', 'mmin', 'mmax', 'kappa']
-        def p_m(m, x):
-            return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=x[param_list.index("delta")], mmin=x[param_list.index("mmin")], mmax=x[param_list.index("mmax")])
+    # Mass distribution
+    if mass_dist == "PLP":
+        from population_models.mass import plpeak as m_model
+
+        if param == "2a":
+            param_list = ['H0', 'alpha']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "2b":
+            param_list = ['H0', 'mu']
+            def p_m(m, x):
+                return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "3a":
+            param_list = ['H0', 'alpha', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], mu=fixed_params["mu"], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "3b":
+            param_list = ['H0', 'mu', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "4a":
+            param_list = ['H0', 'alpha', 'mu', 'sigma']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "4b":
+            param_list = ['H0', 'mu', 'sigma', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha=fixed_params["alpha"], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "4c":
+            param_list = ['H0', 'alpha', 'mu', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=fixed_params["sigma"], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "5a":
+            param_list = ['H0', 'alpha', 'mu', 'sigma', 'w']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "5b":
+            param_list = ['H0', 'alpha', 'mu', 'sigma', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=fixed_params["w"], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "6":
+            param_list = ['H0', 'alpha', 'mu', 'sigma', 'w', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "9":
+            param_list = ['H0', 'alpha', 'mu', 'sigma', 'w', 'delta', 'mmin', 'mmax', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], mu=x[param_list.index("mu")], sigma=x[param_list.index("sigma")], w=x[param_list.index("w")], delta=x[param_list.index("delta")], mmin=x[param_list.index("mmin")], mmax=x[param_list.index("mmax")])
+        else:
+            print("Invalid parameter!")
+            sys.exit(1)
+
+    elif mass_dist == "PL":
+        from population_models.mass import powerlaw_smoothed as m_model
+
+        if param == "2a":
+            param_list = ['H0', 'alpha']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        elif param == "3a":
+            param_list = ['H0', 'alpha', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha=x[param_list.index("alpha")], delta=fixed_params["delta"], mmin=fixed_params["mmin"], mmax=fixed_params["mmax"])
+        else:
+            print("Invalid parameter!")
+            sys.exit(1)
+    elif mass_dist == "BPL":
+        from population_models.mass import broken_powerlaw_smoothed as m_model
+
+        if param == "5c":
+            param_list = ['H0', 'alpha1', 'alpha2', 'b', 'kappa']
+            def p_m(m, x):
+                return m_model(m, alpha1=x[param_list.index("alpha1")], alpha2=x[param_list.index("alpha2")], b=x[param_list.index("b")])
+        else:
+            print("Invalid parameter!")
+            sys.exit(1)
     else:
-        print("Invalid parameter!")
+        print("Invalid mass distribution!")
         sys.exit(1)
-    
+
     bounds = [bounds_dict[p] for p in param_list]
 
     
