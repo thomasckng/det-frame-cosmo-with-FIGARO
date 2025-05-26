@@ -39,7 +39,7 @@ for key, parameters in param_dict.items():
                         fill_contours=True,
                         contourf_kwargs={'colors': ['white', 'darkturquoise', 'mediumturquoise'], 'alpha': [1, 0.2, 0.5]},
                         contour_kwargs={'linewidths': 1}, show_titles=True)
-            fig.savefig(paths.figures / f'simulation_result_{key}.pdf', bbox_inches='tight')
+            fig.savefig(paths.figures / f'simulation_result_{mass_dist}_{key}.pdf', bbox_inches='tight')
             fig.clf()
             f.close()
             print(f"Plot saved for {mass_dist}_{key}.")
