@@ -2,6 +2,7 @@ import numpy as np
 from corner import corner
 from figaro.cosmology import Planck18
 from figaro import plot_settings
+import matplotlib.pyplot as plt
 import paths
 
 param_dict = {
@@ -14,18 +15,21 @@ param_dict = {
     '4c': ['$H_0$', '$\\alpha$', '$\\mu$', '$\\kappa$'],
     '5a': ['$H_0$', '$\\alpha$', '$\\mu$', '$\\sigma$', '$w$'],
     '5b': ['$H_0$', '$\\alpha$', '$\\mu$', '$\\sigma$', '$\\kappa$'],
-    '5c': ['$H_0$', '$\\alpha1$', '$\\alpha2$', '$b$, $\\kappa$'],
+    '5c': ['$H_0$', '$\\alpha_1$', '$\\alpha_2$', '$b$', '$\\kappa$'],
     '6': ['$H_0$', '$\\alpha$', '$\\mu$', '$\\sigma$', '$w$', '$\\kappa$'],
     # '9': ['$H_0$', '$\\alpha$', '$\\mu$', '$\\sigma$', '$w$', '$\\delta$', '$m_\mathrm{min}$', '$m_\mathrm{max}$', '$\\kappa$'],
 }
 
-simulated_truth = {'$H_0$': Planck18.h*100, '$\\alpha$': 3.5, '$\\mu$': 35, '$\\sigma$': 5, '$\\delta$': 5, '$w$': 0.2, '$m_\mathrm{min}$': 5, '$m_\mathrm{max}$': 90, '$\\kappa$': 0, '$\\alpha1$': None, '$\\alpha2$': None, '$b$': None}
+simulated_truth = {'$H_0$': Planck18.h*100, '$\\alpha$': 3.5, '$\\mu$': 35, '$\\sigma$': 5, '$\\delta$': 5, '$w$': 0.2, '$m_\mathrm{min}$': 5, '$m_\mathrm{max}$': 90, '$\\kappa$': 0, '$\\alpha_1$': None, '$\\alpha_2$': None, '$b$': None}
 
-for key, parameters in param_dict.items():
-    for mass_dist in ['PLP', 'PL', 'BPL']:
+fig_jsd, ax_jsd = plt.subplots()
+colors = ['tab:blue', 'tab:red', 'tab:green', 'tab:orange', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray']
+for mass_dist in ['PLP', 'PL', 'BPL']:
+    for key, parameters in param_dict.items():
         try:
             f = np.load(paths.data / 'simulation/multi' / f'{mass_dist}_{key}_Powell.npz')
             result = f['result']
+            jsd_samples = f['jsd']
             
             fig = corner(result,
                         labels=parameters,
@@ -44,6 +48,8 @@ for key, parameters in param_dict.items():
             fig.clf()
             f.close()
             print(f"Plot saved for {mass_dist}_{key}.")
+
+            ax_jsd.hist(jsd_samples, bins = int(np.sqrt(len(jsd_samples))), histtype = 'step', density = True, color= colors.pop(0), label = f'$\mathrm{{{mass_dist}}}$')
         except FileNotFoundError:
             print(f"File not found for {mass_dist}_{key}. Skipping...")
         except Exception as e:
@@ -53,3 +59,8 @@ for key, parameters in param_dict.items():
             except:
                 pass
         print()
+
+ax_jsd.legend()
+ax_jsd.set_xlabel('$d_\mathrm{JS}$')
+ax_jsd.set_ylabel('$\mathrm{Density}$')
+fig_jsd.savefig(paths.figures / f"simulation_result_jsd.pdf", bbox_inches='tight')

@@ -9,17 +9,14 @@ import multiprocessing
 import sys
 
 # Mass distribution
-mass_dist = sys.argv[2]
-if mass_dist == 'PLP':
-    from population_models.mass import plpeak as p_m
-elif mass_dist == 'PL':
-    from population_models.mass import powerlaw_smoothed as p_m
+from population_models.mass import plpeak as p_m
+
 # Redshift distribution
 def p_z(z, H0):
     Omega = CosmologicalParameters(H0/100., 0.315, 0.685, -1., 0., 0.)
     return Omega.ComovingVolumeElement(z)*(1+z)**(-2)/Omega.dDLdz(z)
 
-label = 'simulation'
+label = 'simulation_less'
 outdir = paths.data / label
 
 print("Reading bounds and draws...")
@@ -32,11 +29,12 @@ H0 = np.linspace(5,150,500)
 
 print("Generating model PDFs for each H0 value...")
 # Calculate source-frame population model pdf for each H0
+mu = float(sys.argv[2]) if len(sys.argv) > 2 else 35. # Default value for mu
 model_pdf = []
 for h0 in tqdm(H0, desc = 'model pdf'):
     z = CosmologicalParameters(h0/100., 0.315, 0.685, -1., 0., 0.).Redshift(dL) # shape = (len(dL))
     m = np.einsum("i, j -> ij", mz, np.reciprocal(1+z)) # shape = (len(mz), len(dL))
-    model_pdf_m = p_m(m) # shape = (len(mz), len(dL))
+    model_pdf_m = p_m(m, mu=mu) # shape = (len(mz), len(dL))
     model_pdf_z = p_z(z, h0) # shape = (len(z))
     model_pdf.append(np.einsum("ij, j -> ij", model_pdf_m, model_pdf_z)) # shape = (len(mz), len(dL))
 model_pdf = np.array(model_pdf) # shape = (len(H0), len(mz), len(dL))
@@ -75,6 +73,6 @@ H0_samples = H0[np.argmin(jsd, axis=1)]
 print("Saving H0 samples and JSD results...")
 # Make H0 directory
 (outdir / "H0").mkdir(exist_ok=True)
-np.savez(outdir / f"H0/{mass_dist}", samples=H0_samples, jsd=jsd_min)
+np.savez(outdir / f"H0/PLP_{mu}", samples=H0_samples, jsd=jsd_min)
 
 print("All done!")
