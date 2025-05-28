@@ -2,7 +2,6 @@ from figaro.load import load_density
 from figaro.plot import plot_multidim
 from figaro import plot_settings
 import numpy as np
-from matplotlib import pyplot as plt
 import paths
 
 label = 'real'
@@ -15,6 +14,6 @@ fig = plot_multidim(draws, hierarchical=True, median_label='$p(m^z_1, d_L|\mathb
 fig.axes[0].hist(samples_med[:, 0], bins = int(np.sqrt(len(samples_med))), histtype = 'step', density = True, label = '$\mathrm{median}(Y_t)$', color = 'red', alpha = 0.7)
 fig.axes[3].hist(samples_med[:, 1], bins = int(np.sqrt(len(samples_med))), histtype = 'step', density = True, color = 'red', alpha = 0.7)
 
-fig.axes[1].legend(*fig.axes[0].get_legend_handles_labels(), loc = 'center')
+fig.axes[1].legend(*fig.axes[0].get_legend_handles_labels(), loc = 'center', fontsize=18)
 
 fig.savefig(paths.figures / 'real_reconstruction.pdf', bbox_inches='tight')

@@ -61,6 +61,6 @@ for h0_val, color in zip(H0_cases, colors):
     fig.axes[0].plot(mz, pdf_mz, color=color, label=f'$H_0={h0_val}$')
     fig.axes[3].plot(dL, pdf_dl, color=color)
 
-fig.axes[1].legend(*fig.axes[0].get_legend_handles_labels(), loc = 'center')
+fig.axes[1].legend(*fig.axes[0].get_legend_handles_labels(), loc = 'center', fontsize=18)
 
 fig.savefig(paths.figures / 'simulation_comparison.pdf', bbox_inches='tight')

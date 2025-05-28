@@ -45,7 +45,10 @@ for mass_dist in ['PLP', 'PL', 'BPL']:
                         smooth=1,
                         fill_contours=True,
                         contourf_kwargs={'colors': ['white', 'darkturquoise', 'mediumturquoise'], 'alpha': [1, 0.2, 0.5]},
-                        contour_kwargs={'linewidths': 1}, show_titles=True)
+                        contour_kwargs={'linewidths': 1},
+                        show_titles=True,
+                        title_kwargs={'fontsize': 20},
+                        )
             fig.savefig(paths.figures / f'real_result_{key}.pdf', bbox_inches='tight')
             fig.clf()
             f.close()

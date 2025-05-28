@@ -15,6 +15,6 @@ fig = plot_multidim(draws, hierarchical=True, median_label='$p(m^z_1, d_L|\mathb
 fig.axes[0].hist(obs_samples[:, 0], bins = int(np.sqrt(len(obs_samples))), histtype = 'step', density = True, label = '$T_t$', color = 'red', alpha = 0.7)
 fig.axes[3].hist(obs_samples[:, 1], bins = int(np.sqrt(len(obs_samples))), histtype = 'step', density = True, color = 'red', alpha = 0.7)
 
-fig.axes[1].legend(*fig.axes[0].get_legend_handles_labels(), loc = 'center')
+fig.axes[1].legend(*fig.axes[0].get_legend_handles_labels(), loc = 'center', fontsize=18)
 
 fig.savefig(paths.figures / 'simulation_reconstruction.pdf', bbox_inches='tight')
