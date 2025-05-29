@@ -1,6 +1,6 @@
 import numpy as np
 from corner import corner
-# from figaro.cosmology import Planck18
+from figaro.cosmology import Planck18
 from figaro import plot_settings
 import matplotlib.pyplot as plt
 import paths
@@ -20,8 +20,8 @@ param_dict = {
     # '9': ['$H_0$', '$\\alpha$', '$\\mu$', '$\\sigma$', '$w$', '$\\delta$', '$m_\mathrm{min}$', '$m_\mathrm{max}$', '$\\kappa$'],
 }
 
-# expected = {'$H_0$': Planck18.h*100, "$\\alpha$": 4.2487241670754035, "$\\mu$": 31.825703461630482, "$\\sigma$": 3.7904971258458042, "$w$": 0.024059947239759398, "$\\delta$": 4.8961636235644015, "$m_\mathrm{min}$": 5.0808821331157095, "$m_\mathrm{max}$": 109.03299036617125, "$\\kappa$": None}
-bounds = {'$H_0$': (40, 100), "$\\alpha$": (2, 8), "$\\mu$": (10, 60), "$\\sigma$": (0, 5), "$w$": (0, 1), "$\\delta$": (0, 10), "$m_\mathrm{min}$": (0, 10), "$m_\mathrm{max}$": (70, 100), "$\\kappa$": (-1, 5)}
+# expected = {'$H_0$': Planck18.h*100, "$\\alpha$": 4.2487241670754035, "$\\mu$": 31.825703461630482, "$\\sigma$": 3.7904971258458042, "$w$": 0.024059947239759398, "$\\delta$": 4.8961636235644015, "$m_\mathrm{min}$": 5.0808821331157095, "$m_\mathrm{max}$": 109.03299036617125, "$\\kappa$": None, "$\\alpha_1$": None, "$\\alpha_2$": None, "$b$": None}
+bounds = {'$H_0$': (10, 180), "$\\alpha$": (1, 14.9), "$\\mu$": (10, 60), "$\\sigma$": (0, 20), "$w$": (0, 0.95), "$\\delta$": (0, 10), "$m_\mathrm{min}$": (0, 10), "$m_\mathrm{max}$": (70, 100), "$\\kappa$": (-8, 8), "$\\alpha_1$": (1, 14.9), "$\\alpha_2$": (1, 14.9), "$b$": (0, 1)}
 
 fig_jsd, ax_jsd = plt.subplots()
 colors = ['tab:blue', 'tab:red', 'tab:green', 'tab:orange', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray']
@@ -31,6 +31,14 @@ for mass_dist in ['PLP', 'PL', 'BPL']:
             f = np.load(paths.data / 'real/multi' / f'{mass_dist}_{key}_Powell.npz')
             result = f['result']
             jsd_samples = f['jsd']
+
+            mask = np.ones(len(result), dtype=bool)
+            for param, (low, high) in bounds.items():
+                if param in parameters:
+                    mask &= (result[:, parameters.index(param)] >= low) & (result[:, parameters.index(param)] <= high)
+            result = result[mask]
+            jsd_samples = jsd_samples[mask]
+            print(f"Plotting for key: {mass_dist}_{key} with {len(result)} samples.")
 
             fig = corner(result,
                         labels=parameters,
