@@ -27,7 +27,7 @@ colors = ['tab:blue', 'tab:red', 'tab:green', 'tab:orange', 'tab:purple', 'tab:b
 for mass_dist in ['PLP', 'PL', 'BPL']:
     for key, parameters in param_dict.items():
         try:
-            f = np.load(paths.data / 'simulation_less/multi' / f'{mass_dist}_{key}_Powell.npz')
+            f = np.load(paths.data / 'simulation/multi' / f'{mass_dist}_{key}_Powell.npz')
             result = f['result']
             jsd_samples = f['jsd']
             
@@ -47,7 +47,7 @@ for mass_dist in ['PLP', 'PL', 'BPL']:
                         show_titles=True,
                         title_kwargs={'fontsize': 20},
                         )
-            fig.savefig(paths.figures / f'simulation_less_result_{mass_dist}_{key}.pdf', bbox_inches='tight')
+            fig.savefig(paths.figures / f'simulation_result_{mass_dist}_{key}.pdf', bbox_inches='tight')
             fig.clf()
             f.close()
             print(f"Plot saved for {mass_dist}_{key}.")
@@ -66,4 +66,4 @@ for mass_dist in ['PLP', 'PL', 'BPL']:
 ax_jsd.legend()
 ax_jsd.set_xlabel('$d_\mathrm{JS}$')
 ax_jsd.set_ylabel('$\mathrm{Density}$')
-fig_jsd.savefig(paths.figures / f"simulation_less_result_jsd.pdf", bbox_inches='tight')
+fig_jsd.savefig(paths.figures / f"simulation_result_jsd.pdf", bbox_inches='tight')

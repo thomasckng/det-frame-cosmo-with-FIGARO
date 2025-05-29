@@ -28,7 +28,7 @@ colors = ['tab:blue', 'tab:red', 'tab:green', 'tab:orange', 'tab:purple', 'tab:b
 for mass_dist in ['PLP', 'PL', 'BPL']:
     for key, parameters in param_dict.items():
         try:
-            f = np.load(paths.data / 'real/multi' / f'{key}_Powell.npz')
+            f = np.load(paths.data / 'real/multi' / f'{mass_dist}_{key}_Powell.npz')
             result = f['result']
             jsd_samples = f['jsd']
 
@@ -49,16 +49,16 @@ for mass_dist in ['PLP', 'PL', 'BPL']:
                         show_titles=True,
                         title_kwargs={'fontsize': 20},
                         )
-            fig.savefig(paths.figures / f'real_result_{key}.pdf', bbox_inches='tight')
+            fig.savefig(paths.figures / f'real_result_{mass_dist}_{key}.pdf', bbox_inches='tight')
             fig.clf()
             f.close()
-            print(f"Plot saved for key: {key}.")
+            print(f"Plot saved for key: {mass_dist}_{key}.")
 
             ax_jsd.hist(jsd_samples, bins = int(np.sqrt(len(jsd_samples))), histtype = 'step', density = True, color= colors.pop(0), label = f'$\mathrm{{{mass_dist}}}$')
         except FileNotFoundError:
-            print(f"File not found for key: {key}. Skipping...")
+            print(f"File not found for key: {mass_dist}_{key}. Skipping...")
         except Exception as e:
-            print(f"An error occurred for key: {key}. Error: {e}")
+            print(f"An error occurred for key: {mass_dist}_{key}. Error: {e}")
             try:
                 f.close()
             except:
