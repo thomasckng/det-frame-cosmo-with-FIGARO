@@ -158,7 +158,7 @@ if not os.path.exists(outdir/f'multi/{mass_dist}_{param}_{method}.npz'):
 
     print("Preparing inference grid and PDFs...")
     # Initialize mz and dL using jsd_bounds
-    mz = np.linspace(jsd_bounds[0][0], jsd_bounds[0][1], 900)
+    mz = np.linspace(jsd_bounds[0][0], jsd_bounds[0][1], 90)
     dL = np.linspace(jsd_bounds[1][0], jsd_bounds[1][1], 80)
     # For each H0, convert dL to z
     def get_z_from_dL(H0, dL):
